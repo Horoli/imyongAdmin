@@ -13,7 +13,7 @@ class _ViewHomeState extends State<ViewHome> {
   final List<Widget> bottomNavigationButton = [
     // ViewHome(),
     ViewLotto(),
-    ViewConvertText(),
+    ViewImyong(),
   ];
   //
   void bottomNavigationButtonTap(int index) {

@@ -26,15 +26,17 @@ import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
 
 // service
 part 'service/fetch_lotto.dart';
+part 'service/type.dart';
 
 // model
 part 'model/lotto.dart';
 part 'model/lotto_info.dart';
+part 'model/type.dart';
 
 // part
 part 'view/home.dart';
 part 'view/lotto.dart';
-part 'view/convert.dart';
+part 'view/imyong.dart';
 part 'global.dart';
 
 // part 'extension.dart';

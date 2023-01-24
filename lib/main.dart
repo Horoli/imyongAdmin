@@ -5,8 +5,13 @@ import 'common.dart';
 import 'preset/router.dart' as ROUTER;
 import 'preset/color.dart' as COLOR;
 
-void main() {
+Future<void> main() async {
+  _initService();
   runApp(AppRoot());
+}
+
+void _initService() {
+  GServiceType = ServiceType.getInstance();
 }
 
 class AppRoot extends StatelessWidget {
@@ -20,7 +25,7 @@ class AppRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     //
     return MaterialApp(
-      title: 'olio',
+      title: 'imyong',
       initialRoute: ROUTER.HOME,
       routes: routes,
     );
