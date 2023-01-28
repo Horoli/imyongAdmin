@@ -7,14 +7,16 @@ class MType {
     required this.type,
   });
 
-  MType.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-  }
-
   @override
   Map<String, dynamic> get map => {
         'type ': type,
       };
+
+  factory MType.fromJson(Map item) {
+    List<String> type = List<String>.from(item['type'] ?? []);
+
+    return MType(type: type);
+  }
 
   MType copyWith({
     List<String>? type,

@@ -12,11 +12,21 @@ class _ViewImyongState extends State<ViewImyong> {
   @override
   Widget build(BuildContext context) {
     //
-    return ElevatedButton(
-      child: const Text('asd'),
-      onPressed: () {
-        GServiceType.getType();
-      },
+    return Column(
+      children: [
+        ElevatedButton(
+          child: const Text('login post'),
+          onPressed: () async {
+            GServiceLogin.login(id: 'horoli', pw: '1234');
+          },
+        ).expand(),
+        ElevatedButton(
+          child: const Text('type post'),
+          onPressed: () async {
+            GServiceType.getType(inputType: "asd");
+          },
+        ).expand(),
+      ],
     );
   }
 }

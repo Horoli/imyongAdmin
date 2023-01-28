@@ -12,11 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 // preset
-// import 'package:first/preset/router.dart' as ROUTER;
-
-// import 'package:olio/preset/router.dart' as ROUTER;
-
-import 'package:olio/preset/color.dart' as COLOR;
+import 'package:imyong/preset/color.dart' as COLOR;
+import 'package:imyong/preset/url.dart' as URL;
 
 import 'package:tnd_core/tnd_core.dart';
 import 'package:tnd_pkg_widget/extension.dart';
@@ -27,11 +24,14 @@ import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
 // service
 part 'service/fetch_lotto.dart';
 part 'service/type.dart';
+part 'service/login.dart';
 
 // model
 part 'model/lotto.dart';
 part 'model/lotto_info.dart';
+
 part 'model/type.dart';
+part 'model/login.dart';
 
 // part
 part 'view/home.dart';

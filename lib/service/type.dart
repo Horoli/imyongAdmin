@@ -6,27 +6,27 @@ class ServiceType {
 
   ServiceType._internal();
 
-  Future<MType> getType() async {
-    String url = 'http://localhost:3000/type';
-
-    Uri uri = Uri.parse(url);
+  Future<MType> getType({required String inputType}) async {
+    Uri uri = Uri.parse(URL.URL + URL.TYPE);
+    String encodeData = jsonEncode({"type": inputType});
 
     final response = await http.post(
       uri,
       headers: {
-        // 'Content-Type': 'application/json',
-        'token': '36c4ab35a13246efaad47c045170c642',
+        "Content-Type": "application/json",
+        "token": GServiceLogin.loginToken,
       },
-      body: jsonEncode({'type': 'asd'}),
+      body: encodeData,
     );
-    ;
 
     print('response $response');
     print('responseBody ${response.body}');
 
     if (response.statusCode == 200) {
-      MType asd = MType.fromJson(jsonDecode(response.body));
-      return asd;
+      dynamic getData = jsonDecode(response.body)['data'];
+      print(getData);
+      MType data = MType.fromJson(getData);
+      return data;
     } else {
       throw Exception('failed to load Data');
     }

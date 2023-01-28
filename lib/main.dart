@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:olio/common.dart';
+import 'package:imyong/common.dart';
 
-import 'common.dart';
 import 'preset/router.dart' as ROUTER;
 import 'preset/color.dart' as COLOR;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   _initService();
   runApp(AppRoot());
 }
 
 void _initService() {
   GServiceType = ServiceType.getInstance();
+  GServiceLogin = ServiceLogin.getInstance();
 }
 
 class AppRoot extends StatelessWidget {
