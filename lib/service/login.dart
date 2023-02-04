@@ -30,7 +30,7 @@ class ServiceLogin {
       print(getData);
       MLogin data = MLogin.fromJson(getData);
       $loginToken.sink$(data.token);
-      hiveMLogin.put(id, data);
+      hiveMLogin.put('token', data);
       print(hiveMLogin.toMap());
 
       return data;

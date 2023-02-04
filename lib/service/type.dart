@@ -14,7 +14,7 @@ class ServiceType {
       uri,
       headers: {
         "Content-Type": "application/json",
-        "token": GServiceLogin.loginToken,
+        "token": hiveMLogin.values.first.token,
       },
       body: encodeData,
     );

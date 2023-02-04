@@ -31,6 +31,7 @@ void registerHiveAdapter() {
 
 class AppRoot extends StatelessWidget {
   final Map<String, Widget Function(BuildContext)> routes = {
+    ROUTER.LOGIN: (BuildContext context) => ViewLogin(),
     ROUTER.HOME: (BuildContext context) => ViewHome(),
     // ROUTER.LOTTO: (BuildContext context) => ViewLotto(),
     // ROUTER.CONVERT: (BuildContext context) => ViewConvertText(),
@@ -41,7 +42,7 @@ class AppRoot extends StatelessWidget {
     //
     return MaterialApp(
       title: 'imyong',
-      initialRoute: ROUTER.HOME,
+      initialRoute: ROUTER.LOGIN,
       routes: routes,
     );
   }

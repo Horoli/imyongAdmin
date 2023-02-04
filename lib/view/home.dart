@@ -12,7 +12,8 @@ class _ViewHomeState extends State<ViewHome> {
 
   final List<Widget> bottomNavigationButton = [
     // ViewHome(),
-    ViewLotto(),
+    // ViewLotto(),
+    Container(),
     ViewImyong(),
   ];
   //
