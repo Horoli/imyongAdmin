@@ -30,6 +30,9 @@ class ServiceLogin {
       print(getData);
       MLogin data = MLogin.fromJson(getData);
       $loginToken.sink$(data.token);
+      hiveMLogin.put(id, data);
+      print(hiveMLogin.toMap());
+
       return data;
     } else {
       throw Exception('failed to load Data');

@@ -1,7 +1,7 @@
 name: "imyong"
 description: imyong
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -12,17 +12,19 @@ dependencies:
   http: ^0.13.4
   flutter:
     sdk: flutter
-    
+
   tnd_core:
     git:
-      url: 'https://git.technolda.com/Technolda/tnd_core.git'
+      url: "https://git.technolda.com/Technolda/tnd_core.git"
       ref: v2
 
   tnd_pkg_widget:
     git:
-      url: 'https://git.technolda.com/Technolda/tnd_pkg_widget.git'
+      url: "https://git.technolda.com/Technolda/tnd_pkg_widget.git"
       ref: v2
 
+  hive: 2.0.4
+  hive_flutter: 1.1.0
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
@@ -32,5 +34,4 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter:
-
   uses-material-design: true
