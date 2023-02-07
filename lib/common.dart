@@ -18,25 +18,36 @@ import 'package:imyong/preset/color.dart' as COLOR;
 import 'package:imyong/preset/url.dart' as URL;
 import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
 import 'package:imyong/preset/router.dart' as ROUTER;
+import 'package:imyong/preset/tab.dart' as TAB;
 
 import 'package:tnd_core/tnd_core.dart';
 import 'package:tnd_pkg_widget/extension.dart';
 import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
 
-//
+// global
+part 'global.dart';
 
 // service
 part 'service/type.dart';
 part 'service/login.dart';
+part 'service/guest.dart';
 
 // model
+part 'model/common.dart';
+part 'model/base.dart';
 part 'model/type.dart';
 part 'model/login.dart';
 
-// part
+// widgets
+part 'widgets/common_widgets.dart';
+
+// view
 part 'view/login.dart';
 part 'view/home.dart';
-part 'view/imyong.dart';
-part 'global.dart';
 
-// part 'extension.dart';
+// page
+part 'view/page/dashboard.dart';
+part 'view/page/question.dart';
+part 'view/page/users.dart';
+part 'view/page/maincategory.dart';
+part 'view/page/subcategory.dart';

@@ -19,9 +19,8 @@ class _ViewLoginState extends State<ViewLogin> {
           onPressed: () async {
             if (hiveMLogin.isEmpty) {
               GServiceLogin.login(id: 'horoli', pw: '1234');
-
-              //
             }
+
             if (hiveMLogin.isNotEmpty) {
               Navigator.pushNamed(
                 context,
