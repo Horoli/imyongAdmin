@@ -7,15 +7,16 @@ class ServiceType {
   ServiceType._internal();
 
   Future<MType> getType({required String inputType}) async {
-    Uri uri = Uri.parse(URL.URL + URL.TYPE);
     String encodeData = jsonEncode({"type": inputType});
 
+    final Map<String, String> _headers = {
+      "Content-Type": "application/json",
+      "token": hiveMLogin.values.first.token,
+    };
+
     final response = await http.post(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-        "token": hiveMLogin.values.first.token,
-      },
+      getRequestUri(PATH.TYPE),
+      headers: _headers,
       body: encodeData,
     );
 
@@ -25,7 +26,7 @@ class ServiceType {
     if (response.statusCode == 200) {
       dynamic getData = jsonDecode(response.body)['data'];
       print(getData);
-      MType data = MType.fromJson(getData);
+      MType data = MType.fromMap(getData);
       return data;
     } else {
       throw Exception('failed to load Data');

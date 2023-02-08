@@ -1,6 +1,45 @@
 part of '/common.dart';
 
-class MGuest {}
+// @HiveType(typeId: HIVE_ID.GUEST)
+// TODO : move to imyong APP
+class MGuest extends MCommonBase {
+  late List<String> currentQuestion;
+  late List<String> wrongQuestion;
+  MGuest._internal({
+    required this.currentQuestion,
+    required this.wrongQuestion,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+  });
+  // }) : this.tmp = tmp == 0 ? 1 : tmp;
+
+  factory MGuest.fromMap(Map<String, dynamic> item) {
+    String id = item['id'] ?? '';
+    int createdAt = item['createdAt'] ?? 0;
+    int updatedAt = item['updatedAt'] ?? 0;
+    List<String> currentQuestion =
+        List<String>.from(item['currentQuestion'] ?? []);
+    List<String> wrongQuestion = List<String>.from(item['wrongQuestion'] ?? []);
+
+    return MGuest._internal(
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      currentQuestion: currentQuestion,
+      wrongQuestion: wrongQuestion,
+    );
+  }
+
+  @override
+  Map<String, dynamic> get map => {
+        'id': id,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
+        'currentQuestion': currentQuestion,
+        'wrongQuestion': wrongQuestion,
+      };
+}
 
 class ServiceGuest {
   static ServiceGuest? _instance;
@@ -8,16 +47,17 @@ class ServiceGuest {
 
   ServiceGuest._internal();
 
-  Future<MType> getType({required String inputType}) async {
-    Uri uri = Uri.parse(URL.URL + URL.TYPE);
-    String encodeData = jsonEncode({"type": inputType});
+  final Map<String, String> _headers = {
+    "Content-Type": "application/json",
+    // "token": hiveMLogin.values.first.token,
+  };
+
+  Future<MGuest> getGuest({required String uuid}) async {
+    String encodeData = jsonEncode({"id": uuid});
 
     final response = await http.post(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-        "token": hiveMLogin.values.first.token,
-      },
+      getRequestUri(PATH.GUEST),
+      headers: _headers,
       body: encodeData,
     );
 
@@ -27,7 +67,7 @@ class ServiceGuest {
     if (response.statusCode == 200) {
       dynamic getData = jsonDecode(response.body)['data'];
       print(getData);
-      MType data = MType.fromJson(getData);
+      MGuest data = MGuest.fromMap(getData);
       return data;
     } else {
       throw Exception('failed to load Data');

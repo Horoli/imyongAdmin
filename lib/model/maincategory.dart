@@ -1,27 +1,28 @@
+
 part of '/common.dart';
 
-class MType {
+class MSubCategory {
   late List<String> type;
 
-  MType({
+  MSubCategory({
     required this.type,
   });
-
-  factory MType.fromMap(Map item) {
-    List<String> type = List<String>.from(item['type'] ?? []);
-    return MType(type: type);
-  }
 
   @override
   Map<String, dynamic> get map => {
         'type ': type,
       };
 
+  factory MSubCategory.fromMap(Map item) {
+    List<String> type = List<String>.from(item['type'] ?? []);
 
-  MType copyWith({
+    return MSubCategory(type: type);
+  }
+
+  MSubCategory copyWith({
     List<String>? type,
   }) =>
-      MType(
+      MSubCategory(
         type: type ?? this.type,
       );
 }

@@ -12,17 +12,17 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-// preset
-import 'package:imyong/preset/color.dart' as COLOR;
-import 'package:imyong/preset/url.dart' as URL;
-import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
-import 'package:imyong/preset/router.dart' as ROUTER;
-import 'package:imyong/preset/tab.dart' as TAB;
-
+import 'package:path/path.dart' as p;
 import 'package:tnd_core/tnd_core.dart';
 import 'package:tnd_pkg_widget/extension.dart';
 import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
+
+// preset
+import 'package:imyong/preset/color.dart' as COLOR;
+import 'package:imyong/preset/path.dart' as PATH;
+import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
+import 'package:imyong/preset/router.dart' as ROUTER;
+import 'package:imyong/preset/tab.dart' as TAB;
 
 // global
 part 'global.dart';
@@ -37,6 +37,8 @@ part 'model/common.dart';
 part 'model/base.dart';
 part 'model/type.dart';
 part 'model/login.dart';
+part 'model/maincategory.dart';
+part 'model/subcategory.dart';
 
 // widgets
 part 'widgets/common_widgets.dart';

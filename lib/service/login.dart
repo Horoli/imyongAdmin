@@ -10,15 +10,17 @@ class ServiceLogin {
 
   ServiceLogin._internal();
 
+  final Map<String, String> _headers = {
+    "Content-Type": "application/json",
+    // "token": hiveMLogin.values.first.token,
+  };
+
   Future<MLogin> login({required String id, required String pw}) async {
-    Uri uri = Uri.parse(URL.URL + URL.LOGIN);
     String encodeData = jsonEncode({"id": id, "pw": pw});
 
     final response = await http.post(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      getRequestUri(PATH.LOGIN),
+      headers: _headers,
       body: encodeData,
     );
 
@@ -28,7 +30,7 @@ class ServiceLogin {
     if (response.statusCode == 200) {
       dynamic getData = jsonDecode(response.body)['data'];
       print(getData);
-      MLogin data = MLogin.fromJson(getData);
+      MLogin data = MLogin.fromMap(getData);
       $loginToken.sink$(data.token);
       hiveMLogin.put('token', data);
       print(hiveMLogin.toMap());

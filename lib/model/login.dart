@@ -9,14 +9,14 @@ class MLogin {
     required this.token,
   });
 
-  factory MLogin.fromJson(Map<String, dynamic> json) {
-    String token = json['token'] ?? '';
+  factory MLogin.fromMap(Map<String, dynamic> item) {
+    String token = item['token'] ?? '';
     return MLogin(token: token);
   }
 
   @override
   Map<String, dynamic> get map => {
-        'token ': token,
+        'token': token,
       };
 
   MLogin copyWith({

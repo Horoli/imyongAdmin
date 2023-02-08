@@ -18,6 +18,7 @@ Future<void> main() async {
 void _initService() {
   GServiceType = ServiceType.getInstance();
   GServiceLogin = ServiceLogin.getInstance();
+  GServiceGuest = ServiceGuest.getInstance();
 }
 
 Future<void> _initHive() async {
