@@ -1,27 +1,27 @@
 part of '/common.dart';
 
-class MMainCategory {
-  late List<String> type;
+class MSubCategory {
+  late List<String> subCategory;
 
-  MMainCategory({
-    required this.type,
+  MSubCategory({
+    required this.subCategory,
   });
 
   @override
   Map<String, dynamic> get map => {
-        'type ': type,
+        'subcategory': subCategory,
       };
 
-  factory MMainCategory.fromMap(Map item) {
-    List<String> type = List<String>.from(item['type'] ?? []);
+  factory MSubCategory.fromMap(Map item) {
+    List<String> subCategory = List<String>.from(item['subcategory'] ?? []);
 
-    return MMainCategory(type: type);
+    return MSubCategory(subCategory: subCategory);
   }
 
-  MMainCategory copyWith({
-    List<String>? type,
+  MSubCategory copyWith({
+    List<String>? subCategory,
   }) =>
-      MMainCategory(
-        type: type ?? this.type,
+      MSubCategory(
+        subCategory: subCategory ?? this.subCategory,
       );
 }

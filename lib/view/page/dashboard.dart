@@ -18,7 +18,7 @@ class _ViewDashboardState extends State<ViewDashboard> {
         child: ElevatedButton(
           child: Text('a'),
           onPressed: () {
-            GServiceGuest.getGuest(uuid: newUUID());
+            GServiceGuest.post(uuid: newUUID());
           },
         ),
       ),

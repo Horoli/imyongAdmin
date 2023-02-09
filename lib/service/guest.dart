@@ -52,7 +52,11 @@ class ServiceGuest {
     // "token": hiveMLogin.values.first.token,
   };
 
-  Future<MGuest> getGuest({required String uuid}) async {
+  TStream<MGuest> $guests = TStream<MGuest>();
+
+  MGuest get getGuests => $guests.lastValue;
+
+  Future<MGuest> post({required String uuid}) async {
     String encodeData = jsonEncode({"id": uuid});
 
     final response = await http.post(
@@ -72,5 +76,23 @@ class ServiceGuest {
     } else {
       throw Exception('failed to load Data');
     }
+  }
+
+  Future<Map<String, MGuest>> get() async {
+    final response = await http.get(
+      getRequestUri(PATH.GUEST),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data']['guest'] ?? {});
+
+    Map<String, MGuest> convertedItem = item.map<String, MGuest>(
+        (key, value) => MapEntry(key, MGuest.fromMap(value)));
+    return convertedItem;
   }
 }

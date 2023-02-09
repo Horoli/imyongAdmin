@@ -13,12 +13,25 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   Widget build(BuildContext context) {
     //
     return buildBorderContainer(
-        child: Row(
-      children: [
-        asd().expand(),
-        Container(color: Colors.blue).expand(),
-      ],
-    ));
+      child: Row(
+        children: [
+          asd().expand(),
+          Container(color: Colors.blue).expand(),
+          TStreamBuilder(
+            stream: GServiceMainCategory.$mainCategory.browse$,
+            builder: (BuildContext context, MMainCategory value) {
+              print(value);
+              print(value.mainCategory);
+              return ListView.builder(
+                itemCount: value.mainCategory.length,
+                itemBuilder: (context, index) =>
+                    Text(value.mainCategory[index]),
+              );
+            },
+          ).expand()
+        ],
+      ),
+    );
   }
 
   Widget asd() {
@@ -31,5 +44,11 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    GServiceMainCategory.get();
   }
 }

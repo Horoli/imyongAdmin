@@ -8,5 +8,8 @@ Uri getRequestUri(String path) => Uri.parse(p.join(baseURL, path));
 late ServiceType GServiceType;
 late ServiceLogin GServiceLogin;
 late ServiceGuest GServiceGuest;
+late ServiceMainCategory GServiceMainCategory;
+late ServiceSubCategory GServiceSubCategory;
+
 
 late final Box<MLogin> hiveMLogin;

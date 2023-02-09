@@ -31,14 +31,16 @@ part 'global.dart';
 part 'service/type.dart';
 part 'service/login.dart';
 part 'service/guest.dart';
+part 'service/maincategory.dart';
+part 'service/subcategory.dart';
 
 // model
 part 'model/common.dart';
 part 'model/base.dart';
 part 'model/type.dart';
 part 'model/login.dart';
-part 'model/maincategory.dart';
 part 'model/subcategory.dart';
+part 'model/maincategory.dart';
 
 // widgets
 part 'widgets/common_widgets.dart';
@@ -50,6 +52,6 @@ part 'view/home.dart';
 // page
 part 'view/page/dashboard.dart';
 part 'view/page/question.dart';
-part 'view/page/users.dart';
+part 'view/page/guests.dart';
 part 'view/page/maincategory.dart';
 part 'view/page/subcategory.dart';

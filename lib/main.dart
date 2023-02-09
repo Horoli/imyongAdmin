@@ -19,6 +19,8 @@ void _initService() {
   GServiceType = ServiceType.getInstance();
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
+  GServiceMainCategory = ServiceMainCategory.getInstance();
+  GServiceSubCategory = ServiceSubCategory.getInstance();
 }
 
 Future<void> _initHive() async {

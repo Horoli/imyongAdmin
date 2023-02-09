@@ -16,7 +16,7 @@ class _ViewHomeState extends State<ViewHome>
   // TODO : create widgets
   final List<Widget> testWidgets = [
     ViewDashboard(),
-    ViewUsers(),
+    ViewGuests(),
     ViewMainCategory(),
     ViewSubCategory(),
     ViewQuestion(),
