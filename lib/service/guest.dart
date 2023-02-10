@@ -52,10 +52,11 @@ class ServiceGuest {
     // "token": hiveMLogin.values.first.token,
   };
 
-  TStream<MGuest> $guests = TStream<MGuest>();
+  TStream<Map<String, MGuest>> $guest = TStream<Map<String, MGuest>>();
 
-  MGuest get getGuests => $guests.lastValue;
+  Map<String, MGuest> get getGuest => $guest.lastValue;
 
+  // TODO :
   Future<MGuest> post({required String uuid}) async {
     String encodeData = jsonEncode({"id": uuid});
 
@@ -93,6 +94,8 @@ class ServiceGuest {
 
     Map<String, MGuest> convertedItem = item.map<String, MGuest>(
         (key, value) => MapEntry(key, MGuest.fromMap(value)));
+
+    $guest.sink$(convertedItem);
     return convertedItem;
   }
 }
