@@ -7,11 +7,55 @@ class ServiceMainCategory {
 
   ServiceMainCategory._internal();
 
-  TStream<MMainCategory> $mainCategory = TStream<MMainCategory>();
+  TStream<Map<String, MMainCategory>> $mainCategory =
+      TStream<Map<String, MMainCategory>>();
 
-  MMainCategory get getMainCategory => $mainCategory.lastValue;
+  Map<String, MMainCategory> get getMainCategory => $mainCategory.lastValue;
 
-  Future<MMainCategory> get() async {
+  Future<Map<String, MMainCategory>> post({
+    required String id,
+    required String type,
+    required String maincategory,
+  }) async {
+    String encodeData = jsonEncode({
+      "id": id,
+      "type": type,
+      "maincategory": maincategory,
+    });
+
+    final Map<String, String> _headers = {
+      "Content-Type": "application/json",
+      "token": hiveMLogin.values.first.token,
+    };
+
+    final response = await http.post(
+      getRequestUri(PATH.MAINCATEGORY),
+      headers: _headers,
+      body: encodeData,
+    );
+
+    print('response $response');
+    print('responseBody ${response.body}');
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> item =
+          Map.from(jsonDecode(response.body)['data'] ?? {});
+
+      Map<String, MMainCategory> convertItem =
+          item.map<String, MMainCategory>((key, value) => MapEntry(
+                key,
+                MMainCategory.fromMap(value),
+              ));
+
+      $mainCategory.sink$(convertItem);
+
+      return convertItem;
+    } else {
+      throw Exception('failed to load Data');
+    }
+  }
+
+  Future<Map<String, MMainCategory>> get() async {
     final Map<String, String> _headers = {
       "Content-Type": "application/json",
       // "token": hiveMLogin.values.first.GServiceGuesttoken,
@@ -26,11 +70,18 @@ class ServiceMainCategory {
     print('responseBody ${response.body}');
 
     if (response.statusCode == 200) {
-      dynamic getData = jsonDecode(response.body)['data'];
-      //
-      MMainCategory data = MMainCategory.fromMap(getData);
-      $mainCategory.sink$(data);
-      return data;
+      Map<String, dynamic> item =
+          Map.from(jsonDecode(response.body)['data'] ?? {});
+
+      Map<String, MMainCategory> convertItem =
+          item.map<String, MMainCategory>((key, value) => MapEntry(
+                key,
+                MMainCategory.fromMap(value),
+              ));
+
+      $mainCategory.sink$(convertItem);
+
+      return convertItem;
     } else {
       throw Exception('failed to load Data');
     }

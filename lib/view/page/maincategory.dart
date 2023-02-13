@@ -19,13 +19,14 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
           Container(color: Colors.blue).expand(),
           TStreamBuilder(
             stream: GServiceMainCategory.$mainCategory.browse$,
-            builder: (BuildContext context, MMainCategory value) {
+            builder: (
+              BuildContext context,
+              Map<String, MMainCategory> value,
+            ) {
               print(value);
-              print(value.mainCategory);
               return ListView.builder(
-                itemCount: value.mainCategory.length,
-                itemBuilder: (context, index) =>
-                    Text(value.mainCategory[index]),
+                itemCount: value.keys.length,
+                itemBuilder: (context, index) => const Text(''),
               );
             },
           ).expand()
@@ -50,5 +51,11 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
+
+    GServiceMainCategory.post(
+      id: newUUID(),
+      type: "math",
+      maincategory: "mainFirst",
+    );
   }
 }

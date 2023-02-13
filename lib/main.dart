@@ -12,6 +12,7 @@ Future<void> main() async {
   registerHiveAdapter();
 
   _initService();
+  _getData();
   runApp(AppRoot());
 }
 
@@ -21,6 +22,10 @@ void _initService() {
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();
   GServiceSubCategory = ServiceSubCategory.getInstance();
+}
+
+void _getData() {
+  GServiceMainCategory.get();
 }
 
 Future<void> _initHive() async {

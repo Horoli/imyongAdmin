@@ -12,6 +12,8 @@ class ServiceLogin {
 
   final Map<String, String> _headers = {
     "Content-Type": "application/json",
+
+    // List<String>? mainCategory,
     // "token": hiveMLogin.values.first.token,
   };
 

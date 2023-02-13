@@ -49,9 +49,7 @@ class ServiceType {
     );
 
     if (response.statusCode == 200) {
-      dynamic getData = jsonDecode(response.body)['data'];
-      //
-      MType data = MType.fromMap(getData);
+      MType data = MType.fromMap(jsonDecode(response.body)['data'] ?? {});
       $type.sink$(data);
       return data;
     } else {

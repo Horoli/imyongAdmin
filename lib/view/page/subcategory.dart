@@ -17,12 +17,11 @@ class _ViewSubCategoryState extends State<ViewSubCategory> {
         color: Colors.blue,
         child: TStreamBuilder(
           stream: GServiceSubCategory.$subCategory.browse$,
-          builder: (BuildContext context, MSubCategory value) {
+          builder: (BuildContext context, Map<String, MSubCategory> value) {
             print(value);
-            print(value.subCategory);
             return ListView.builder(
-              itemCount: value.subCategory.length,
-              itemBuilder: (context, index) => Text(value.subCategory[index]),
+              itemCount: value.keys.length,
+              itemBuilder: (context, index) => const Text(''),
             );
           },
         ),
@@ -33,6 +32,12 @@ class _ViewSubCategoryState extends State<ViewSubCategory> {
   @override
   void initState() {
     super.initState();
-    GServiceSubCategory.get();
+    print(GServiceMainCategory.getMainCategory);
+
+    GServiceSubCategory.post(
+      id: newUUID(),
+      maincategory: GServiceMainCategory.getMainCategory.keys.first,
+      subcategory: "asd",
+    );
   }
 }

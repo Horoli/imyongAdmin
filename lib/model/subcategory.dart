@@ -1,27 +1,43 @@
 part of '/common.dart';
 
 class MSubCategory {
-  late List<String> subCategory;
+  final String id;
+  final String mainCategory;
+  final String subCategory;
 
   MSubCategory({
+    required this.id,
+    required this.mainCategory,
     required this.subCategory,
   });
 
   @override
   Map<String, dynamic> get map => {
-        'subcategory': subCategory,
+        'id': id,
+        'maincategory': mainCategory,
+        'subCategory': subCategory,
       };
 
   factory MSubCategory.fromMap(Map item) {
-    List<String> subCategory = List<String>.from(item['subcategory'] ?? []);
+    String id = item['id'] ?? '';
+    String subCategory = item['subcategory'] ?? '';
+    String mainCategory = item['maincategory'] ?? '';
 
-    return MSubCategory(subCategory: subCategory);
+    return MSubCategory(
+      id: id,
+      mainCategory: mainCategory,
+      subCategory: subCategory,
+    );
   }
 
   MSubCategory copyWith({
-    List<String>? subCategory,
+    String? id,
+    String? mainCategory,
+    String? subCategory,
   }) =>
       MSubCategory(
+        id: id ?? this.id,
+        mainCategory: mainCategory ?? this.mainCategory,
         subCategory: subCategory ?? this.subCategory,
       );
 }
