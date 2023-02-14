@@ -1,15 +1,16 @@
 part of '/common.dart';
 
 class MMainCategory {
-  // late List<String> mainCategory;
   final String id;
   final String type;
   final String mainCategory;
+  // final String? subCategory;
 
   MMainCategory({
     required this.id,
-    required this.mainCategory,
     required this.type,
+    required this.mainCategory,
+    // this.subCategory,
   });
 
   @override
@@ -17,17 +18,20 @@ class MMainCategory {
         'id': id,
         'type': type,
         'maincategory': mainCategory,
+        // 'subcategory': subCategory,
       };
 
   factory MMainCategory.fromMap(Map item) {
     String id = item['id'] ?? '';
     String type = item['type'] ?? '';
     String mainCategory = item['maincategory'] ?? '';
+    // String subCategory = item['subcategory'] ?? '';
 
     return MMainCategory(
       id: id,
       type: type,
       mainCategory: mainCategory,
+      // subCategory: subCategory,
     );
   }
 
@@ -35,10 +39,12 @@ class MMainCategory {
     String? id,
     String? type,
     String? mainCategory,
+    // String? subCategory,
   }) =>
       MMainCategory(
         id: id ?? this.id,
         type: type ?? this.type,
         mainCategory: mainCategory ?? this.mainCategory,
+        // subCategory: subCategory ?? this.subCategory,
       );
 }

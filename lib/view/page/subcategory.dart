@@ -38,10 +38,10 @@ class _ViewSubCategoryState extends State<ViewSubCategory> {
     GServiceSubCategory.get();
     // print(GServiceMainCategory.getMainCategory);
 
-    GServiceSubCategory.post(
-      id: newUUID(),
-      maincategory: GServiceMainCategory.getMainCategory.keys.first,
-      subcategory: "asd",
-    );
+    // GServiceSubCategory.post(
+    //   id: newUUID(),
+    //   maincategory: GServiceMainCategory.getMainCategory.keys.first,
+    //   subcategory: "asd",
+    // );
   }
 }

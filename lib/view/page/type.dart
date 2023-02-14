@@ -8,6 +8,7 @@ class ViewType extends StatefulWidget {
 }
 
 class _ViewTypeState extends State<ViewType> {
+  final TextEditingController ctrType = TextEditingController();
   //
   @override
   Widget build(BuildContext context) {
@@ -15,20 +16,45 @@ class _ViewTypeState extends State<ViewType> {
     return buildBorderContainer(
       child: Row(
         children: [
-          Container(color: Colors.blue).expand(),
+          buildEditingFields().expand(),
           TStreamBuilder(
             stream: GServiceType.$type.browse$,
             builder: (BuildContext context, MType value) {
               print(value);
               print(value.type);
-              return ListView.builder(
-                itemCount: value.type.length,
-                itemBuilder: (context, index) => Text(value.type[index]),
+              return Container(
+                color: Colors.blue,
+                child: ListView.builder(
+                  itemCount: value.type.length,
+                  itemBuilder: (context, index) => Text(value.type[index]),
+                ),
               );
             },
-          ).expand()
+          ).expand(),
+          ElevatedButton(
+            child: const Text('add'),
+            onPressed: () {
+              GServiceType.postDel(type: ctrType.text);
+            },
+          ).expand(),
+          ElevatedButton(
+            child: const Text('del'),
+            onPressed: () {
+              GServiceType.postDel(type: ctrType.text, del: true);
+            },
+          ).expand(),
         ],
       ),
+    );
+  }
+
+  Widget buildEditingFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: ctrType,
+        ).expand(),
+      ],
     );
   }
 

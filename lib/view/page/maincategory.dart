@@ -8,6 +8,8 @@ class ViewMainCategory extends StatefulWidget {
 }
 
 class _VieMainCategoryState extends State<ViewMainCategory> {
+  final TextEditingController ctrType = TextEditingController();
+  final TextEditingController ctrMainCategory = TextEditingController();
   //
   @override
   Widget build(BuildContext context) {
@@ -15,36 +17,56 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
     return buildBorderContainer(
       child: Row(
         children: [
-          asd().expand(),
-          Container(color: Colors.blue).expand(),
+          buildEditingFields().expand(),
           TStreamBuilder(
             stream: GServiceMainCategory.$mainCategory.browse$,
             builder: (
               BuildContext context,
               Map<String, MMainCategory> item,
             ) {
-              return ListView.builder(
-                itemCount: item.keys.length,
-                itemBuilder: (context, index) => Text(
-                  '${item.values.toList()[index].mainCategory}',
+              return Container(
+                color: Colors.blue,
+                child: ListView.builder(
+                  itemCount: item.keys.length,
+                  itemBuilder: (context, index) => Text(
+                    '${item.values.toList()[index].mainCategory}',
+                  ),
                 ),
               );
             },
-          ).expand()
+          ).expand(),
+          ElevatedButton(
+            child: const Text('add'),
+            onPressed: () {
+              GServiceMainCategory.post(
+                id: newUUID(),
+                type: ctrType.text,
+                maincategory: ctrMainCategory.text,
+              );
+            },
+          ).expand(),
         ],
       ),
     );
   }
 
-  Widget asd() {
-    return ListView(
-      children: List.generate(
-        50,
-        (int index) => Container(
-          height: 50,
-          color: index % 2 == 0 ? Colors.red : Colors.green,
-        ),
-      ),
+  Widget buildEditingFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: ctrType,
+          readOnly: true,
+        ).expand(),
+        TextFormField(
+          controller: ctrMainCategory,
+        ).expand(),
+        ElevatedButton(
+          onPressed: () async {
+            buildTypeDialog();
+          },
+          child: Container(),
+        ).expand(),
+      ],
     );
   }
 
@@ -52,11 +74,29 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
+    GServiceType.get();
+  }
 
-    GServiceMainCategory.post(
-      id: newUUID(),
-      type: "math",
-      maincategory: "mainFirst",
+  Future<void> buildTypeDialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(children: createList());
+      },
+    );
+  }
+
+  List<SimpleDialogOption> createList() {
+    List<String> types = GServiceType.type.type;
+    return List.generate(
+      types.length,
+      (index) => SimpleDialogOption(
+        child: Text(types[index]),
+        onPressed: () {
+          print('types[index] ${types[index]}');
+          ctrType.text = types[index];
+        },
+      ),
     );
   }
 }

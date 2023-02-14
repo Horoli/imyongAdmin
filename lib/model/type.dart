@@ -17,7 +17,6 @@ class MType {
         'type ': type,
       };
 
-
   MType copyWith({
     List<String>? type,
   }) =>
