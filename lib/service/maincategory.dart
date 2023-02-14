@@ -34,25 +34,25 @@ class ServiceMainCategory {
       body: encodeData,
     );
 
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> item =
-          Map.from(jsonDecode(response.body)['data'] ?? {});
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data'] ?? {});
 
-      Map<String, MMainCategory> convertItem =
-          item.map<String, MMainCategory>((key, value) => MapEntry(
-                key,
-                MMainCategory.fromMap(value),
-              ));
+    Map<String, MMainCategory> convertItem =
+        item.map<String, MMainCategory>((key, value) => MapEntry(
+              key,
+              MMainCategory.fromMap(value),
+            ));
 
-      $mainCategory.sink$(convertItem);
+    $mainCategory.sink$(convertItem);
 
-      return convertItem;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    return convertItem;
   }
 
   Future<Map<String, MMainCategory>> get() async {
@@ -66,24 +66,24 @@ class ServiceMainCategory {
       headers: _headers,
     );
 
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> item =
-          Map.from(jsonDecode(response.body)['data'] ?? {});
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data'] ?? {});
 
-      Map<String, MMainCategory> convertItem =
-          item.map<String, MMainCategory>((key, value) => MapEntry(
-                key,
-                MMainCategory.fromMap(value),
-              ));
+    Map<String, MMainCategory> convertItem =
+        item.map<String, MMainCategory>((key, value) => MapEntry(
+              key,
+              MMainCategory.fromMap(value),
+            ));
 
-      $mainCategory.sink$(convertItem);
+    $mainCategory.sink$(convertItem);
 
-      return convertItem;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    return convertItem;
   }
 }

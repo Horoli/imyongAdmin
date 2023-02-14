@@ -24,17 +24,17 @@ class ServiceType {
       body: encodeData,
     );
 
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      dynamic getData = jsonDecode(response.body)['data'];
-      print(getData);
-      MType data = MType.fromMap(getData);
-      return data;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    MType convertedItem =
+        MType.fromMap(jsonDecode(response.body)['data'] ?? {});
+    $type.sink$(convertedItem);
+    return convertedItem;
   }
 
   Future<MType> get() async {
@@ -48,12 +48,13 @@ class ServiceType {
       headers: _headers,
     );
 
-    if (response.statusCode == 200) {
-      MType data = MType.fromMap(jsonDecode(response.body)['data'] ?? {});
-      $type.sink$(data);
-      return data;
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('failed to load Data');
     }
+
+    MType convertedItem =
+        MType.fromMap(jsonDecode(response.body)['data'] ?? {});
+    $type.sink$(convertedItem);
+    return convertedItem;
   }
 }

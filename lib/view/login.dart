@@ -18,7 +18,7 @@ class _ViewLoginState extends State<ViewLogin> {
           child: const Text('admin Login'),
           onPressed: () async {
             if (hiveMLogin.isEmpty) {
-              GServiceLogin.login(id: 'horoli', pw: '1234');
+              GServiceLogin.post(id: 'horoli', pw: '1234');
             }
 
             if (hiveMLogin.isNotEmpty) {

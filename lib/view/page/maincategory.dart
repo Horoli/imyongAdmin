@@ -21,12 +21,13 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
             stream: GServiceMainCategory.$mainCategory.browse$,
             builder: (
               BuildContext context,
-              Map<String, MMainCategory> value,
+              Map<String, MMainCategory> item,
             ) {
-              print(value);
               return ListView.builder(
-                itemCount: value.keys.length,
-                itemBuilder: (context, index) => const Text(''),
+                itemCount: item.keys.length,
+                itemBuilder: (context, index) => Text(
+                  '${item.values.toList()[index].mainCategory}',
+                ),
               );
             },
           ).expand()

@@ -1,13 +1,13 @@
 part of '/common.dart';
 
-class ViewGuests extends StatefulWidget {
-  const ViewGuests({Key? key}) : super(key: key);
+class ViewGuest extends StatefulWidget {
+  const ViewGuest({Key? key}) : super(key: key);
 
   @override
-  _ViewGuestsState createState() => _ViewGuestsState();
+  _ViewGuestState createState() => _ViewGuestState();
 }
 
-class _ViewGuestsState extends State<ViewGuests> {
+class _ViewGuestState extends State<ViewGuest> {
   //
   @override
   Widget build(BuildContext context) {

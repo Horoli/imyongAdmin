@@ -17,7 +17,7 @@ class ServiceSubCategory {
     required String subcategory,
     required String maincategory,
   }) async {
-    String encodeData = jsonEncode({
+    String _encodeData = jsonEncode({
       "id": id,
       "maincategory": maincategory,
       "subcategory": subcategory,
@@ -31,28 +31,28 @@ class ServiceSubCategory {
     final response = await http.post(
       getRequestUri(PATH.SUBCATEGORY),
       headers: _headers,
-      body: encodeData,
+      body: _encodeData,
     );
+
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
 
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> item =
-          Map.from(jsonDecode(response.body)['data'] ?? {});
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data'] ?? {});
 
-      Map<String, MSubCategory> convertItem =
-          item.map<String, MSubCategory>((key, value) => MapEntry(
-                key,
-                MSubCategory.fromMap(value),
-              ));
+    Map<String, MSubCategory> convertedItem =
+        item.map<String, MSubCategory>((key, value) => MapEntry(
+              key,
+              MSubCategory.fromMap(value),
+            ));
 
-      $subCategory.sink$(convertItem);
+    $subCategory.sink$(convertedItem);
 
-      return convertItem;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    return convertedItem;
   }
 
   ///
@@ -68,22 +68,20 @@ class ServiceSubCategory {
       headers: _headers,
     );
 
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> item =
-          Map.from(jsonDecode(response.body)['data'] ?? {});
-      //
-      Map<String, MSubCategory> convertItem =
-          item.map<String, MSubCategory>((key, value) => MapEntry(
-                key,
-                MSubCategory.fromMap(value),
-              ));
-      $subCategory.sink$(convertItem);
-      return convertItem;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data'] ?? {});
+    //
+    Map<String, MSubCategory> convertedItem = item.map<String, MSubCategory>(
+        (key, value) => MapEntry(key, MSubCategory.fromMap(value)));
+
+    $subCategory.sink$(convertedItem);
+    return convertedItem;
   }
 }

@@ -57,7 +57,7 @@ class ServiceGuest {
   Map<String, MGuest> get getGuest => $guest.lastValue;
 
   // TODO :
-  Future<MGuest> post({required String uuid}) async {
+  Future<Map<String, MGuest>> post({required String uuid}) async {
     String encodeData = jsonEncode({"id": uuid});
 
     final response = await http.post(
@@ -66,17 +66,20 @@ class ServiceGuest {
       body: encodeData,
     );
 
+    if (response.statusCode != 200) {
+      throw Exception('failed to load Data');
+    }
+
     print('response $response');
     print('responseBody ${response.body}');
 
-    if (response.statusCode == 200) {
-      dynamic getData = jsonDecode(response.body)['data'];
-      print(getData);
-      MGuest data = MGuest.fromMap(getData);
-      return data;
-    } else {
-      throw Exception('failed to load Data');
-    }
+    Map<String, dynamic> item =
+        Map.from(jsonDecode(response.body)['data']['guest'] ?? {});
+    Map<String, MGuest> convertedItem = item.map<String, MGuest>(
+        (key, value) => MapEntry(key, MGuest.fromMap(value)));
+
+    $guest.sink$(convertedItem);
+    return convertedItem;
   }
 
   Future<Map<String, MGuest>> get() async {
