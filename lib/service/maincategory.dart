@@ -34,6 +34,8 @@ class ServiceMainCategory {
       body: encodeData,
     );
 
+    print('response ${response.body}');
+
     if (response.statusCode != 200) {
       throw Exception('failed to load Data');
     }

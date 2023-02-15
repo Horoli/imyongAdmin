@@ -14,12 +14,12 @@ class _ViewHomeState extends State<ViewHome>
   late int selectedIndex = 0;
   final List<String> tabs = TAB.SIDE_TAB;
   // TODO : create widgets
-  final List<Widget> testWidgets = [
+  final List<Widget> tabsView = [
     ViewDashboard(),
     ViewGuest(),
     ViewType(),
     ViewMainCategory(),
-    ViewSubCategory(),
+    // ViewSubCategory(),
     ViewQuestion(),
   ];
 
@@ -44,7 +44,7 @@ class _ViewHomeState extends State<ViewHome>
           ).expand(),
           TabBarView(
             controller: ctrTab,
-            children: testWidgets,
+            children: tabsView,
           ).expand(flex: 5)
         ],
       ),

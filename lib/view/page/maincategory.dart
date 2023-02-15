@@ -10,6 +10,7 @@ class ViewMainCategory extends StatefulWidget {
 class _VieMainCategoryState extends State<ViewMainCategory> {
   final TextEditingController ctrType = TextEditingController();
   final TextEditingController ctrMainCategory = TextEditingController();
+
   //
   @override
   Widget build(BuildContext context) {
@@ -18,31 +19,17 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
       child: Row(
         children: [
           buildEditingFields().expand(),
-          TStreamBuilder(
-            stream: GServiceMainCategory.$mainCategory.browse$,
-            builder: (
-              BuildContext context,
-              Map<String, MMainCategory> item,
-            ) {
-              return Container(
-                color: Colors.blue,
-                child: ListView.builder(
-                  itemCount: item.keys.length,
-                  itemBuilder: (context, index) => Text(
-                    '${item.values.toList()[index].mainCategory}',
-                  ),
-                ),
-              );
-            },
-          ).expand(),
+          buildStreamList().expand(),
           ElevatedButton(
             child: const Text('add'),
             onPressed: () {
-              GServiceMainCategory.post(
-                id: newUUID(),
-                type: ctrType.text,
-                maincategory: ctrMainCategory.text,
-              );
+              if (ctrType.text != "") {
+                GServiceMainCategory.post(
+                  id: newUUID(),
+                  type: ctrType.text,
+                  maincategory: ctrMainCategory.text,
+                );
+              }
             },
           ).expand(),
         ],
@@ -70,6 +57,46 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
     );
   }
 
+  Widget buildStreamList() {
+    return TStreamBuilder(
+      stream: GServiceMainCategory.$mainCategory.browse$,
+      builder: (BuildContext context, Map<String, MMainCategory> item) {
+        List<MMainCategory> mainCATs = item.values.toList();
+        // TODO : type을 선택한 경우, filteredMAinCATs를 생성한 뒤 ListView를 그림
+        if (ctrType.text != "") {
+          List<MMainCategory> filteredMainCATs = [];
+          for (MMainCategory cat in mainCATs) {
+            if (cat.type == ctrType.text) {
+              filteredMainCATs.add(cat);
+            }
+          }
+          return buildListView(filteredMainCATs);
+        }
+
+        // TODO : type을 선택하지 않은 경우 모든 CATs를 return
+        return buildListView(mainCATs);
+      },
+    );
+  }
+
+  Widget buildListView(List<MMainCategory> items) {
+    return Container(
+      color: Colors.blue,
+      child: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          MMainCategory mainCAT = items[index];
+          return Row(
+            children: [
+              Text('${mainCAT.type}').expand(),
+              Text('${mainCAT.mainCategory}').expand(),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -93,8 +120,9 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
       (index) => SimpleDialogOption(
         child: Text(types[index]),
         onPressed: () {
-          print('types[index] ${types[index]}');
-          ctrType.text = types[index];
+          setState(() {
+            ctrType.text = types[index];
+          });
         },
       ),
     );

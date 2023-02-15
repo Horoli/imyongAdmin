@@ -27,6 +27,9 @@ class ServiceType {
 
     MType convertedItem =
         MType.fromMap(jsonDecode(response.body)['data'] ?? {});
+
+    // TODO : type을 선택할 경우, 빈값을 선택 할 수 있도록 0번째에 빈값을 추가
+    convertedItem.type.insert(0, '');
     $type.sink$(convertedItem);
     return convertedItem;
   }
@@ -61,8 +64,8 @@ class ServiceType {
     }
 
     if (response.statusCode != 200) {
-      String asd = response.body;
-      throw Exception(asd);
+      String error = response.body;
+      throw Exception(error);
     }
 
     print('response $response');
@@ -73,30 +76,4 @@ class ServiceType {
     $type.sink$(convertedItem);
     return convertedItem;
   }
-
-  // Future<MType> del({required String type}) async {
-  //   String encodeData = jsonEncode({"type": type});
-
-  //   final Map<String, String> _headers = {
-  //     "Content-Type": "application/json",
-  //     "token": hiveMLogin.values.first.token,
-  //   };
-
-  //   final response = await http.delete(
-  //     getRequestUri(PATH.TYPE),
-  //     headers: _headers,
-  //     body: encodeData,
-  //   );
-
-  //   if (response.statusCode != 200) {
-  //     String asd = response.body;
-  //     // return response;
-  //     throw Exception(asd);
-  //   }
-
-  //   MType convertedItem =
-  //       MType.fromMap(jsonDecode(response.body)['data'] ?? {});
-  //   $type.sink$(convertedItem);
-  //   return convertedItem;
-  // }
 }

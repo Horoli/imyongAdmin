@@ -21,7 +21,7 @@ void _initService() {
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();
-  GServiceSubCategory = ServiceSubCategory.getInstance();
+  // GServiceSubCategory = ServiceSubCategory.getInstance();
 }
 
 void _getData() {
@@ -41,14 +41,13 @@ class AppRoot extends StatelessWidget {
   final Map<String, Widget Function(BuildContext)> routes = {
     ROUTER.LOGIN: (BuildContext context) => ViewLogin(),
     ROUTER.HOME: (BuildContext context) => ViewHome(),
-    // ROUTER.LOTTO: (BuildContext context) => ViewLotto(),
-    // ROUTER.CONVERT: (BuildContext context) => ViewConvertText(),
   };
 
   @override
   Widget build(BuildContext context) {
     //
     return MaterialApp(
+      // theme: ThemeData.dark(),
       title: 'imyong',
       initialRoute: ROUTER.LOGIN,
       routes: routes,

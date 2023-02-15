@@ -3,6 +3,6 @@ const List<String> SIDE_TAB = [
   'Guests',
   'Type',
   'MainCategory',
-  'SubCategory',
+  // 'SubCategory',
   'Questions',
 ];
