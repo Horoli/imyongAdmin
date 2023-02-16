@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 class ServiceMainCategory {
   static ServiceMainCategory? _instance;

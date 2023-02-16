@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 class MSubCategory {
   final String id;

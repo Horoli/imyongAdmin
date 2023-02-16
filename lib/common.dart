@@ -24,23 +24,12 @@ import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
 import 'package:imyong/preset/router.dart' as ROUTER;
 import 'package:imyong/preset/tab.dart' as TAB;
 
+// import inner packages
+import 'package:imyong/service/lib.dart';
+import 'package:imyong/model/lib.dart';
+
 // global
 part 'global.dart';
-
-// service
-part 'service/type.dart';
-part 'service/login.dart';
-part 'service/guest.dart';
-part 'service/maincategory.dart';
-part 'service/subcategory.dart';
-
-// model
-part 'model/common.dart';
-part 'model/base.dart';
-part 'model/type.dart';
-part 'model/login.dart';
-part 'model/subcategory.dart';
-part 'model/maincategory.dart';
 
 // widgets
 part 'widgets/common_widgets.dart';
@@ -56,3 +45,4 @@ part 'view/page/guest.dart';
 part 'view/page/maincategory.dart';
 // part 'view/page/subcategory.dart';
 part 'view/page/type.dart';
+part 'view/page/setting.dart';

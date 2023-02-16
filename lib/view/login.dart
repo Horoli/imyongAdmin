@@ -22,6 +22,15 @@ class _ViewLoginState extends State<ViewLogin> {
             }
 
             if (hiveMLogin.isNotEmpty) {
+              // TODO : TEST THEME CODE, MUST DELETE
+              if (hiveTheme.values.toString() == 'light') {
+                GServiceTheme.$theme.sink$(GServiceTheme.light());
+              }
+
+              // TODO : TEST THEME CODE, MUST DELETE
+              if (hiveTheme.values.toString() == 'dark') {
+                GServiceTheme.$theme.sink$(GServiceTheme.dark());
+              }
               Navigator.pushNamed(
                 context,
                 ROUTER.HOME,

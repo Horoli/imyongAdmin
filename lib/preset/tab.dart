@@ -5,4 +5,5 @@ const List<String> SIDE_TAB = [
   'MainCategory',
   // 'SubCategory',
   'Questions',
+  'Setting',
 ];

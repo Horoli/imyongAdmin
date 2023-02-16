@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 @HiveType(typeId: HIVE_ID.LOGIN)
 class MLogin {

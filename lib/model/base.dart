@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 abstract class MCommonBase extends CommonModel {
   final String id;

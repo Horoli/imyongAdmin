@@ -3,13 +3,16 @@ import 'package:imyong/common.dart';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:imyong/service/lib.dart';
+import 'package:imyong/model/lib.dart';
+import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
 import 'preset/router.dart' as ROUTER;
 import 'preset/color.dart' as COLOR;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _initHive();
-  registerHiveAdapter();
+  _registerHiveAdapter();
 
   _initService();
   _getData();
@@ -17,6 +20,7 @@ Future<void> main() async {
 }
 
 void _initService() {
+  GServiceTheme = ServiceTheme.getInstance();
   GServiceType = ServiceType.getInstance();
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
@@ -31,9 +35,10 @@ void _getData() {
 Future<void> _initHive() async {
   await Hive.initFlutter();
   hiveMLogin = await Hive.openBox('login');
+  hiveTheme = await Hive.openBox('theme');
 }
 
-void registerHiveAdapter() {
+void _registerHiveAdapter() {
   Hive.registerAdapter<MLogin>(MLoginAdapter());
 }
 
@@ -45,12 +50,16 @@ class AppRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //
-    return MaterialApp(
-      // theme: ThemeData.dark(),
-      title: 'imyong',
-      initialRoute: ROUTER.LOGIN,
-      routes: routes,
+    return TStreamBuilder(
+      stream: GServiceTheme.$theme.browse$,
+      builder: (context, ThemeData theme) {
+        return MaterialApp(
+          theme: theme,
+          title: 'imyong',
+          initialRoute: ROUTER.LOGIN,
+          routes: routes,
+        );
+      },
     );
   }
 }

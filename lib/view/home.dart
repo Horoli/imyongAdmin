@@ -21,6 +21,7 @@ class _ViewHomeState extends State<ViewHome>
     ViewMainCategory(),
     // ViewSubCategory(),
     ViewQuestion(),
+    ViewSetting(),
   ];
 
   @override

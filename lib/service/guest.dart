@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 // @HiveType(typeId: HIVE_ID.GUEST)
 // TODO : move to imyong APP

@@ -1,4 +1,4 @@
-part of '/common.dart';
+part of 'lib.dart';
 
 abstract class CommonModel {
   Map<String, dynamic> get map;
