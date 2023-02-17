@@ -52,7 +52,9 @@ class _ViewLoginState extends State<ViewLogin> {
   Widget buildTextField(TextEditingController ctr) {
     return TextFormField(
       controller: ctr,
-      // maxLines: 1,
+      expands: true,
+      maxLines: null,
+      maxLength: null,
       textAlign: TextAlign.center,
       textAlignVertical: TextAlignVertical.center,
       decoration: const InputDecoration(

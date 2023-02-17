@@ -31,9 +31,7 @@ class ServiceLogin {
     );
 
     if (response.statusCode != 200) {
-      // print('response ${response.statusCode}');
-      // hiveMLogin.put('token', MLogin(token: ''));
-      // print(hiveMLogin.values);
+      hiveMLogin.put('token', MLogin(token: ''));
       throw Exception('failed to load Data');
     }
 
