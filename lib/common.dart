@@ -23,6 +23,7 @@ import 'package:imyong/preset/path.dart' as PATH;
 import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
 import 'package:imyong/preset/router.dart' as ROUTER;
 import 'package:imyong/preset/tab.dart' as TAB;
+import 'package:imyong/preset/theme.dart' as THEME;
 
 // import inner packages
 import 'package:imyong/service/lib.dart';
@@ -34,9 +35,12 @@ part 'global.dart';
 // widgets
 part 'widgets/common_widgets.dart';
 
+part 'helper/navigator.dart';
+
 // view
 part 'view/login.dart';
 part 'view/home.dart';
+// part 'view/loading.dart';
 
 // page
 part 'view/page/dashboard.dart';

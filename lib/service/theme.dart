@@ -6,31 +6,28 @@ class ServiceTheme {
 
   ServiceTheme._internal();
 
-  late final TStream<ThemeData> $theme = TStream<ThemeData>()..sink$(light());
+  late final TStream<ThemeData> $theme = TStream<ThemeData>()
+    ..sink$(THEME.LIGHT);
 
   ThemeData get theme => $theme.lastValue;
 
-  void fetch(ThemeData inputTheme) {
-    $theme.sink$(inputTheme);
+  late final Box<int> _box;
+
+  StreamSubscription<BoxEvent>? _subBox;
+
+  Future<void> fetch() async {
+    if (!Hive.isBoxOpen('theme')) {
+      _box = await Hive.openBox('theme');
+    }
+
+    _subBox ??= _box.watch().listen((event) {
+      int index = event.value;
+      $theme.sink$(THEME.THEMEDATA_LIST[index]);
+    });
   }
 
-  ThemeData dark() {
-    return ThemeData.dark().copyWith(
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.grey[700]),
-        ),
-      ),
-    );
-  }
-
-  ThemeData light() {
-    return ThemeData.light().copyWith(
-        // elevatedButtonTheme: ElevatedButtonThemeData(
-        //   style: ButtonStyle(
-        //     backgroundColor: MaterialStateProperty.all(Colors.grey[700]),
-        //   ),
-        // ),
-        );
+  void update(THEME.Type type) {
+    int index = THEME.TYPE_LIST.indexOf(type);
+    _box.put('theme', index);
   }
 }

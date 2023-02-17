@@ -13,14 +13,22 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _initHive();
   _registerHiveAdapter();
-
   _initService();
   _getData();
   runApp(AppRoot());
 }
 
+Future<void> _initHive() async {
+  await Hive.initFlutter();
+  hiveMLogin = await Hive.openBox('login');
+  GServiceTheme.fetch();
+}
+
+Future<void> _registerHiveAdapter() async {
+  Hive.registerAdapter<MLogin>(MLoginAdapter());
+}
+
 void _initService() {
-  GServiceTheme = ServiceTheme.getInstance();
   GServiceType = ServiceType.getInstance();
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
@@ -32,19 +40,10 @@ void _getData() {
   GServiceMainCategory.get();
 }
 
-Future<void> _initHive() async {
-  await Hive.initFlutter();
-  hiveMLogin = await Hive.openBox('login');
-  hiveTheme = await Hive.openBox('theme');
-}
-
-void _registerHiveAdapter() {
-  Hive.registerAdapter<MLogin>(MLoginAdapter());
-}
-
 class AppRoot extends StatelessWidget {
   final Map<String, Widget Function(BuildContext)> routes = {
     ROUTER.LOGIN: (BuildContext context) => ViewLogin(),
+    // ROUTER.LOADING: (BuildContext context) => ViewLoading(),
     ROUTER.HOME: (BuildContext context) => ViewHome(),
   };
 
@@ -56,6 +55,7 @@ class AppRoot extends StatelessWidget {
         return MaterialApp(
           theme: theme,
           title: 'imyong',
+          navigatorKey: GNavigatorKey,
           initialRoute: ROUTER.LOGIN,
           routes: routes,
         );

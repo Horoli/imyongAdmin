@@ -1,3 +1,3 @@
-const String HOME = '/';
-const String LOGIN = '/login';
-const String LOTTO = '/lotto';
+const String HOME = '/home';
+const String LOGIN = '/';
+// const String LOADING = '/';

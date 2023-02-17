@@ -15,6 +15,12 @@ class ServiceLogin {
     // "token": hiveMLogin.values.first.token,
   };
 
+  void hiveBoxlistener() {
+    hiveMLogin.watch().listen((event) {
+      print('event $event');
+    });
+  }
+
   Future<MLogin> post({required String id, required String pw}) async {
     String encodeData = jsonEncode({"id": id, "pw": pw});
 
@@ -25,6 +31,9 @@ class ServiceLogin {
     );
 
     if (response.statusCode != 200) {
+      // print('response ${response.statusCode}');
+      // hiveMLogin.put('token', MLogin(token: ''));
+      // print(hiveMLogin.values);
       throw Exception('failed to load Data');
     }
 
