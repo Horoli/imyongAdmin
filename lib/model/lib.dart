@@ -22,3 +22,4 @@ part 'login.dart';
 part 'type.dart';
 part 'maincategory.dart';
 part 'subcategory.dart';
+part 'restful_result.dart';

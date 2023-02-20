@@ -14,7 +14,7 @@ Future<void> main() async {
   _initHive();
   _registerHiveAdapter();
   _initService();
-  _getData();
+  // _getData();
   runApp(AppRoot());
 }
 
@@ -36,9 +36,9 @@ void _initService() {
   // GServiceSubCategory = ServiceSubCategory.getInstance();
 }
 
-void _getData() {
-  GServiceMainCategory.get();
-}
+// void _getData() {
+//   GServiceMainCategory.get();
+// }
 
 class AppRoot extends StatelessWidget {
   final Map<String, Widget Function(BuildContext)> routes = {
