@@ -65,7 +65,10 @@ class _ViewLoginState extends State<ViewLogin> {
                             return GHelperNavigator.pushHome();
                           }
 
-                          return buildDialog(result.message, result.statusCode);
+                          return buildDialog(
+                            result.message,
+                            result.statusCode,
+                          );
                         },
                       ),
                     ).expand(),

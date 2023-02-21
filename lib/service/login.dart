@@ -11,7 +11,7 @@ class ServiceLogin {
   ServiceLogin._internal();
 
   final Map<String, String> _headers = {
-    "Content-Type": "application/json",
+    HEADER.CONTENT_TYPE: HEADER.JSON,
     // "token": hiveMLogin.values.first.token,
   };
 
@@ -30,13 +30,13 @@ class ServiceLogin {
         .then((response) {
           if (response == null) {
             return completer.complete(RestfulResult(
-              statusCode: 400,
-              message: 'unknown error.',
+              statusCode: STATUS.UNKNOWN_CODE,
+              message: STATUS.UNKNOWN_MSG,
             ));
           }
           Map result = json.decode(response.body);
 
-          if (response.statusCode == 200) {
+          if (response.statusCode == STATUS.SUCCESS_CODE) {
             MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
             $loginToken.sink$(convertedItem.token);
             hiveMLogin.put('token', convertedItem);
@@ -52,8 +52,8 @@ class ServiceLogin {
         .catchError(
           (error) => completer.complete(
             RestfulResult(
-              statusCode: 503,
-              message: 'server connection failed.',
+              statusCode: STATUS.CONNECTION_FAILED_CODE,
+              message: STATUS.CONNECTION_FAILED_MSG,
             ),
           ),
         )
@@ -61,47 +61,12 @@ class ServiceLogin {
           const Duration(milliseconds: 5000),
           onTimeout: () => completer.complete(
             RestfulResult(
-              statusCode: 503,
-              message: 'Request Timeout.',
+              statusCode: STATUS.CONNECTION_FAILED_CODE,
+              message: STATUS.REQUEST_TIMEOUT,
             ),
           ),
         );
 
     return completer.future;
-
-    // : RestfulResult(
-    //     statusCode: 503, message: 'server connection failed.');
-    // bool connectionCheck = false;
-    // String encodeData = jsonEncode({"id": id, "pw": pw});
-
-    // return await http
-    //     .post(getRequestUri(PATH.LOGIN), headers: _headers, body: encodeData)
-    //     .catchError((error) {
-    //   connectionCheck = false;
-    // }).then(
-    //   (response) {
-    //     late Map result;
-
-    //     if (connectionCheck) {
-    //       result = json.decode(response.body);
-    //       if (response.statusCode == 200) {
-    //         MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
-    //         $loginToken.sink$(convertedItem.token);
-    //         hiveMLogin.put('token', convertedItem);
-    //       } else {
-    //         hiveMLogin.put('token', MLogin(token: ''));
-    //       }
-    //     }
-
-    //     // if (response.statusCode != 200) {
-    //     //   throw Exception('failed to load Data');
-    //     // }
-
-    //     return connectionCheck
-    //         ? RestfulResult.fromMap(result, response.statusCode)
-    //         : RestfulResult(
-    //             statusCode: 503, message: 'server connection failed.');
-    //   },
-    // );
   }
 }

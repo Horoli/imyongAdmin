@@ -17,6 +17,8 @@ import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
 import 'package:imyong/preset/router.dart' as ROUTER;
 import 'package:imyong/preset/tab.dart' as TAB;
 import 'package:imyong/preset/theme.dart' as THEME;
+import 'package:imyong/preset/status.dart' as STATUS;
+import 'package:imyong/preset/header.dart' as HEADER;
 
 part 'guest.dart';
 part 'login.dart';

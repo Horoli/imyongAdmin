@@ -24,8 +24,8 @@ class ServiceSubCategory {
     });
 
     final Map<String, String> _headers = {
-      "Content-Type": "application/json",
-      "token": hiveMLogin.values.first.token,
+      HEADER.CONTENT_TYPE: HEADER.JSON,
+      HEADER.TOKEN: hiveMLogin.values.first.token,
     };
 
     final response = await http.post(
@@ -34,8 +34,8 @@ class ServiceSubCategory {
       body: _encodeData,
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('failed to load Data');
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
+      throw Exception(STATUS.LOAD_FAILED_MSG);
     }
 
     print('response $response');
@@ -59,8 +59,8 @@ class ServiceSubCategory {
   ///
   Future<Map<String, MSubCategory>> get() async {
     final Map<String, String> _headers = {
-      "Content-Type": "application/json",
-      "token": hiveMLogin.values.first.token,
+      HEADER.CONTENT_TYPE: HEADER.JSON,
+      HEADER.TOKEN: hiveMLogin.values.first.token,
     };
 
     final response = await http.get(
@@ -68,8 +68,8 @@ class ServiceSubCategory {
       headers: _headers,
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('failed to load Data');
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
+      throw Exception(STATUS.LOAD_FAILED_MSG);
     }
 
     print('response $response');

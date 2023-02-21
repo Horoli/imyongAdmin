@@ -48,7 +48,7 @@ class ServiceGuest {
   ServiceGuest._internal();
 
   final Map<String, String> _headers = {
-    "Content-Type": "application/json",
+    HEADER.CONTENT_TYPE: HEADER.JSON,
     // "token": hiveMLogin.values.first.token,
   };
 
@@ -66,8 +66,8 @@ class ServiceGuest {
       body: encodeData,
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('failed to load Data');
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
+      throw Exception(STATUS.LOAD_FAILED_MSG);
     }
 
     print('response $response');
@@ -88,8 +88,8 @@ class ServiceGuest {
       headers: _headers,
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('failed to load Data');
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
+      throw Exception(STATUS.LOAD_FAILED_MSG);
     }
 
     Map<String, dynamic> item =

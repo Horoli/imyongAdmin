@@ -12,7 +12,7 @@ class ServiceType {
 
   Future<MType> get() async {
     final Map<String, String> _headers = {
-      "Content-Type": "application/json",
+      HEADER.CONTENT_TYPE: HEADER.JSON,
       // "token": hiveMLogin.values.first.GServiceGuesttoken,
     };
 
@@ -21,8 +21,8 @@ class ServiceType {
       headers: _headers,
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('failed to load Data');
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
+      throw Exception(STATUS.LOAD_FAILED_MSG);
     }
 
     MType convertedItem =
@@ -41,11 +41,11 @@ class ServiceType {
     String encodeData = jsonEncode({"type": type});
 
     final Map<String, String> _headers = {
-      "Content-Type": "application/json",
-      "token": hiveMLogin.values.first.token,
+      HEADER.CONTENT_TYPE: HEADER.JSON,
+      HEADER.TOKEN: hiveMLogin.values.first.token,
     };
 
-    late final response;
+    late final http.Response response;
 
     if (del) {
       response = await http.delete(
@@ -63,7 +63,7 @@ class ServiceType {
       );
     }
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != STATUS.SUCCESS_CODE) {
       String error = response.body;
       throw Exception(error);
     }
