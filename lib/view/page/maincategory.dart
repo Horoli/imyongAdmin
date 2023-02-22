@@ -24,7 +24,7 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
             child: const Text('add'),
             onPressed: () {
               if (ctrType.text != "") {
-                GServiceMainCategory.post(
+                GServiceMainCategory.comPost(
                   id: newUUID(),
                   type: ctrType.text,
                   maincategory: ctrMainCategory.text,

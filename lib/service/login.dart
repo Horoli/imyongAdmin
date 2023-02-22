@@ -28,44 +28,43 @@ class ServiceLogin {
     http
         .post(getRequestUri(PATH.LOGIN), headers: _headers, body: encodeData)
         .then((response) {
-          if (response == null) {
-            return completer.complete(RestfulResult(
-              statusCode: STATUS.UNKNOWN_CODE,
-              message: STATUS.UNKNOWN_MSG,
-            ));
-          }
-          Map result = json.decode(response.body);
+      if (response == null) {
+        return completer.complete(RestfulResult(
+          statusCode: STATUS.UNKNOWN_CODE,
+          message: STATUS.UNKNOWN_MSG,
+        ));
+      }
+      Map result = json.decode(response.body);
 
-          if (response.statusCode == STATUS.SUCCESS_CODE) {
-            MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
-            $loginToken.sink$(convertedItem.token);
-            hiveMLogin.put('token', convertedItem);
-          } else {
-            hiveMLogin.put('token', MLogin(token: ''));
-          }
+      if (response.statusCode == STATUS.SUCCESS_CODE) {
+        MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
+        $loginToken.sink$(convertedItem.token);
+        hiveMLogin.put('token', convertedItem);
+      } else {
+        hiveMLogin.put('token', MLogin(token: ''));
+      }
 
-          return completer.complete(RestfulResult.fromMap(
-            result,
-            response.statusCode,
-          ));
-        })
-        .catchError(
-          (error) => completer.complete(
-            RestfulResult(
-              statusCode: STATUS.CONNECTION_FAILED_CODE,
-              message: STATUS.CONNECTION_FAILED_MSG,
-            ),
-          ),
-        )
-        .timeout(
-          const Duration(milliseconds: 5000),
-          onTimeout: () => completer.complete(
-            RestfulResult(
-              statusCode: STATUS.CONNECTION_FAILED_CODE,
-              message: STATUS.REQUEST_TIMEOUT,
-            ),
-          ),
-        );
+      return completer.complete(RestfulResult.fromMap(
+        result,
+        response.statusCode,
+      ));
+    }).catchError((error) {
+      print('Error: $error');
+      return completer.complete(
+        RestfulResult(
+          statusCode: STATUS.CONNECTION_FAILED_CODE,
+          message: STATUS.CONNECTION_FAILED_MSG,
+        ),
+      );
+    }).timeout(
+      const Duration(milliseconds: 5000),
+      onTimeout: () => completer.complete(
+        RestfulResult(
+          statusCode: STATUS.CONNECTION_FAILED_CODE,
+          message: STATUS.REQUEST_TIMEOUT,
+        ),
+      ),
+    );
 
     return completer.future;
   }

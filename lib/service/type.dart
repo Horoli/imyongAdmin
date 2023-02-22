@@ -10,6 +10,7 @@ class ServiceType {
 
   MType get type => $type.lastValue;
 
+  // TODO : return type을 completer로 수정,
   Future<MType> get() async {
     final Map<String, String> _headers = {
       HEADER.CONTENT_TYPE: HEADER.JSON,

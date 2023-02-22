@@ -132,6 +132,10 @@ class _ViewLoginState extends State<ViewLogin> {
       },
     );
 
+    Timer(const Duration(milliseconds: 3000), () {
+      GHelperNavigator.pushLogin();
+    });
+
     // GServiceLogin.post(id: ctrID.text, pw: ctrPW.text);
 
     //   if (hiveMLogin.isEmpty) {

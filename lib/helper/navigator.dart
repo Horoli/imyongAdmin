@@ -9,15 +9,15 @@ class HelperNavigator {
 
   BuildContext get context => GNavigatorKey.currentContext!;
 
-  // void pushLogin() {
-  //   //
-  //   Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(
-  //       settings: const RouteSettings(name: ROUTER.LOGIN),
-  //       builder: (BuildContext context) => ViewLogin(),
-  //     ),
-  //   );
-  // }
+  void pushLogin() {
+    //
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        settings: const RouteSettings(name: ROUTER.LOGIN),
+        builder: (BuildContext context) => ViewLogin(),
+      ),
+    );
+  }
 
   void pushHome() {
     //
