@@ -47,10 +47,10 @@ class ServiceGuest {
 
   ServiceGuest._internal();
 
-  final Map<String, String> _headers = {
-    HEADER.CONTENT_TYPE: HEADER.JSON,
-    // "token": hiveMLogin.values.first.token,
-  };
+  // final Map<String, String> _headers = {
+  //   HEADER.CONTENT_TYPE: HEADER.JSON,
+  //   // "token": hiveMLogin.values.first.token,
+  // };
 
   TStream<Map<String, MGuest>> $guest = TStream<Map<String, MGuest>>();
 
@@ -62,7 +62,7 @@ class ServiceGuest {
 
     final response = await http.post(
       getRequestUri(PATH.GUEST),
-      headers: _headers,
+      headers: createHeaders(),
       body: encodeData,
     );
 
@@ -85,7 +85,7 @@ class ServiceGuest {
   Future<Map<String, MGuest>> get() async {
     final response = await http.get(
       getRequestUri(PATH.GUEST),
-      headers: _headers,
+      headers: createHeaders(),
     );
 
     if (response.statusCode != STATUS.SUCCESS_CODE) {

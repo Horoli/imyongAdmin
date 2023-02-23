@@ -15,21 +15,11 @@ class ServiceMainCategory {
   // TODO : return type을 completer로 수정,
   // TODO : completer 처리 시 token 만료 여부 체크해서 login페이지로 보내는 기능 추가
 
-  Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
-    Map<String, String> headers = {
-      HEADER.CONTENT_TYPE: HEADER.JSON,
-    };
-    if (tokenKey != null) {
-      headers[tokenKey] = tokenValue!;
-    }
-
-    return headers;
-  }
-
-  Future<RestfulResult> comPost({
+  Future<RestfulResult> post({
     required String id,
     required String type,
     required String maincategory,
+    bool isDelete = false,
   }) async {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
@@ -44,21 +34,24 @@ class ServiceMainCategory {
       "maincategory": maincategory,
     });
 
-    http
-        .post(getRequestUri(PATH.MAINCATEGORY),
+    Future<http.Response> httpResponse = isDelete
+        ? http.delete(getRequestUri(PATH.MAINCATEGORY),
             headers: _headers, body: encodeData)
-        .then((response) {
+        : http.post(getRequestUri(PATH.MAINCATEGORY),
+            headers: _headers, body: encodeData);
+
+    httpResponse.then((response) {
       if (response == null) {
-        return completer.complete(RestfulResult(
-          statusCode: STATUS.UNKNOWN_CODE,
-          message: STATUS.UNKNOWN_MSG,
-        ));
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.UNKNOWN_CODE,
+            message: STATUS.UNKNOWN_MSG,
+          ),
+        );
       }
       Map result = json.decode(response.body);
-
       if (response.statusCode == STATUS.SUCCESS_CODE) {
         Map<String, dynamic> item = Map.from(result['data'] ?? {});
-
         Map<String, MMainCategory> convertItem =
             item.map<String, MMainCategory>((key, value) => MapEntry(
                   key,
@@ -66,49 +59,64 @@ class ServiceMainCategory {
                 ));
         $mainCategory.sink$(convertItem);
       }
-
       return completer.complete(RestfulResult.fromMap(
         result,
         response.statusCode,
       ));
-    }).catchError((error) {
-      print('Error: $error');
-      return completer.complete(
-        RestfulResult(
-          statusCode: STATUS.CONNECTION_FAILED_CODE,
-          message: STATUS.CONNECTION_FAILED_MSG,
-        ),
-      );
-    });
-
+    }).catchError(
+      (error) {
+        print('Error: $error');
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.CONNECTION_FAILED_CODE,
+            message: STATUS.CONNECTION_FAILED_MSG,
+          ),
+        );
+      },
+    );
     return completer.future;
   }
 
-  Future<Map<String, MMainCategory>> get() async {
-    final response = await http.get(
-      getRequestUri(PATH.MAINCATEGORY),
-      headers: createHeaders(),
+  Future<RestfulResult> get() async {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    http
+        .get(getRequestUri(PATH.MAINCATEGORY), headers: createHeaders())
+        .then((response) {
+      if (response == null) {
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.UNKNOWN_CODE,
+            message: STATUS.UNKNOWN_MSG,
+          ),
+        );
+      }
+      if (response.statusCode == STATUS.SUCCESS_CODE) {
+        Map<String, dynamic> item =
+            Map.from(jsonDecode(response.body)['data'] ?? {});
+        Map<String, MMainCategory> convertItem =
+            item.map<String, MMainCategory>((key, value) => MapEntry(
+                  key,
+                  MMainCategory.fromMap(value),
+                ));
+        $mainCategory.sink$(convertItem);
+        return completer.complete(RestfulResult.fromMap(
+          item,
+          STATUS.SUCCESS_CODE,
+        ));
+      }
+    }).catchError(
+      (error) {
+        print('Error: $error');
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.CONNECTION_FAILED_CODE,
+            message: STATUS.CONNECTION_FAILED_MSG,
+          ),
+        );
+      },
     );
-
-    if (response.statusCode != STATUS.SUCCESS_CODE) {
-      throw Exception(STATUS.LOAD_FAILED_MSG);
-    }
-
-    print('response $response');
-    print('responseBody ${response.body}');
-
-    Map<String, dynamic> item =
-        Map.from(jsonDecode(response.body)['data'] ?? {});
-
-    Map<String, MMainCategory> convertItem =
-        item.map<String, MMainCategory>((key, value) => MapEntry(
-              key,
-              MMainCategory.fromMap(value),
-            ));
-
-    $mainCategory.sink$(convertItem);
-
-    return convertItem;
+    return completer.future;
   }
 
   // Future<Map<String, MMainCategory>> post({

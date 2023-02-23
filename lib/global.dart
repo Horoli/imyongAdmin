@@ -7,6 +7,17 @@ final GlobalKey<NavigatorState> GNavigatorKey = GlobalKey<NavigatorState>();
 
 Uri getRequestUri(String path) => Uri.parse(p.join(baseURL, path));
 
+Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
+  Map<String, String> headers = {
+    HEADER.CONTENT_TYPE: HEADER.JSON,
+  };
+  if (tokenKey != null) {
+    headers[tokenKey] = tokenValue!;
+  }
+
+  return headers;
+}
+
 final ServiceTheme GServiceTheme = ServiceTheme.getInstance();
 late ServiceType GServiceType;
 late ServiceLogin GServiceLogin;

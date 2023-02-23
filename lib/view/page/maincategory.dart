@@ -24,10 +24,23 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
             child: const Text('add'),
             onPressed: () {
               if (ctrType.text != "") {
-                GServiceMainCategory.comPost(
+                GServiceMainCategory.post(
                   id: newUUID(),
                   type: ctrType.text,
                   maincategory: ctrMainCategory.text,
+                );
+              }
+            },
+          ).expand(),
+          ElevatedButton(
+            child: const Text('del'),
+            onPressed: () {
+              if (ctrType.text != "") {
+                GServiceMainCategory.post(
+                  id: newUUID(),
+                  type: ctrType.text,
+                  maincategory: ctrMainCategory.text,
+                  isDelete: true,
                 );
               }
             },
@@ -101,7 +114,7 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
-    GServiceType.get();
+    GServiceType.get(isCategoryView: true);
   }
 
   Future<void> buildTypeDialog() {

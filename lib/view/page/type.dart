@@ -39,8 +39,10 @@ class _ViewTypeState extends State<ViewType> {
           ).expand(),
           ElevatedButton(
             child: const Text('del'),
-            onPressed: () {
-              GServiceType.postDel(type: ctrType.text, del: true);
+            onPressed: () async {
+              RestfulResult asd = await GServiceType.postDel(
+                  type: ctrType.text, isDelete: true);
+              print(asd.data);
             },
           ).expand(),
         ],

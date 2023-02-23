@@ -10,10 +10,10 @@ class ServiceLogin {
 
   ServiceLogin._internal();
 
-  final Map<String, String> _headers = {
-    HEADER.CONTENT_TYPE: HEADER.JSON,
-    // "token": hiveMLogin.values.first.token,
-  };
+  // final Map<String, String> _headers = {
+  //   HEADER.CONTENT_TYPE: HEADER.JSON,
+  //   // "token": hiveMLogin.values.first.token,
+  // };
 
   void hiveBoxlistener() {
     hiveMLogin.watch().listen((event) {
@@ -25,8 +25,11 @@ class ServiceLogin {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     String encodeData = jsonEncode({"id": id, "pw": pw});
+
+
     http
-        .post(getRequestUri(PATH.LOGIN), headers: _headers, body: encodeData)
+        .post(getRequestUri(PATH.LOGIN),
+            headers: createHeaders(), body: encodeData)
         .then((response) {
       if (response == null) {
         return completer.complete(RestfulResult(

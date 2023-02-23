@@ -10,71 +10,101 @@ class ServiceType {
 
   MType get type => $type.lastValue;
 
-  // TODO : return type을 completer로 수정,
-  Future<MType> get() async {
-    final Map<String, String> _headers = {
-      HEADER.CONTENT_TYPE: HEADER.JSON,
-      // "token": hiveMLogin.values.first.GServiceGuesttoken,
-    };
+  Future<RestfulResult> postDel({
+    required String type,
+    bool isDelete = false,
+  }) async {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
 
-    final response = await http.get(
-      getRequestUri(PATH.TYPE),
-      headers: _headers,
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: hiveMLogin.values.first.token,
     );
 
-    if (response.statusCode != STATUS.SUCCESS_CODE) {
-      throw Exception(STATUS.LOAD_FAILED_MSG);
-    }
-
-    MType convertedItem =
-        MType.fromMap(jsonDecode(response.body)['data'] ?? {});
-
-    // TODO : type을 선택할 경우, 빈값을 선택 할 수 있도록 0번째에 빈값을 추가
-    convertedItem.type.insert(0, '');
-    $type.sink$(convertedItem);
-    return convertedItem;
-  }
-
-  Future<MType> postDel({
-    required String type,
-    bool del = false,
-  }) async {
     String encodeData = jsonEncode({"type": type});
 
-    final Map<String, String> _headers = {
-      HEADER.CONTENT_TYPE: HEADER.JSON,
-      HEADER.TOKEN: hiveMLogin.values.first.token,
-    };
+    Future<http.Response> httpResponse = isDelete
+        ? http.delete(getRequestUri(PATH.TYPE),
+            headers: _headers, body: encodeData)
+        : http.post(getRequestUri(PATH.TYPE),
+            headers: _headers, body: encodeData);
 
-    late final http.Response response;
+    httpResponse.then((response) {
+      if (response == null) {
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.UNKNOWN_CODE,
+            message: STATUS.UNKNOWN_MSG,
+          ),
+        );
+      }
 
-    if (del) {
-      response = await http.delete(
-        getRequestUri(PATH.TYPE),
-        headers: _headers,
-        body: encodeData,
+      Map result = jsonDecode(response.body);
+
+      if (response.statusCode == STATUS.SUCCESS_CODE) {
+        MType convertedItem = MType.fromMap(result['data'] ?? {});
+        $type.sink$(convertedItem);
+      }
+      return completer.complete(RestfulResult(
+        statusCode: response.statusCode,
+        data: result,
+        message: '',
+      ));
+    }).catchError((error) {
+      print('Error: $error');
+      return completer.complete(
+        RestfulResult(
+          statusCode: STATUS.CONNECTION_FAILED_CODE,
+          message: STATUS.CONNECTION_FAILED_MSG,
+        ),
       );
-    }
+    });
+    return completer.future;
+  }
 
-    if (del == false) {
-      response = await http.post(
-        getRequestUri(PATH.TYPE),
-        headers: _headers,
-        body: encodeData,
-      );
-    }
+  Future<RestfulResult> get({bool isCategoryView = false}) async {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
 
-    if (response.statusCode != STATUS.SUCCESS_CODE) {
-      String error = response.body;
-      throw Exception(error);
-    }
+    http
+        .get(getRequestUri(PATH.TYPE), headers: createHeaders())
+        .then((response) {
+      if (response == null) {
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.UNKNOWN_CODE,
+            message: STATUS.UNKNOWN_MSG,
+          ),
+        );
+      }
 
-    print('response $response');
-    print('responseBody ${response.body}');
+      Map result = jsonDecode(response.body);
 
-    MType convertedItem =
-        MType.fromMap(jsonDecode(response.body)['data'] ?? {});
-    $type.sink$(convertedItem);
-    return convertedItem;
+      if (response.statusCode == STATUS.SUCCESS_CODE) {
+        MType convertedItem = MType.fromMap(result['data'] ?? {});
+
+        // TODO : type을 선택할 경우, 빈값을 선택 할 수 있도록 0번째에 빈값을 추가
+        if (isCategoryView) {
+          convertedItem.type.insert(0, '');
+        }
+        $type.sink$(convertedItem);
+      }
+
+      return completer.complete(RestfulResult(
+        statusCode: response.statusCode,
+        data: result,
+        message: '',
+      ));
+    }).catchError(
+      (error) {
+        print('Error: $error');
+        return completer.complete(
+          RestfulResult(
+            statusCode: STATUS.CONNECTION_FAILED_CODE,
+            message: STATUS.CONNECTION_FAILED_MSG,
+          ),
+        );
+      },
+    );
+    return completer.future;
   }
 }
