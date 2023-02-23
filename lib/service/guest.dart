@@ -47,16 +47,11 @@ class ServiceGuest {
 
   ServiceGuest._internal();
 
-  // final Map<String, String> _headers = {
-  //   HEADER.CONTENT_TYPE: HEADER.JSON,
-  //   // "token": hiveMLogin.values.first.token,
-  // };
-
   TStream<Map<String, MGuest>> $guest = TStream<Map<String, MGuest>>();
 
   Map<String, MGuest> get getGuest => $guest.lastValue;
 
-  // TODO :
+  // TODO : change http.post to completer
   Future<Map<String, MGuest>> post({required String uuid}) async {
     String encodeData = jsonEncode({"id": uuid});
 
