@@ -18,33 +18,47 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
     return buildBorderContainer(
       child: Row(
         children: [
-          buildEditingFields().expand(),
-          buildStreamList().expand(),
-          ElevatedButton(
-            child: const Text('add'),
-            onPressed: () {
-              if (ctrType.text != "") {
-                // GServiceMainCategory.post(
-                //   id: newUUID(),
-                //   type: ctrType.text,
-                //   maincategory: ctrMainCategory.text,
-                // );
-              }
+          TStreamBuilder(
+            stream: GServiceMainCategory.$mainCategory.browse$,
+            builder: (BuildContext context, MainCategory category) {
+              List<String> mainCategories =
+                  List<String>.from(category.map.values);
+
+              return ListView.builder(
+                  itemCount: mainCategories.length,
+                  itemBuilder: (context, int index) {
+                    return Text(mainCategories[index]);
+                  });
             },
           ).expand(),
-          ElevatedButton(
-            child: const Text('del'),
-            onPressed: () {
-              if (ctrType.text != "") {
-                // GServiceMainCategory.post(
-                //   id: newUUID(),
-                //   type: ctrType.text,
-                //   maincategory: ctrMainCategory.text,
-                //   isDelete: true,
-                // );
-              }
-            },
-          ).expand(),
+
+          // buildEditingFields().expand(),
+          // buildStreamList().expand(),
+          // ElevatedButton(
+          //   child: const Text('add'),
+          //   onPressed: () {
+          //     if (ctrType.text != "") {
+          //       // GServiceMainCategory.post(
+          //       //   id: newUUID(),
+          //       //   type: ctrType.text,
+          //       //   maincategory: ctrMainCategory.text,
+          //       // );
+          //     }
+          //   },
+          // ).expand(),
+          // ElevatedButton(
+          //   child: const Text('del'),
+          //   onPressed: () {
+          //     if (ctrType.text != "") {
+          //       // GServiceMainCategory.post(
+          //       //   id: newUUID(),
+          //       //   type: ctrType.text,
+          //       //   maincategory: ctrMainCategory.text,
+          //       //   isDelete: true,
+          //       // );
+          //     }
+          //   },
+          // ).expand(),
         ],
       ),
     );
@@ -114,7 +128,7 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
-    GServiceType.get(isCategoryView: true);
+    // GServiceType.get(isCategoryView: true);
   }
 
   Future<void> buildTypeDialog() {

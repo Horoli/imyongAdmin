@@ -9,7 +9,7 @@ class ServiceSubCategory {
 
   TStream<List<MSubCategory>> $subCategory = TStream<List<MSubCategory>>();
 
-  List<MSubCategory> get getSubCategory => $subCategory.lastValue;
+  List<MSubCategory> get subCategory => $subCategory.lastValue;
 
   Future<RestfulResult> get({required String parent}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();

@@ -20,7 +20,7 @@ class _ViewDashboardState extends State<ViewDashboard> {
           onPressed: () {
             // GServiceGuest.post(uuid: newUUID());
             GServiceMainCategory.get();
-            GServiceSubCategory.get(parent: 'ab3aa1612dbd438a8288ca18d0bff3ee');
+            // GServiceSubCategory.get(parent: 'ab3aa1612dbd438a8288ca18d0bff3ee');
             GServiceSubCategory.get(parent: 'en');
           },
         ),
