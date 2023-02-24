@@ -33,7 +33,7 @@ void _initService() {
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();
-  // GServiceSubCategory = ServiceSubCategory.getInstance();
+  GServiceSubCategory = ServiceSubCategory.getInstance();
 }
 
 // void _getData() {

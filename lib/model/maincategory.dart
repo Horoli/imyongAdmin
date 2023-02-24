@@ -1,5 +1,35 @@
 part of 'lib.dart';
 
+class MainCategory {
+  final String en;
+  final String ko;
+  final String history;
+  MainCategory({
+    required this.en,
+    required this.ko,
+    required this.history,
+  });
+
+  @override
+  Map<String, dynamic> get map => {
+        'en': en,
+        'ko': ko,
+        'history': history,
+      };
+
+  factory MainCategory.fromMap(Map item) {
+    String en = item['en'] ?? '';
+    String ko = item['ko'] ?? '';
+    String history = item['history'] ?? '';
+
+    return MainCategory(
+      en: en,
+      ko: ko,
+      history: history,
+    );
+  }
+}
+
 class MMainCategory {
   final String id;
   final String type;

@@ -24,11 +24,11 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
             child: const Text('add'),
             onPressed: () {
               if (ctrType.text != "") {
-                GServiceMainCategory.post(
-                  id: newUUID(),
-                  type: ctrType.text,
-                  maincategory: ctrMainCategory.text,
-                );
+                // GServiceMainCategory.post(
+                //   id: newUUID(),
+                //   type: ctrType.text,
+                //   maincategory: ctrMainCategory.text,
+                // );
               }
             },
           ).expand(),
@@ -36,12 +36,12 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
             child: const Text('del'),
             onPressed: () {
               if (ctrType.text != "") {
-                GServiceMainCategory.post(
-                  id: newUUID(),
-                  type: ctrType.text,
-                  maincategory: ctrMainCategory.text,
-                  isDelete: true,
-                );
+                // GServiceMainCategory.post(
+                //   id: newUUID(),
+                //   type: ctrType.text,
+                //   maincategory: ctrMainCategory.text,
+                //   isDelete: true,
+                // );
               }
             },
           ).expand(),

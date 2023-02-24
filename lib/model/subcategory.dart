@@ -1,43 +1,61 @@
 part of 'lib.dart';
 
-class MSubCategory {
-  final String id;
-  final String mainCategory;
-  final String subCategory;
+class MSubCategory extends MCommonBase {
+  final String parent;
+  final List<String> children;
+  final String name;
 
   MSubCategory({
-    required this.id,
-    required this.mainCategory,
-    required this.subCategory,
+    required this.parent,
+    required this.name,
+    required this.children,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
   });
 
   @override
   Map<String, dynamic> get map => {
         'id': id,
-        'maincategory': mainCategory,
-        'subCategory': subCategory,
+        'parent': parent,
+        'children': children,
+        'name': name,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
       };
 
   factory MSubCategory.fromMap(Map item) {
     String id = item['id'] ?? '';
-    String subCategory = item['subcategory'] ?? '';
-    String mainCategory = item['maincategory'] ?? '';
+    String parent = item['parent'] ?? '';
+    List<String> children = List<String>.from(item['children'] ?? []);
+    String name = item['name'] ?? '';
+    int createdAt = item['createdAt'] ?? '';
+    int updatedAt = item['updatedAt'] ?? '';
 
     return MSubCategory(
       id: id,
-      mainCategory: mainCategory,
-      subCategory: subCategory,
+      parent: parent,
+      children: children,
+      name: name,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 
   MSubCategory copyWith({
     String? id,
-    String? mainCategory,
-    String? subCategory,
+    String? parent,
+    List<String>? children,
+    String? name,
+    int? createdAt,
+    int? updatedAt,
   }) =>
       MSubCategory(
         id: id ?? this.id,
-        mainCategory: mainCategory ?? this.mainCategory,
-        subCategory: subCategory ?? this.subCategory,
+        parent: parent ?? this.parent,
+        children: children ?? this.children,
+        name: name ?? this.name,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
 }

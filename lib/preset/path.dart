@@ -4,3 +4,5 @@ const String LOGIN = 'login';
 const String GUEST = 'guest';
 const String MAINCATEGORY = 'maincategory';
 const String SUBCATEGORY = 'subcategory';
+
+const String CATEGORY_QUERY = 'category?id=';

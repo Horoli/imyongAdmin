@@ -38,7 +38,6 @@ class ServiceType {
           ),
         );
       }
-
       Map result = jsonDecode(response.body);
 
       if (response.statusCode == STATUS.SUCCESS_CODE) {
