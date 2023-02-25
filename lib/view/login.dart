@@ -132,7 +132,7 @@ class _ViewLoginState extends State<ViewLogin> {
       },
     );
 
-    Timer(const Duration(milliseconds: 3000), () {
+    Timer(const Duration(milliseconds: 2000), () {
       GHelperNavigator.pushLogin();
     });
 

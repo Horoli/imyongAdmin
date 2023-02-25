@@ -17,8 +17,8 @@ class _ViewHomeState extends State<ViewHome>
   final List<Widget> tabsView = [
     ViewDashboard(),
     ViewGuest(),
-    ViewType(),
-    ViewMainCategory(),
+    ViewCategory(),
+    // ViewMainCategory(),
     // ViewSubCategory(),
     ViewQuestion(),
     ViewSetting(),

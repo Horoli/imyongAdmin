@@ -7,21 +7,22 @@ class ServiceSubCategory {
 
   ServiceSubCategory._internal();
 
-  TStream<List<MSubCategory>> $subCategory = TStream<List<MSubCategory>>();
+  final TStream<List<MSubCategory>> $subCategory =
+      TStream<List<MSubCategory>>();
 
   List<MSubCategory> get subCategory => $subCategory.lastValue;
 
-  Future<RestfulResult> get({required String parent}) {
+  Future<RestfulResult> get({String parent = '', bool isSub = false}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    String query = isSub ? 'subcategory' : '${PATH.CATEGORY_QUERY}$parent';
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
       tokenValue: hiveMLogin.values.first.token,
     );
 
-    http
-        .get(getRequestUri('${PATH.CATEGORY_QUERY}$parent'), headers: _headers)
-        .then(
+    http.get(getRequestUri(query), headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
         List<MSubCategory> subList = [];
@@ -36,6 +37,32 @@ class ServiceSubCategory {
             RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
       },
     );
+
+    return completer.future;
+  }
+
+  Future<RestfulResult> post({
+    required String name,
+    String parent = '',
+  }) {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: hiveMLogin.values.first.token,
+    );
+
+    String _encodeData = jsonEncode({
+      "name": name,
+      "parent": parent,
+    });
+
+    http
+        .post(getRequestUri(PATH.CATEGORY),
+            body: _encodeData, headers: _headers)
+        .then((response) {
+      print(response.body);
+    });
 
     return completer.future;
   }

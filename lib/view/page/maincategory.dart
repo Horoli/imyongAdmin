@@ -18,19 +18,19 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
     return buildBorderContainer(
       child: Row(
         children: [
-          TStreamBuilder(
-            stream: GServiceMainCategory.$mainCategory.browse$,
-            builder: (BuildContext context, MainCategory category) {
-              List<String> mainCategories =
-                  List<String>.from(category.map.values);
+          // TStreamBuilder(
+          //   stream: GServiceMainCategory.$mainCategory.browse$,
+          //   builder: (BuildContext context, MainCategory category) {
+          //     List<String> mainCategories =
+          //         List<String>.from(category.map.values);
 
-              return ListView.builder(
-                  itemCount: mainCategories.length,
-                  itemBuilder: (context, int index) {
-                    return Text(mainCategories[index]);
-                  });
-            },
-          ).expand(),
+          //     return ListView.builder(
+          //         itemCount: mainCategories.length,
+          //         itemBuilder: (context, int index) {
+          //           return Text(mainCategories[index]);
+          //         });
+          //   },
+          // ).expand(),
 
           // buildEditingFields().expand(),
           // buildStreamList().expand(),

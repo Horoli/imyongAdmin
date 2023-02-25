@@ -1,8 +1,8 @@
 const List<String> SIDE_TAB = [
   'Dashboard',
   'Guests',
-  'Type',
-  'MainCategory',
+  'Category',
+  // 'MainCategory',
   // 'SubCategory',
   'Questions',
   'Setting',
