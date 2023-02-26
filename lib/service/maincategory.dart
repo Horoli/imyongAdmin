@@ -7,9 +7,9 @@ class ServiceMainCategory {
 
   ServiceMainCategory._internal();
 
-  TStream<MainCategory> $mainCategory = TStream<MainCategory>();
+  TStream<MMainCategory> $mainCategory = TStream<MMainCategory>();
 
-  MainCategory get mainCategory => $mainCategory.lastValue;
+  MMainCategory get mainCategory => $mainCategory.lastValue;
 
   Future<RestfulResult> get() {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
@@ -24,7 +24,7 @@ class ServiceMainCategory {
         Map result = json.decode(response.body);
 
         Map<String, dynamic> item = Map.from(result['data'] ?? {});
-        MainCategory main = MainCategory.fromMap(item);
+        MMainCategory main = MMainCategory.fromMap(item);
         print(main.map);
 
         $mainCategory.sink$(main);

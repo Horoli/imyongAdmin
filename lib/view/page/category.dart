@@ -12,6 +12,8 @@ class _ViewCategoryState extends State<ViewCategory> {
   final TextEditingController ctrSubCategory = TextEditingController();
   final TextEditingController ctrTestCategory = TextEditingController();
   //
+  // getter
+  List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
   @override
   Widget build(BuildContext context) {
     //
@@ -22,45 +24,8 @@ class _ViewCategoryState extends State<ViewCategory> {
           buildManagementMainCategory().expand(),
           // TODO : sub
           buildManagementSubCategory().expand(),
-          // Container(color: Colors.blue[400]).expand(),
-
-          buildBorderContainer().expand(),
-          buildBorderContainer(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: ctrTestCategory,
-                ).expand(),
-                ElevatedButton(
-                  child: Text('add'),
-                  onPressed: () {
-                    String parent = ctrSubCategory.text.isNotEmpty
-                        ? ctrSubCategory.text
-                        : ctrMainCategory.text;
-
-                    GServiceSubCategory.post(
-                      name: ctrTestCategory.text,
-                      parent: parent,
-                    );
-                    GServiceSubCategory.get(parent: parent);
-                  },
-                ).expand(),
-                ElevatedButton(
-                  child: Text('delete'),
-                  onPressed: () {
-                    String id = ctrSubCategory.text;
-
-                    GServiceSubCategory.delete(id: id);
-                    GServiceSubCategory.get(isSub: true);
-                  },
-                ).expand(),
-                ElevatedButton(
-                  child: Text('textfield reset'),
-                  onPressed: textFieldReset,
-                ).expand(),
-              ],
-            ),
-          ).expand(),
+          // TODO : edit
+          buildEditButtons().expand(),
         ],
       ),
     );
@@ -72,34 +37,34 @@ class _ViewCategoryState extends State<ViewCategory> {
     return buildBorderContainer(
       child: Column(
         children: [
-          // TextFormField(
-          //   controller: ctrMainCategory,
-          //   readOnly: true,
-          // ).expand(),
-          ElevatedButton(
+          buildElevatedButton(
+            width: double.infinity,
             onPressed: () async {
               buildCategoriesDialog(createMainCategories());
             },
             child: Text('main'),
           ).expand(),
-          TStreamBuilder(
-            stream: GServiceMainCategory.$mainCategory.browse$,
-            builder: (BuildContext context, MainCategory category) {
-              List<String> mainCategories =
-                  List<String>.from(category.map.values);
-              print('mainCategories $mainCategories');
+          Padding(
+            padding: commonPadding,
+            child: TStreamBuilder(
+              stream: GServiceMainCategory.$mainCategory.browse$,
+              builder: (BuildContext context, MMainCategory category) {
+                List<String> mainCategories =
+                    List<String>.from(category.map.values);
+                print('mainCategories $mainCategories');
 
-              return ListView.builder(
-                itemCount: mainCategories.length,
-                itemBuilder: (context, int index) {
-                  return Container(
-                      color: selectedMainCategory == mainCategories[index]
-                          ? Colors.amber
-                          : Colors.blue,
-                      child: Text(mainCategories[index]));
-                },
-              );
-            },
+                return ListView.builder(
+                  itemCount: mainCategories.length,
+                  itemBuilder: (context, int index) {
+                    return Container(
+                        color: selectedMainCategory == mainCategories[index]
+                            ? Colors.amber
+                            : Colors.blue,
+                        child: Text(mainCategories[index]));
+                  },
+                );
+              },
+            ),
           ).expand(),
         ],
       ),
@@ -110,34 +75,120 @@ class _ViewCategoryState extends State<ViewCategory> {
     return buildBorderContainer(
       child: Column(
         children: [
-          TextFormField(
-            controller: ctrSubCategory,
+          buildTextField(
+            ctrSubCategory,
             readOnly: true,
+            label: 'sub',
           ).expand(),
-          ElevatedButton(
-            child: Text('sub'),
+          buildElevatedButton(
+            width: double.infinity,
+            child: Text('select SubCategory'),
             onPressed: () async {
+              if (ctrMainCategory.text == '') {
+                showSnackBar(
+                  msg: 'please select mainCategory',
+                  context: context,
+                );
+                return;
+              }
+              if (subCategories.length == 0) {
+                showSnackBar(
+                  msg: 'this subCategory is null',
+                  context: context,
+                );
+                return;
+              }
               buildCategoriesDialog(createSubCategories());
             },
           ).expand(),
-          TStreamBuilder(
-            stream: GServiceSubCategory.$subCategory.browse$,
-            builder: (BuildContext context, List<MSubCategory> subCategories) {
-              return ListView.builder(
-                itemCount: subCategories.length,
-                itemBuilder: (context, int index) {
-                  print(subCategories[index].name);
-                  return Row(
-                    children: [
-                      Text(subCategories[index].id),
-                      Text(subCategories[index].name),
-                      // Text(subCategories[index].parent),
-                      // Text('${subCategories[index].children}'),
-                    ],
-                  );
-                },
+          Padding(
+            padding: commonPadding,
+            child: TStreamBuilder(
+              stream: GServiceSubCategory.$subCategory.browse$,
+              builder: (
+                BuildContext context,
+                List<MSubCategory> subCategories,
+              ) {
+                return ListView.builder(
+                  itemCount: subCategories.length,
+                  itemBuilder: (context, int index) {
+                    print(subCategories[index].name);
+                    return Row(
+                      children: [
+                        Text(subCategories[index].id),
+                        Text(subCategories[index].name),
+                        // Text(subCategories[index].parent),
+                        // Text('${subCategories[index].children}'),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ).expand(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildEditButtons() {
+    return buildBorderContainer(
+      child: Column(
+        children: [
+          buildTextField(
+            ctrTestCategory,
+            label: 'input name',
+          ).expand(),
+          buildElevatedButton(
+            width: double.infinity,
+            child: Text('add'),
+            onPressed: () async {
+              String parent = ctrSubCategory.text.isNotEmpty
+                  ? ctrSubCategory.text
+                  : ctrMainCategory.text;
+
+              RestfulResult result = await GServiceSubCategory.post(
+                name: ctrTestCategory.text,
+                parent: parent,
+                context: context,
               );
+              if (result.statusCode != STATUS.SUCCESS_CODE) {
+                buildErrorDialog(result.message, result.statusCode, context);
+              }
+
+              GServiceSubCategory.get(parent: parent);
             },
+          ).expand(),
+          buildElevatedButton(
+            width: double.infinity,
+            child: Text('delete'),
+            onPressed: () async {
+              print('step1');
+              RestfulResult result = await GServiceSubCategory.delete(
+                id: ctrSubCategory.text,
+              );
+              print('step2');
+
+              if (!result.isSuccess) {
+                buildErrorDialog(
+                  result.message,
+                  result.statusCode,
+                  context,
+                );
+                return;
+              }
+
+              print('step3');
+              ctrSubCategory.text = '';
+              GServiceSubCategory.get(parent: ctrMainCategory.text);
+
+              print('result $result');
+            },
+          ).expand(),
+          buildElevatedButton(
+            width: double.infinity,
+            child: Text('textfield reset'),
+            onPressed: textFieldReset,
           ).expand(),
         ],
       ),
@@ -202,8 +253,6 @@ class _ViewCategoryState extends State<ViewCategory> {
     );
   }
 
-  List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
-
   List<SimpleDialogOption> createSubCategories() {
     return List.generate(
       subCategories.length,
@@ -216,11 +265,8 @@ class _ViewCategoryState extends State<ViewCategory> {
         ),
         onPressed: () {
           ctrSubCategory.text = subCategories[index].id;
-          // setState(() {
           GServiceSubCategory.get(parent: ctrSubCategory.text);
-
           Navigator.pop(context);
-          // });
         },
       ),
     );

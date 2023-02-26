@@ -15,6 +15,7 @@ class ServiceSubCategory {
   Future<RestfulResult> get({String parent = '', bool isSub = false}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
+    // parent가 없으면 isSub가 true, 있으면 false로 사용
     String query = isSub ? 'subcategory' : '${PATH.CATEGORY_QUERY}$parent';
 
     final Map<String, String> _headers = createHeaders(
@@ -36,13 +37,16 @@ class ServiceSubCategory {
         completer.complete(
             RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
       },
-    );
+    ).catchError((error) {
+      // GHelperNavigator.pushLogin();
+    });
 
     return completer.future;
   }
 
   Future<RestfulResult> post({
     required String name,
+    BuildContext? context,
     String parent = '',
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
@@ -61,7 +65,21 @@ class ServiceSubCategory {
         .post(getRequestUri(PATH.CATEGORY),
             body: _encodeData, headers: _headers)
         .then((response) {
-      print(response.body);
+      Map result = json.decode(response.body);
+
+      if (name == '') {
+        return completer.complete(RestfulResult.fromMap(
+          result,
+          response.statusCode,
+        ));
+      }
+
+      return completer.complete(RestfulResult.fromMap(
+        result,
+        response.statusCode,
+      ));
+    }).catchError((error) {
+      print(error);
     });
 
     return completer.future;
@@ -85,90 +103,15 @@ class ServiceSubCategory {
         .delete(getRequestUri(PATH.CATEGORY),
             body: _encodeData, headers: _headers)
         .then((response) {
-      print(response.body);
+      Map result = json.decode(response.body);
+      return completer.complete(
+        RestfulResult.fromMap(
+          result,
+          response.statusCode,
+        ),
+      );
     });
 
     return completer.future;
   }
-
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  // Future<Map<String, MSubCategory>> post({
-  //   required String id,
-  //   required String subcategory,
-  //   required String maincategory,
-  // }) async {
-  //   String _encodeData = jsonEncode({
-  //     "id": id,
-  //     "maincategory": maincategory,
-  //     "subcategory": subcategory,
-  //   });
-
-  //   final Map<String, String> _headers = {
-  //     HEADER.CONTENT_TYPE: HEADER.JSON,
-  //     HEADER.TOKEN: hiveMLogin.values.first.token,
-  //   };
-
-  //   final response = await http.post(
-  //     getRequestUri(PATH.SUBCATEGORY),
-  //     headers: _headers,
-  //     body: _encodeData,
-  //   );
-
-  //   if (response.statusCode != STATUS.SUCCESS_CODE) {
-  //     throw Exception(STATUS.LOAD_FAILED_MSG);
-  //   }
-
-  //   print('response $response');
-  //   print('responseBody ${response.body}');
-
-  //   Map<String, dynamic> item =
-  //       Map.from(jsonDecode(response.body)['data'] ?? {});
-
-  //   Map<String, MSubCategory> convertedItem =
-  //       item.map<String, MSubCategory>((key, value) => MapEntry(
-  //             key,
-  //             MSubCategory.fromMap(value),
-  //           ));
-
-  //   $subCategory.sink$(convertedItem);
-
-  //   return convertedItem;
-  // }
-
-  // ///
-  // ///
-  // Future<Map<String, MSubCategory>> get() async {
-  //   final Map<String, String> _headers = {
-  //     HEADER.CONTENT_TYPE: HEADER.JSON,
-  //     HEADER.TOKEN: hiveMLogin.values.first.token,
-  //   };
-
-  //   final response = await http.get(
-  //     getRequestUri(PATH.SUBCATEGORY),
-  //     headers: _headers,
-  //   );
-
-  //   if (response.statusCode != STATUS.SUCCESS_CODE) {
-  //     throw Exception(STATUS.LOAD_FAILED_MSG);
-  //   }
-
-  //   print('response $response');
-  //   print('responseBody ${response.body}');
-
-  //   Map<String, dynamic> item =
-  //       Map.from(jsonDecode(response.body)['data'] ?? {});
-  //   //
-  //   Map<String, MSubCategory> convertedItem = item.map<String, MSubCategory>(
-  //       (key, value) => MapEntry(key, MSubCategory.fromMap(value)));
-
-  //   $subCategory.sink$(convertedItem);
-  //   return convertedItem;
-  // }
 }

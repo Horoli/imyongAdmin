@@ -33,44 +33,36 @@ class _ViewLoginState extends State<ViewLogin> {
               child: Card(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: buildTextField(ctrID, label: 'id', hint: 'id'),
+                    buildTextField(ctrID, label: 'id', hint: 'id'),
+                    buildTextField(
+                      ctrPW,
+                      label: 'pw',
+                      hint: 'pw',
+                      obscureText: true,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: buildTextField(
-                        ctrPW,
-                        label: 'pw',
-                        hint: 'pw',
-                        obscureText: true,
-                      ),
-                    ),
-                    Container(
+                    buildElevatedButton(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        child: TAutoSizeText('login'),
-                        onPressed: () async {
-                          //
-                          RestfulResult result = await GServiceLogin.post(
-                            ctrID.text,
-                            ctrPW.text,
-                          );
+                      child: TAutoSizeText('login'),
+                      onPressed: () async {
+                        //
+                        RestfulResult result = await GServiceLogin.post(
+                          ctrID.text,
+                          ctrPW.text,
+                        );
 
-                          print('result $result');
-                          // print(result.data);
+                        print('result $result');
+                        // print(result.data);
 
-                          if (result.isSuccess) {
-                            return GHelperNavigator.pushHome();
-                          }
+                        if (result.isSuccess) {
+                          return GHelperNavigator.pushHome();
+                        }
 
-                          return buildDialog(
-                            result.message,
-                            result.statusCode,
-                          );
-                        },
-                      ),
+                        return buildErrorDialog(
+                          result.message,
+                          result.statusCode,
+                          context,
+                        );
+                      },
                     ).expand(),
                   ],
                 ),
@@ -80,85 +72,6 @@ class _ViewLoginState extends State<ViewLogin> {
         );
       },
     );
-  }
-
-  Widget buildTextField(
-    TextEditingController ctr, {
-    bool obscureText = false,
-    required String label,
-    required String hint,
-  }) {
-    return TextFormField(
-      controller: ctr,
-      // expands: true,
-      // maxLines: null,
-      // maxLength: null,
-      textAlign: TextAlign.center,
-      textAlignVertical: TextAlignVertical.center,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(vertical: 40),
-        labelText: label,
-        hintText: hint,
-      ),
-    );
-  }
-
-  void buildDialog(String message, int statusCode) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: SizedBox(
-              width: 200,
-              height: 200,
-              child: Column(
-                children: [
-                  Center(child: Text('$statusCode')).expand(),
-                  Center(child: Text(message)).expand(),
-                ],
-              )
-              // child: Stack(
-              //   fit: StackFit.expand,
-              //   children: [
-              //     // CircularProgressIndicator(strokeWidth: 10),
-              //     Center(child: Text('$statusCode')),
-              //     Center(child: Text(message))
-              //   ],
-              // ),
-              ),
-        );
-      },
-    );
-
-    Timer(const Duration(milliseconds: 2000), () {
-      GHelperNavigator.pushLogin();
-    });
-
-    // GServiceLogin.post(id: ctrID.text, pw: ctrPW.text);
-
-    //   if (hiveMLogin.isEmpty) {
-    //     print('isEmpty');
-    //     GServiceLogin.post(id: ctrID.text, pw: ctrPW.text);
-    //     hiveTheme.put('theme', 'light');
-    //   }
-
-    //   if (hiveMLogin.isNotEmpty) {
-    //     print('isNotEmpty');
-    //     // TODO : TEST THEME CODE, MUST DELETE
-    //     if (hiveTheme.values.isEmpty ||
-    //         hiveTheme.values.first.toString() == 'light') {
-    //       hiveTheme.put('theme', 'light');
-    //       GServiceTheme.$theme.sink$(GServiceTheme.light());
-    //     }
-
-    //     // TODO : TEST THEME CODE, MUST DELETE
-    //     if (hiveTheme.values.first.toString() == 'dark') {
-    //       GServiceTheme.$theme.sink$(GServiceTheme.dark());
-    //     }
-    //     GHelperNavigator.pushHome();
-    //   }
   }
 
   @override

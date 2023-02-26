@@ -26,7 +26,6 @@ class ServiceLogin {
 
     String encodeData = jsonEncode({"id": id, "pw": pw});
 
-
     http
         .post(getRequestUri(PATH.LOGIN),
             headers: createHeaders(), body: encodeData)
@@ -53,6 +52,7 @@ class ServiceLogin {
       ));
     }).catchError((error) {
       print('Error: $error');
+      GHelperNavigator.pushLogin();
       return completer.complete(
         RestfulResult(
           statusCode: STATUS.CONNECTION_FAILED_CODE,

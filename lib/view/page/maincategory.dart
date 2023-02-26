@@ -84,45 +84,45 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
     );
   }
 
-  Widget buildStreamList() {
-    return TStreamBuilder(
-      stream: GServiceMainCategory.$mainCategory.browse$,
-      builder: (BuildContext context, Map<String, MMainCategory> item) {
-        List<MMainCategory> mainCATs = item.values.toList();
-        // TODO : type을 선택한 경우, filteredMAinCATs를 생성한 뒤 ListView를 그림
-        if (ctrType.text != "") {
-          List<MMainCategory> filteredMainCATs = [];
-          for (MMainCategory cat in mainCATs) {
-            if (cat.type == ctrType.text) {
-              filteredMainCATs.add(cat);
-            }
-          }
-          return buildListView(filteredMainCATs);
-        }
+  // Widget buildStreamList() {
+  //   return TStreamBuilder(
+  //     stream: GServiceMainCategory.$mainCategory.browse$,
+  //     builder: (BuildContext context, Map<String, MMainCategory> item) {
+  //       List<MMainCategory> mainCATs = item.values.toList();
+  //       // TODO : type을 선택한 경우, filteredMAinCATs를 생성한 뒤 ListView를 그림
+  //       if (ctrType.text != "") {
+  //         List<MMainCategory> filteredMainCATs = [];
+  //         for (MMainCategory cat in mainCATs) {
+  //           if (cat.type == ctrType.text) {
+  //             filteredMainCATs.add(cat);
+  //           }
+  //         }
+  //         return buildListView(filteredMainCATs);
+  //       }
 
-        // TODO : type을 선택하지 않은 경우 모든 CATs를 return
-        return buildListView(mainCATs);
-      },
-    );
-  }
+  //       // TODO : type을 선택하지 않은 경우 모든 CATs를 return
+  //       return buildListView(mainCATs);
+  //     },
+  //   );
+  // }
 
-  Widget buildListView(List<MMainCategory> items) {
-    return Container(
-      color: Colors.blue,
-      child: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          MMainCategory mainCAT = items[index];
-          return Row(
-            children: [
-              Text('${mainCAT.type}').expand(),
-              Text('${mainCAT.mainCategory}').expand(),
-            ],
-          );
-        },
-      ),
-    );
-  }
+  // Widget buildListView(List<MMainCategory> items) {
+  //   return Container(
+  //     color: Colors.blue,
+  //     child: ListView.builder(
+  //       itemCount: items.length,
+  //       itemBuilder: (context, index) {
+  //         MMainCategory mainCAT = items[index];
+  //         return Row(
+  //           children: [
+  //             Text('${mainCAT.type}').expand(),
+  //             Text('${mainCAT.mainCategory}').expand(),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   void initState() {
