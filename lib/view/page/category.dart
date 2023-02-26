@@ -11,7 +11,8 @@ class _ViewCategoryState extends State<ViewCategory> {
   final TextEditingController ctrMainCategory = TextEditingController();
   final TextEditingController ctrSubCategory = TextEditingController();
   final TextEditingController ctrTestCategory = TextEditingController();
-  //
+  // selectedCheck
+  String selectedMainCategory = '';
   // getter
   List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
   @override
@@ -30,8 +31,6 @@ class _ViewCategoryState extends State<ViewCategory> {
       ),
     );
   }
-
-  String selectedMainCategory = '';
 
   Widget buildManagementMainCategory() {
     return buildBorderContainer(

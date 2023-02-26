@@ -3,14 +3,19 @@ import 'package:imyong/common.dart';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:imyong/preset/theme.dart' as THEME;
 import 'package:imyong/service/lib.dart';
 import 'package:imyong/model/lib.dart';
+import 'package:tnd_pkg_widget/preset/color.dart';
 import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
 import 'preset/router.dart' as ROUTER;
 import 'preset/color.dart' as COLOR;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  GServiceTheme.fetch();
+
   _initHive();
   _registerHiveAdapter();
   _initService();
@@ -21,7 +26,6 @@ Future<void> main() async {
 Future<void> _initHive() async {
   await Hive.initFlutter();
   hiveMLogin = await Hive.openBox('login');
-  GServiceTheme.fetch();
 }
 
 Future<void> _registerHiveAdapter() async {
@@ -34,6 +38,11 @@ void _initService() {
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();
   GServiceSubCategory = ServiceSubCategory.getInstance();
+
+  // if (!GServiceTheme.$theme.hasValue) {
+  //   print('hasValue == ${GServiceTheme.$theme.hasValue}');
+  //   GServiceTheme.$theme.sink$(THEME.DARK);
+  // }
 }
 
 // void _getData() {
