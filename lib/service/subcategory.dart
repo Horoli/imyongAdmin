@@ -67,6 +67,30 @@ class ServiceSubCategory {
     return completer.future;
   }
 
+  Future<RestfulResult> delete({
+    required String id,
+  }) {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: hiveMLogin.values.first.token,
+    );
+
+    String _encodeData = jsonEncode({
+      "id": id,
+    });
+
+    http
+        .delete(getRequestUri(PATH.CATEGORY),
+            body: _encodeData, headers: _headers)
+        .then((response) {
+      print(response.body);
+    });
+
+    return completer.future;
+  }
+
   ///
   ///
   ///
