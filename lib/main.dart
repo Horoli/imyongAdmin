@@ -59,6 +59,7 @@ class AppRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TStreamBuilder(
+      // stream: GServiceTheme.box.watch(),
       stream: GServiceTheme.$theme.browse$,
       builder: (context, ThemeData theme) {
         return MaterialApp(

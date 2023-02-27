@@ -74,11 +74,11 @@ class _ViewCategoryState extends State<ViewCategory> {
     return buildBorderContainer(
       child: Column(
         children: [
-          buildTextField(
-            ctrSubCategory,
-            readOnly: true,
-            label: 'sub',
-          ).expand(),
+          buildTextField(ctrSubCategory,
+                  readOnly: true,
+                  label: 'subcategory',
+                  hint: 'select subcategory')
+              .expand(),
           buildElevatedButton(
             width: double.infinity,
             child: Text('select SubCategory'),
@@ -92,7 +92,7 @@ class _ViewCategoryState extends State<ViewCategory> {
               }
               if (subCategories.length == 0) {
                 showSnackBar(
-                  msg: 'this subCategory is null',
+                  msg: '',
                   context: context,
                 );
                 return;
@@ -136,7 +136,8 @@ class _ViewCategoryState extends State<ViewCategory> {
         children: [
           buildTextField(
             ctrTestCategory,
-            label: 'input name',
+            label: 'Enter category name',
+            hint: 'Enter category name',
           ).expand(),
           buildElevatedButton(
             width: double.infinity,

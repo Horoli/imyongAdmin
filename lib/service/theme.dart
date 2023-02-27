@@ -6,9 +6,7 @@ class ServiceTheme {
 
   ServiceTheme._internal();
 
-  late final TStream<ThemeData> $theme = TStream<ThemeData>()
-    ..sink$(THEME.DARK);
-
+  late final TStream<ThemeData> $theme = TStream<ThemeData>();
   ThemeData get theme => $theme.lastValue;
 
   late final Box<int> _box;
@@ -17,32 +15,34 @@ class ServiceTheme {
 
   Future<void> fetch() async {
     if (!Hive.isBoxOpen('theme')) {
+      print('step 1 boxOpen');
       _box = await Hive.openBox('theme');
     }
 
-    // $theme.sink$(THEME.THEMEDATA_LIST[int.parse(_box.values.toString())]);
+    // TODO : 최초 실행시에만 추가
+    if (_box.values.isEmpty) {
+      print('step 0 boxOpen');
+      _box.put('theme', 0);
+    }
 
-    print('fetch fetch fetch fetch ');
-    print(_box.toMap());
+    // init : 최초 _subBox가 null이면 $theme에 sink$
+    if (_subBox == null) {
+      print('step 2 subBox');
+      int index = _box.values.first;
+      $theme.sink$(THEME.THEMEDATA_LIST[index]);
+    }
 
-    print('_subBox1 $_subBox');
-
-    _subBox ??= _box.watch().listen((event) {
+    // _subBox가 생성된 후 _box에 subscription을 달아 갱신이 될때마다
+    // $theme에 sink$ 하도록 작성
+    _subBox = _box.watch().listen((event) {
+      print('step 3 box watch');
       int index = event.value;
-      print('index $index');
-      print(THEME.THEMEDATA_LIST[index]);
+      $theme.sink$(THEME.THEMEDATA_LIST[index]);
     });
-
-    print('_subBox2 ${_subBox}');
-    // _box.watch().listen((event) {
-    //   int index = event.value;
-    //   $theme.sink$(THEME.THEMEDATA_LIST[index]);
-    // });
   }
 
   void update(THEME.Type type) {
     int index = THEME.TYPE_LIST.indexOf(type);
-    print('index $index');
     _box.put('theme', index);
   }
 }
