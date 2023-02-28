@@ -15,6 +15,9 @@ class _ViewCategoryState extends State<ViewCategory> {
   String selectedMainCategory = '';
   // getter
   List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
+
+  //
+  List<String> selectedCategoriesId = [];
   @override
   Widget build(BuildContext context) {
     //
@@ -85,6 +88,14 @@ class _ViewCategoryState extends State<ViewCategory> {
           ).expand(),
           buildElevatedButton(
             width: double.infinity,
+            child: Text('cancel'),
+            onPressed: () {
+              ctrSubCategory.clear();
+              GServiceSubCategory.get(parent: ctrMainCategory.text);
+            },
+          ).expand(),
+          buildElevatedButton(
+            width: double.infinity,
             child: Text('select SubCategory'),
             onPressed: () async {
               if (ctrMainCategory.text == '') {
@@ -127,25 +138,36 @@ class _ViewCategoryState extends State<ViewCategory> {
                     List<String> children = subCategories[index].children;
                     print('children $children');
                     List<String> childrenName = [];
-                    children.forEach((String childrenKey) {
+                    for (var childrenKey in children) {
                       bool hasChildrenKey = GServiceSubCategory.allSubCategory
                           .containsKey(childrenKey);
                       if (hasChildrenKey) {
                         childrenName.add(GServiceSubCategory
                             .allSubCategory[childrenKey]!.name);
                       }
-                    });
+                    }
 
                     // TODO : checkBox 생성 후 해당 id 체크하면
                     // selectedSubCategory에 저장하고
                     // delete 버튼 누르면 삭제 할 수 있게 기능 추가
+                    return CategoriesTile(
+                      name: subCategories[index].name,
+                      parent: parentName,
+                      children: childrenName,
+                      selected: selectedCategoriesId
+                          .contains(subCategories[index].id),
+                      onChanged: (bool? changed) {
+                        setState(() {
+                          changed!
+                              ? selectedCategoriesId
+                                  .add(subCategories[index].id)
+                              : selectedCategoriesId
+                                  .remove(subCategories[index].id);
+                        });
+                        print('selectedCategoriesId $selectedCategoriesId');
 
-                    return Row(
-                      children: [
-                        Text(subCategories[index].name).expand(),
-                        Text(parentName).expand(),
-                        Text('$childrenName').expand(),
-                      ],
+                        print('changed $changed');
+                      },
                     );
                   },
                 );
@@ -183,8 +205,8 @@ class _ViewCategoryState extends State<ViewCategory> {
                 buildErrorDialog(result.message, result.statusCode, context);
               }
 
-              GServiceSubCategory.get(parent: parent);
               GServiceSubCategory.getAll();
+              GServiceSubCategory.get(parent: parent);
             },
           ).expand(),
           buildElevatedButton(
@@ -192,10 +214,17 @@ class _ViewCategoryState extends State<ViewCategory> {
             child: Text('delete'),
             onPressed: () async {
               print('step1');
-              RestfulResult result = await GServiceSubCategory.delete(
-                id: ctrSubCategory.text,
-              );
-              print('step2');
+
+              if (selectedCategoriesId.isEmpty) {
+                return;
+              }
+
+              late RestfulResult result;
+
+              for (String id in selectedCategoriesId) {
+                result = await GServiceSubCategory.delete(id: id);
+                //
+              }
 
               if (!result.isSuccess) {
                 buildErrorDialog(
@@ -205,11 +234,15 @@ class _ViewCategoryState extends State<ViewCategory> {
                 );
                 return;
               }
+              // RestfulResult result = await GServiceSubCategory.delete(
+              //   id: ctrSubCategory.text,
+              // );
+              // print('step2');
 
               print('step3');
               ctrSubCategory.text = '';
-              GServiceSubCategory.get(parent: ctrMainCategory.text);
               GServiceSubCategory.getAll();
+              GServiceSubCategory.get(parent: ctrMainCategory.text);
 
               print('result $result');
             },
