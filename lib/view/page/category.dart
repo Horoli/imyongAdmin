@@ -10,7 +10,7 @@ class ViewCategory extends StatefulWidget {
 class _ViewCategoryState extends State<ViewCategory> {
   final TextEditingController ctrMainCategory = TextEditingController();
   final TextEditingController ctrSubCategory = TextEditingController();
-  final TextEditingController ctrTestCategory = TextEditingController();
+  final TextEditingController ctrInputCategory = TextEditingController();
   // selectedCheck
   String selectedMainCategory = '';
   // getter
@@ -56,10 +56,13 @@ class _ViewCategoryState extends State<ViewCategory> {
                   itemCount: mainCategories.length,
                   itemBuilder: (context, int index) {
                     return Container(
-                        color: selectedMainCategory == mainCategories[index]
-                            ? Colors.amber
-                            : Colors.blue,
-                        child: Text(mainCategories[index]));
+                      color: selectedMainCategory == mainCategories[index]
+                          ? Colors.amber
+                          : Colors.blue,
+                      child: Text(
+                        mainCategories[index],
+                      ),
+                    );
                   },
                 );
               },
@@ -74,11 +77,12 @@ class _ViewCategoryState extends State<ViewCategory> {
     return buildBorderContainer(
       child: Column(
         children: [
-          buildTextField(ctrSubCategory,
-                  readOnly: true,
-                  label: 'subcategory',
-                  hint: 'select subcategory')
-              .expand(),
+          buildTextField(
+            ctrSubCategory,
+            readOnly: true,
+            label: 'subcategory',
+            hint: 'select subcategory',
+          ).expand(),
           buildElevatedButton(
             width: double.infinity,
             child: Text('select SubCategory'),
@@ -90,9 +94,9 @@ class _ViewCategoryState extends State<ViewCategory> {
                 );
                 return;
               }
-              if (subCategories.length == 0) {
+              if (subCategories.isEmpty) {
                 showSnackBar(
-                  msg: '',
+                  msg: 'null',
                   context: context,
                 );
                 return;
@@ -111,13 +115,36 @@ class _ViewCategoryState extends State<ViewCategory> {
                 return ListView.builder(
                   itemCount: subCategories.length,
                   itemBuilder: (context, int index) {
-                    print(subCategories[index].name);
+                    // TODO : parent key를 활용해서 name을 가져옴
+                    String parentKey = subCategories[index].parent;
+                    bool hasParentKey = GServiceSubCategory.allSubCategory
+                        .containsKey(parentKey);
+                    String parentName = hasParentKey
+                        ? GServiceSubCategory.allSubCategory[parentKey]!.name
+                        : parentKey;
+
+                    // TODO : children key를 활용해서 name을 가져옴
+                    List<String> children = subCategories[index].children;
+                    print('children $children');
+                    List<String> childrenName = [];
+                    children.forEach((String childrenKey) {
+                      bool hasChildrenKey = GServiceSubCategory.allSubCategory
+                          .containsKey(childrenKey);
+                      if (hasChildrenKey) {
+                        childrenName.add(GServiceSubCategory
+                            .allSubCategory[childrenKey]!.name);
+                      }
+                    });
+
+                    // TODO : checkBox 생성 후 해당 id 체크하면
+                    // selectedSubCategory에 저장하고
+                    // delete 버튼 누르면 삭제 할 수 있게 기능 추가
+
                     return Row(
                       children: [
-                        Text(subCategories[index].id),
-                        Text(subCategories[index].name),
-                        // Text(subCategories[index].parent),
-                        // Text('${subCategories[index].children}'),
+                        Text(subCategories[index].name).expand(),
+                        Text(parentName).expand(),
+                        Text('$childrenName').expand(),
                       ],
                     );
                   },
@@ -135,7 +162,7 @@ class _ViewCategoryState extends State<ViewCategory> {
       child: Column(
         children: [
           buildTextField(
-            ctrTestCategory,
+            ctrInputCategory,
             label: 'Enter category name',
             hint: 'Enter category name',
           ).expand(),
@@ -148,7 +175,7 @@ class _ViewCategoryState extends State<ViewCategory> {
                   : ctrMainCategory.text;
 
               RestfulResult result = await GServiceSubCategory.post(
-                name: ctrTestCategory.text,
+                name: ctrInputCategory.text,
                 parent: parent,
                 context: context,
               );
@@ -157,6 +184,7 @@ class _ViewCategoryState extends State<ViewCategory> {
               }
 
               GServiceSubCategory.get(parent: parent);
+              GServiceSubCategory.getAll();
             },
           ).expand(),
           buildElevatedButton(
@@ -181,14 +209,15 @@ class _ViewCategoryState extends State<ViewCategory> {
               print('step3');
               ctrSubCategory.text = '';
               GServiceSubCategory.get(parent: ctrMainCategory.text);
+              GServiceSubCategory.getAll();
 
               print('result $result');
             },
           ).expand(),
           buildElevatedButton(
             width: double.infinity,
-            child: Text('textfield reset'),
-            onPressed: textFieldReset,
+            child: Text('reset'),
+            onPressed: fieldReset,
           ).expand(),
         ],
       ),
@@ -199,15 +228,18 @@ class _ViewCategoryState extends State<ViewCategory> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
-    GServiceSubCategory.get(isSub: true);
+    GServiceSubCategory.getAll();
+    GServiceSubCategory.get();
   }
 
-  void textFieldReset() {
+  void fieldReset() {
     selectedMainCategory = '';
-    ctrMainCategory.text = '';
     GServiceMainCategory.get();
-    ctrSubCategory.text = '';
-    GServiceSubCategory.get(isSub: true);
+    GServiceSubCategory.getAll();
+    GServiceSubCategory.get();
+    ctrMainCategory.clear();
+    ctrSubCategory.clear();
+    ctrInputCategory.clear();
   }
 
   Future<void> buildCategoriesDialog(List<Widget> categories) {
@@ -245,7 +277,7 @@ class _ViewCategoryState extends State<ViewCategory> {
               GServiceSubCategory.get(parent: ctrMainCategory.text);
               return Navigator.pop(context);
             }
-            GServiceSubCategory.get(isSub: true);
+            GServiceSubCategory.get();
             return Navigator.pop(context);
           },
         );
