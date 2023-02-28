@@ -17,7 +17,8 @@ class _ViewCategoryState extends State<ViewCategory> {
   List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
 
   //
-  List<String> selectedCategoriesId = [];
+  List<String> get selectedCategoriesId =>
+      GServiceSubCategory.selectedCategoriesId;
   @override
   Widget build(BuildContext context) {
     //
@@ -44,7 +45,7 @@ class _ViewCategoryState extends State<ViewCategory> {
             onPressed: () async {
               buildCategoriesDialog(createMainCategories());
             },
-            child: Text('main'),
+            child: Text('select mainCategory'),
           ).expand(),
           Padding(
             padding: commonPadding,
@@ -85,38 +86,46 @@ class _ViewCategoryState extends State<ViewCategory> {
             readOnly: true,
             label: 'subcategory',
             hint: 'select subcategory',
-          ).expand(),
-          buildElevatedButton(
-            width: double.infinity,
-            child: Text('cancel'),
-            onPressed: () {
-              ctrSubCategory.clear();
-              GServiceSubCategory.get(parent: ctrMainCategory.text);
-            },
-          ).expand(),
-          buildElevatedButton(
-            width: double.infinity,
-            child: Text('select SubCategory'),
-            onPressed: () async {
-              if (ctrMainCategory.text == '') {
-                showSnackBar(
-                  msg: 'please select mainCategory',
-                  context: context,
-                );
-                return;
-              }
-              if (subCategories.isEmpty) {
-                showSnackBar(
-                  msg: 'null',
-                  context: context,
-                );
-                return;
-              }
-              buildCategoriesDialog(createSubCategories());
-            },
-          ).expand(),
-          Padding(
-            padding: commonPadding,
+          ),
+          Row(
+            children: [
+              buildElevatedButton(
+                height: double.infinity,
+                width: double.infinity,
+                child: Text('select SubCategory'),
+                onPressed: () async {
+                  if (ctrMainCategory.text == '') {
+                    showSnackBar(
+                      msg: 'please select mainCategory',
+                      context: context,
+                    );
+                    return;
+                  }
+                  if (subCategories.isEmpty) {
+                    showSnackBar(
+                      msg: 'null',
+                      context: context,
+                    );
+                    return;
+                  }
+                  buildCategoriesDialog(createSubCategories());
+                  // selectedCategoriesId = [];
+                },
+              ).expand(),
+              buildElevatedButton(
+                height: double.infinity,
+                width: double.infinity,
+                child: Text('deselect SubCategory'),
+                onPressed: () {
+                  // TODO : subCategory 선택 초기화를 하면 mainCategory를 선택한
+                  // 데이터를 다시 가져옴
+                  ctrSubCategory.clear();
+                  GServiceSubCategory.get(parent: ctrMainCategory.text);
+                },
+              ).expand(),
+            ],
+          ).expand(flex: 2),
+          buildBorderContainer(
             child: TStreamBuilder(
               stream: GServiceSubCategory.$subCategory.browse$,
               builder: (
@@ -157,23 +166,29 @@ class _ViewCategoryState extends State<ViewCategory> {
                       selected: selectedCategoriesId
                           .contains(subCategories[index].id),
                       onChanged: (bool? changed) {
+                        // TODO : categories를 다중 선택해서 삭제
                         setState(() {
+                          if (ctrMainCategory.text == '') {
+                            showSnackBar(
+                              msg: 'please select mainCategory',
+                              context: context,
+                            );
+                            return;
+                          }
+
                           changed!
                               ? selectedCategoriesId
                                   .add(subCategories[index].id)
                               : selectedCategoriesId
                                   .remove(subCategories[index].id);
                         });
-                        print('selectedCategoriesId $selectedCategoriesId');
-
-                        print('changed $changed');
                       },
                     );
                   },
                 );
               },
             ),
-          ).expand(),
+          ).expand(flex: 10),
         ],
       ),
     );
@@ -187,7 +202,7 @@ class _ViewCategoryState extends State<ViewCategory> {
             ctrInputCategory,
             label: 'Enter category name',
             hint: 'Enter category name',
-          ).expand(),
+          ),
           buildElevatedButton(
             width: double.infinity,
             child: Text('add'),
@@ -216,6 +231,11 @@ class _ViewCategoryState extends State<ViewCategory> {
               print('step1');
 
               if (selectedCategoriesId.isEmpty) {
+                buildErrorDialog(
+                  'selectedCategory is empty.',
+                  403,
+                  context,
+                );
                 return;
               }
 
@@ -250,7 +270,7 @@ class _ViewCategoryState extends State<ViewCategory> {
           buildElevatedButton(
             width: double.infinity,
             child: Text('reset'),
-            onPressed: fieldReset,
+            onPressed: resetFunction,
           ).expand(),
         ],
       ),
@@ -265,7 +285,7 @@ class _ViewCategoryState extends State<ViewCategory> {
     GServiceSubCategory.get();
   }
 
-  void fieldReset() {
+  void resetFunction() {
     selectedMainCategory = '';
     GServiceMainCategory.get();
     GServiceSubCategory.getAll();
@@ -273,6 +293,7 @@ class _ViewCategoryState extends State<ViewCategory> {
     ctrMainCategory.clear();
     ctrSubCategory.clear();
     ctrInputCategory.clear();
+    // selectedCategoriesId = [];
   }
 
   Future<void> buildCategoriesDialog(List<Widget> categories) {
@@ -308,9 +329,11 @@ class _ViewCategoryState extends State<ViewCategory> {
             print(ctrMainCategory.text);
             if (ctrMainCategory.text != '') {
               GServiceSubCategory.get(parent: ctrMainCategory.text);
+              // selectedCategoriesId = [];
               return Navigator.pop(context);
             }
             GServiceSubCategory.get();
+            // selectedCategoriesId = [];
             return Navigator.pop(context);
           },
         );

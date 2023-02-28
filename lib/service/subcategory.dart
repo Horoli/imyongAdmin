@@ -15,6 +15,8 @@ class ServiceSubCategory {
       TStream<Map<String, MSubCategory>>();
   Map<String, MSubCategory> get allSubCategory => $allSubCategory.lastValue;
 
+  List<String> selectedCategoriesId = [];
+
   //
   // TODO : DEV CODE // subCategories의 전체 데이터를
   // 한번 가져와야 데이터를 활용할 수 있음. 가져 온뒤 별도의 stream에 저장
@@ -52,6 +54,7 @@ class ServiceSubCategory {
 
   Future<RestfulResult> get({String parent = ''}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
+    selectedCategoriesId = [];
 
     // parent가 빈값이면 /subcategory(url),
     // parent에 입력 값이 있으면 /category?id=$parent(query)
