@@ -55,7 +55,7 @@ class _ViewCategoryState extends State<ViewCategory> {
                 List<String> mainCategories =
                     List<String>.from(category.map.values);
                 print('mainCategories $mainCategories');
-
+  
                 return ListView.builder(
                   itemCount: mainCategories.length,
                   itemBuilder: (context, int index) {

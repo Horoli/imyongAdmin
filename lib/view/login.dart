@@ -78,4 +78,9 @@ class _ViewLoginState extends State<ViewLogin> {
   void initState() {
     super.initState();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

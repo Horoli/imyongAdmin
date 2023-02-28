@@ -10,11 +10,6 @@ class ServiceLogin {
 
   ServiceLogin._internal();
 
-  // final Map<String, String> _headers = {
-  //   HEADER.CONTENT_TYPE: HEADER.JSON,
-  //   // "token": hiveMLogin.values.first.token,
-  // };
-
   void hiveBoxlistener() {
     hiveMLogin.watch().listen((event) {
       print('event $event');
