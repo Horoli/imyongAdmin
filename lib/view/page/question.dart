@@ -12,6 +12,13 @@ class _ViewQuestionState extends State<ViewQuestion> {
   @override
   Widget build(BuildContext context) {
     //
-    return buildBorderContainer(child: Container(color: Colors.green));
+    return buildBorderContainer(
+      child: buildElevatedButton(
+        child: Text('a'),
+        onPressed: () {
+          GServiceQuestion.post();
+        },
+      ),
+    );
   }
 }

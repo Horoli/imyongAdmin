@@ -31,10 +31,7 @@ class ServiceSubCategory {
     http
         .get(getRequestUri('subcategory?map=map'), headers: _headers)
         .then((value) {
-      // print('value $value');
       Map result = json.decode(value.body);
-      print('result $result');
-      // print(result['data']);
       Map<String, MSubCategory> convertResult = {};
       for (dynamic item in result['data'].keys) {
         String convertItem = item.toString();
@@ -65,8 +62,6 @@ class ServiceSubCategory {
       tokenKey: HEADER.TOKEN,
       tokenValue: hiveMLogin.values.first.token,
     );
-
-    print('qurey $query');
 
     http.get(getRequestUri(query), headers: _headers).then(
       (response) {
@@ -112,7 +107,9 @@ class ServiceSubCategory {
         .then((response) {
       Map result = json.decode(response.body);
 
+      // name이 입력되지 않았으면 error return
       if (name == '') {
+        print('statusCode : ${response.statusCode}');
         return completer.complete(RestfulResult.fromMap(
           result,
           response.statusCode,
@@ -123,9 +120,7 @@ class ServiceSubCategory {
         result,
         response.statusCode,
       ));
-    }).catchError((error) {
-      print(error);
-    });
+    }).catchError((error) {});
 
     return completer.future;
   }

@@ -23,9 +23,15 @@ class ServiceMainCategory {
       (response) {
         Map result = json.decode(response.body);
 
+        // TODO : tokenExpire
+        if (result['statusCode'] == 403) {
+          GHelperNavigator.pushLogin();
+          return Error();
+        }
+
         Map<String, dynamic> item = Map.from(result['data'] ?? {});
+
         MMainCategory main = MMainCategory.fromMap(item);
-        print(main.map);
 
         $mainCategory.sink$(main);
 
@@ -33,6 +39,9 @@ class ServiceMainCategory {
             RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
       },
     ).catchError((error) {
+      // TODO : server가 실행 중이지 않으면 login페이지로 이동
+      GHelperNavigator.pushLogin();
+      print('error $error');
       return error;
     });
 

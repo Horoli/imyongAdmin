@@ -1,6 +1,7 @@
 library model;
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:imyong/common.dart';
@@ -21,5 +22,6 @@ part 'base.dart';
 part 'login.dart';
 part 'type.dart';
 part 'maincategory.dart';
+part 'question.dart';
 part 'subcategory.dart';
 part 'restful_result.dart';

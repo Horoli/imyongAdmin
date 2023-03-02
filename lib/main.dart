@@ -19,7 +19,6 @@ Future<void> main() async {
   _initHive();
   _registerHiveAdapter();
   _initService();
-  // _getData();
   runApp(AppRoot());
 }
 
@@ -38,16 +37,8 @@ void _initService() {
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();
   GServiceSubCategory = ServiceSubCategory.getInstance();
-
-  // if (!GServiceTheme.$theme.hasValue) {
-  //   print('hasValue == ${GServiceTheme.$theme.hasValue}');
-  //   GServiceTheme.$theme.sink$(THEME.DARK);
-  // }
+  GServiceQuestion = ServiceQuestion.getInstance();
 }
-
-// void _getData() {
-//   GServiceMainCategory.get();
-// }
 
 class AppRoot extends StatelessWidget {
   final Map<String, Widget Function(BuildContext)> routes = {
@@ -59,7 +50,6 @@ class AppRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TStreamBuilder(
-      // stream: GServiceTheme.box.watch(),
       stream: GServiceTheme.$theme.browse$,
       builder: (context, ThemeData theme) {
         return MaterialApp(

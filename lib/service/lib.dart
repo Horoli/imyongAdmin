@@ -22,6 +22,7 @@ import 'package:imyong/preset/header.dart' as HEADER;
 
 part 'guest.dart';
 part 'login.dart';
+part 'question.dart';
 part 'maincategory.dart';
 part 'subcategory.dart';
 part 'theme.dart';

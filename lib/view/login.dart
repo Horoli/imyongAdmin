@@ -9,7 +9,7 @@ class ViewLogin extends StatefulWidget {
 
 class _ViewLoginState extends State<ViewLogin> {
   TextEditingController ctrID = TextEditingController(text: 'horoli');
-  TextEditingController ctrPW = TextEditingController(text: '123');
+  TextEditingController ctrPW = TextEditingController(text: '1234');
   //
   @override
   Widget build(BuildContext context) {

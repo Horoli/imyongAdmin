@@ -24,5 +24,6 @@ late ServiceLogin GServiceLogin;
 late ServiceGuest GServiceGuest;
 late ServiceMainCategory GServiceMainCategory;
 late ServiceSubCategory GServiceSubCategory;
+late ServiceQuestion GServiceQuestion;
 
 late final Box<MLogin> hiveMLogin;

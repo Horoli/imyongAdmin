@@ -216,6 +216,8 @@ class _ViewCategoryState extends State<ViewCategory> {
                 parent: parent,
                 context: context,
               );
+
+              // 
               if (result.statusCode != STATUS.SUCCESS_CODE) {
                 buildErrorDialog(result.message, result.statusCode, context);
               }
