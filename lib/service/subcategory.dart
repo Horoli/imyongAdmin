@@ -17,7 +17,6 @@ class ServiceSubCategory {
 
   List<String> selectedCategoriesId = [];
 
-  //
   // TODO : DEV CODE // subCategories의 전체 데이터를
   // 한번 가져와야 데이터를 활용할 수 있음. 가져 온뒤 별도의 stream에 저장
   Future<RestfulResult> getAll() {
@@ -49,7 +48,7 @@ class ServiceSubCategory {
     return completer.future;
   }
 
-  Future<RestfulResult> get({String parent = ''}) {
+  Future<RestfulResult> get({String parent = '', bool isNoChildren = false}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
     selectedCategoriesId = [];
 
@@ -57,6 +56,9 @@ class ServiceSubCategory {
     // parent에 입력 값이 있으면 /category?id=$parent(query)
     String query =
         parent == '' ? PATH.SUBCATEGORY : '${PATH.CATEGORY_QUERY}$parent';
+    if (isNoChildren) {
+      query = 'nochildrencategory';
+    }
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
@@ -71,12 +73,15 @@ class ServiceSubCategory {
           subList.add(MSubCategory.fromMap(item));
         }
 
+        print('subList $subList');
+
         $subCategory.sink$(subList);
 
         completer.complete(
             RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
       },
     ).catchError((error) {
+      print('error $error');
       // GHelperNavigator.pushLogin();
     });
 

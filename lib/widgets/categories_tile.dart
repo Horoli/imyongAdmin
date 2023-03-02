@@ -2,17 +2,17 @@ part of '/common.dart';
 
 abstract class CategoriesCommonTile extends StatelessWidget {
   final String name;
-  final String parent;
-  final List<String> children;
+  final String? parent;
+  final List<String>? children;
   final bool selected;
   final void Function(bool?) onChanged;
   final void Function()? onPressedAction;
 
   CategoriesCommonTile({
     required this.name,
-    required this.parent,
+    this.parent,
+    this.children,
     this.selected = false,
-    required this.children,
     required this.onChanged,
     this.onPressedAction,
     super.key,
@@ -50,8 +50,29 @@ class CategoriesTile extends CategoriesCommonTile {
       children: [
         buildCheckBoxCell(),
         buildCell(name).expand(),
-        buildCell(parent).expand(),
+        buildCell(parent!).expand(),
         buildCell('${children}').expand(),
+      ],
+    );
+  }
+}
+
+class QuestionCategoryTile extends CategoriesCommonTile {
+  QuestionCategoryTile({
+    required super.name,
+    super.selected = false,
+    required super.onChanged,
+    super.onPressedAction,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        buildCheckBoxCell(),
+        buildCell(name).expand(),
+        
       ],
     );
   }
