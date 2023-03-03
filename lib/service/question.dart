@@ -53,14 +53,12 @@ class ServiceQuestion {
   Future<RestfulResult> get() {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
-    String query = 'question';
-
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
       tokenValue: hiveMLogin.values.first.token,
     );
 
-    http.get(getRequestUri(query), headers: _headers).then((response) {
+    http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
       Map result = json.decode(response.body);
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {

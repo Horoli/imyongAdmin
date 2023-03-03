@@ -61,20 +61,22 @@ Widget buildElevatedButton({
   required void Function() onPressed,
   required Widget child,
   EdgeInsetsGeometry padding = commonPadding,
+  Color? color,
 }) {
   return Container(
     padding: padding,
     height: height,
     width: width,
     child: ElevatedButton(
-      onPressed: onPressed,
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
       child: child,
+      onPressed: onPressed,
     ),
   );
 }
 
-Widget buildTextField(
-  TextEditingController ctr, {
+Widget buildTextField({
+  TextEditingController? ctr,
   bool obscureText = false,
   required String label,
   String hint = '',

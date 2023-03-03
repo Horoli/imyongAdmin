@@ -41,6 +41,9 @@ class _ViewCategoryState extends State<ViewCategory> {
       child: Column(
         children: [
           buildElevatedButton(
+            color: selectedMainCategory == '' || selectedMainCategory == '취소'
+                ? Theme.of(context).primaryColor
+                : Colors.amber,
             width: double.infinity,
             onPressed: () async {
               buildCategoriesDialog(createMainCategories());
@@ -55,7 +58,8 @@ class _ViewCategoryState extends State<ViewCategory> {
                 List<String> mainCategories =
                     List<String>.from(category.map.values);
                 print('mainCategories $mainCategories');
-  
+                print('selectedMainCategory $selectedMainCategory');
+
                 return ListView.builder(
                   itemCount: mainCategories.length,
                   itemBuilder: (context, int index) {
@@ -63,9 +67,7 @@ class _ViewCategoryState extends State<ViewCategory> {
                       color: selectedMainCategory == mainCategories[index]
                           ? Colors.amber
                           : Colors.blue,
-                      child: Text(
-                        mainCategories[index],
-                      ),
+                      child: Text(mainCategories[index]),
                     );
                   },
                 );
@@ -82,7 +84,7 @@ class _ViewCategoryState extends State<ViewCategory> {
       child: Column(
         children: [
           buildTextField(
-            ctrSubCategory,
+            ctr: ctrSubCategory,
             readOnly: true,
             label: 'subcategory',
             hint: 'select subcategory',
@@ -199,7 +201,7 @@ class _ViewCategoryState extends State<ViewCategory> {
       child: Column(
         children: [
           buildTextField(
-            ctrInputCategory,
+            ctr: ctrInputCategory,
             label: 'Enter category name',
             hint: 'Enter category name',
           ),
@@ -217,7 +219,7 @@ class _ViewCategoryState extends State<ViewCategory> {
                 context: context,
               );
 
-              // 
+              //
               if (result.statusCode != STATUS.SUCCESS_CODE) {
                 buildErrorDialog(result.message, result.statusCode, context);
               }
@@ -249,6 +251,7 @@ class _ViewCategoryState extends State<ViewCategory> {
               }
 
               if (!result.isSuccess) {
+                print('result $result');
                 buildErrorDialog(
                   result.message,
                   result.statusCode,
@@ -256,10 +259,6 @@ class _ViewCategoryState extends State<ViewCategory> {
                 );
                 return;
               }
-              // RestfulResult result = await GServiceSubCategory.delete(
-              //   id: ctrSubCategory.text,
-              // );
-              // print('step2');
 
               print('step3');
               ctrSubCategory.text = '';
@@ -319,24 +318,26 @@ class _ViewCategoryState extends State<ViewCategory> {
         return SimpleDialogOption(
           child: Text(mainCategories.values.toList()[index]),
           onPressed: () {
-            selectedMainCategory = mainCategories.values.toList()[index];
-            ctrMainCategory.text = mainCategories.keys.toList()[index];
+            setState(() {
+              selectedMainCategory = mainCategories.values.toList()[index];
+              ctrMainCategory.text = mainCategories.keys.toList()[index];
 
-            // TODO : stream refesh
-            GServiceMainCategory.$mainCategory
-                .sink$(GServiceMainCategory.mainCategory);
-            print('check ${ctrMainCategory.text == selectedMainCategory}');
-            // TODO : 메인 카테고리를 선택하면 서브 카테고리 선택 초기화
-            ctrSubCategory.text = '';
-            print(ctrMainCategory.text);
-            if (ctrMainCategory.text != '') {
-              GServiceSubCategory.get(parent: ctrMainCategory.text);
+              // TODO : stream refesh
+              GServiceMainCategory.$mainCategory
+                  .sink$(GServiceMainCategory.mainCategory);
+              print('check ${ctrMainCategory.text == selectedMainCategory}');
+              // TODO : 메인 카테고리를 선택하면 서브 카테고리 선택 초기화
+              ctrSubCategory.text = '';
+              print(ctrMainCategory.text);
+              if (ctrMainCategory.text != '') {
+                GServiceSubCategory.get(parent: ctrMainCategory.text);
+                // selectedCategoriesId = [];
+                return Navigator.pop(context);
+              }
+              GServiceSubCategory.get();
               // selectedCategoriesId = [];
               return Navigator.pop(context);
-            }
-            GServiceSubCategory.get();
-            // selectedCategoriesId = [];
-            return Navigator.pop(context);
+            });
           },
         );
       },

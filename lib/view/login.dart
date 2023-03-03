@@ -33,9 +33,13 @@ class _ViewLoginState extends State<ViewLogin> {
               child: Card(
                 child: Column(
                   children: [
-                    buildTextField(ctrID, label: 'id', hint: 'id'),
                     buildTextField(
-                      ctrPW,
+                      ctr: ctrID,
+                      label: 'id',
+                      hint: 'id',
+                    ),
+                    buildTextField(
+                      ctr: ctrPW,
                       label: 'pw',
                       hint: 'pw',
                       obscureText: true,
