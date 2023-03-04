@@ -4,7 +4,7 @@ class MMainCategory {
   final String en;
   final String ko;
   final String history;
-  MMainCategory({
+  MMainCategory._internal({
     required this.en,
     required this.ko,
     required this.history,
@@ -22,7 +22,7 @@ class MMainCategory {
     String ko = item['ko'] ?? '';
     String history = item['history'] ?? '';
 
-    return MMainCategory(
+    return MMainCategory._internal(
       en: en,
       ko: ko,
       history: history,

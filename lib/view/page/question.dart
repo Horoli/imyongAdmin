@@ -68,7 +68,9 @@ class _ViewQuestionState extends State<ViewQuestion> {
                 buildElevatedButton(
                   width: double.infinity,
                   child: Text('select difficulty'),
-                  onPressed: () {},
+                  onPressed: () {
+                    buildCategoriesDialog(create());
+                  },
                 ).expand(),
                 const Text('selectCategory'),
                 TStreamBuilder(
@@ -115,7 +117,7 @@ class _ViewQuestionState extends State<ViewQuestion> {
                 buildElevatedButton(
                   child: Text('dialog'),
                   onPressed: () async {
-                    buildCategoriesDialog(create());
+                    // buildCategoriesDialog(create());
                   },
                 ).expand(),
               ],
@@ -151,30 +153,33 @@ class _ViewQuestionState extends State<ViewQuestion> {
     GServiceSubCategory.get(isNoChildren: true);
     GServiceSubCategory.getAll();
     GServiceQuestion.get();
+    GServiceDifficulty.get();
   }
 
-  Future<void> buildCategoriesDialog(List<Widget> categories) {
+  Future<void> buildCategoriesDialog(List<Widget> options) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SimpleDialog(children: categories);
+        return SimpleDialog(children: options);
       },
     );
   }
 
   List<SimpleDialogOption> create() {
+    List<String> difficulty =
+        List<String>.from(GServiceDifficulty.difficulty.map.values);
+    print('difficulty $difficulty');
     return List.generate(
-      filteredSubcategory.length,
+      difficulty.length,
       (int index) {
         return SimpleDialogOption(
           child: Row(
             children: [
-              Text(filteredSubcategory[index].name),
-              Text(filteredSubcategory[index].name),
+              Text(difficulty[index]),
             ],
           ),
           onPressed: () {
-            ctrCategory.text = filteredSubcategory[index].id;
+            // ctrCategory.text = filteredSubcategory[index].id;
           },
         );
       },

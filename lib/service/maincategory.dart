@@ -8,7 +8,6 @@ class ServiceMainCategory {
   ServiceMainCategory._internal();
 
   TStream<MMainCategory> $mainCategory = TStream<MMainCategory>();
-
   MMainCategory get mainCategory => $mainCategory.lastValue;
 
   Future<RestfulResult> get() {
@@ -19,7 +18,7 @@ class ServiceMainCategory {
       tokenValue: hiveMLogin.values.first.token,
     );
 
-    http.get(getRequestUri('category'), headers: _headers).then(
+    http.get(getRequestUri(PATH.CATEGORY), headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
 

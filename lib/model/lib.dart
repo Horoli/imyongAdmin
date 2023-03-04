@@ -26,3 +26,4 @@ part 'maincategory.dart';
 part 'question.dart';
 part 'subcategory.dart';
 part 'restful_result.dart';
+part 'difficulty.dart';

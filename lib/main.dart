@@ -38,6 +38,7 @@ void _initService() {
   GServiceMainCategory = ServiceMainCategory.getInstance();
   GServiceSubCategory = ServiceSubCategory.getInstance();
   GServiceQuestion = ServiceQuestion.getInstance();
+  GServiceDifficulty = ServiceDifficulty.getInstance();
 }
 
 class AppRoot extends StatelessWidget {
