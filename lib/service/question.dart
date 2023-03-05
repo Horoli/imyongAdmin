@@ -40,6 +40,8 @@ class ServiceQuestion {
       Map result = json.decode(response.body);
       print('result $result');
 
+      get();
+
       if (result['statusCode'] == 403) {
         GHelperNavigator.pushLogin();
         return Error();
@@ -74,6 +76,48 @@ class ServiceQuestion {
       ));
     }).catchError((error) {
       print('error $error');
+    });
+
+    return completer.future;
+  }
+
+  Future<RestfulResult> patch({
+    required String id,
+    required String question,
+    required String answer,
+    required String categoryID,
+    String difficulty = 'normal',
+    int score = 3,
+  }) {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: hiveMLogin.values.first.token,
+    );
+
+    String _encodeData = jsonEncode({
+      "id": id,
+      "question": question,
+      "answer": answer,
+      "categoryID": categoryID,
+      "difficulty": difficulty,
+      "score": score,
+    });
+
+    http
+        .patch(getRequestUri(PATH.QUESTION),
+            body: _encodeData, headers: _headers)
+        .then((response) {
+      Map result = json.decode(response.body);
+      print('result $result');
+
+      get();
+
+      if (result['statusCode'] == 403) {
+        GHelperNavigator.pushLogin();
+        return Error();
+      }
     });
 
     return completer.future;

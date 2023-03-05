@@ -287,14 +287,16 @@ class _ViewCategoryState extends State<ViewCategory> {
   }
 
   void resetFunction() {
-    selectedMainCategory = '';
-    GServiceMainCategory.get();
-    GServiceSubCategory.getAll();
-    GServiceSubCategory.get();
-    ctrMainCategory.clear();
-    ctrSubCategory.clear();
-    ctrInputCategory.clear();
-    // selectedCategoriesId = [];
+    setState(() {
+      selectedMainCategory = '';
+      GServiceMainCategory.get();
+      GServiceSubCategory.getAll();
+      GServiceSubCategory.get();
+      ctrMainCategory.clear();
+      ctrSubCategory.clear();
+      ctrInputCategory.clear();
+      // selectedCategoriesId = [];
+    });
   }
 
   Future<void> buildCategoriesDialog(List<Widget> categories) {
