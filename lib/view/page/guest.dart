@@ -16,16 +16,16 @@ class _ViewGuestState extends State<ViewGuest> {
       child: Row(
         children: [
           Container(color: Colors.blue).expand(),
-          TStreamBuilder(
-            stream: GServiceGuest.$guest.browse$,
-            builder: (BuildContext context, Map<String, MGuest> item) {
-              return ListView.builder(
-                itemCount: item.keys.length,
-                itemBuilder: (context, index) =>
-                    Text(item.keys.toList()[index]),
-              );
-            },
-          ).expand(),
+          // TStreamBuilder(
+          //   stream: GServiceGuest.$guest.browse$,
+          //   builder: (BuildContext context, Map<String, MGuest> item) {
+          //     return ListView.builder(
+          //       itemCount: item.keys.length,
+          //       itemBuilder: (context, index) =>
+          //           Text(item.keys.toList()[index]),
+          //     );
+          //   },
+          // ).expand(),
         ],
       ),
     );
@@ -34,6 +34,6 @@ class _ViewGuestState extends State<ViewGuest> {
   @override
   void initState() {
     super.initState();
-    GServiceGuest.get();
+    // GServiceGuest.get();
   }
 }

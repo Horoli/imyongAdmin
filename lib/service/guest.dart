@@ -47,53 +47,53 @@ class ServiceGuest {
 
   ServiceGuest._internal();
 
-  TStream<Map<String, MGuest>> $guest = TStream<Map<String, MGuest>>();
-
-  Map<String, MGuest> get getGuest => $guest.lastValue;
+  TStream<String> $testToken = TStream<String>();
+  String get testToken => $testToken.lastValue;
 
   // TODO : change http.post to completer
-  Future<Map<String, MGuest>> post({required String uuid}) async {
+  Future<RestfulResult> post({required String uuid}) async {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
     String encodeData = jsonEncode({"id": uuid});
 
-    final response = await http.post(
-      getRequestUri(PATH.GUEST),
-      headers: createHeaders(),
-      body: encodeData,
-    );
+    http
+        .post(getRequestUri(PATH.GUEST),
+            headers: createHeaders(), body: encodeData)
+        .then((response) {
+      Map<String, dynamic> item =
+          Map.from(jsonDecode(response.body)['data'] ?? {});
+      print('item $item');
 
-    if (response.statusCode != STATUS.SUCCESS_CODE) {
-      throw Exception(STATUS.LOAD_FAILED_MSG);
-    }
-
-    print('response $response');
-    print('responseBody ${response.body}');
-
-    Map<String, dynamic> item =
-        Map.from(jsonDecode(response.body)['data']['guest'] ?? {});
-    Map<String, MGuest> convertedItem = item.map<String, MGuest>(
-        (key, value) => MapEntry(key, MGuest.fromMap(value)));
-
-    $guest.sink$(convertedItem);
-    return convertedItem;
+      $testToken.sink$(item['token'].toString());
+    });
+    return completer.future;
   }
 
-  Future<Map<String, MGuest>> get() async {
-    final response = await http.get(
-      getRequestUri(PATH.GUEST),
-      headers: createHeaders(),
+  Future<RestfulResult> get(String testID) async {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    print('testID $testID');
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: testID,
     );
 
-    if (response.statusCode != STATUS.SUCCESS_CODE) {
-      throw Exception(STATUS.LOAD_FAILED_MSG);
-    }
+    String query = 'guest?id=$uid';
 
-    Map<String, dynamic> item =
-        Map.from(jsonDecode(response.body)['data']['guest'] ?? {});
+    http.get(getRequestUri(query), headers: _headers).then((response) {
+      print('get ${response.body}');
+    });
 
-    Map<String, MGuest> convertedItem = item.map<String, MGuest>(
-        (key, value) => MapEntry(key, MGuest.fromMap(value)));
+    // if (response.statusCode != STATUS.SUCCESS_CODE) {
+    //   throw Exception(STATUS.LOAD_FAILED_MSG);
+    // }
 
-    $guest.sink$(convertedItem);
-    return convertedItem;
+    // Map<String, dynamic> item =
+    //     Map.from(jsonDecode(response.body)['data']['guest'] ?? {});
+
+    // Map<String, MGuest> convertedItem = item.map<String, MGuest>(
+    //     (key, value) => MapEntry(key, MGuest.fromMap(value)));
+
+    // $guest.sink$(convertedItem);
+    return completer.future;
   }
 }

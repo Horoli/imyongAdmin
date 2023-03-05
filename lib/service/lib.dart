@@ -20,6 +20,7 @@ import 'package:imyong/preset/tab.dart' as TAB;
 import 'package:imyong/preset/theme.dart' as THEME;
 import 'package:imyong/preset/status.dart' as STATUS;
 import 'package:imyong/preset/header.dart' as HEADER;
+import 'package:tnd_pkg_widget/preset/size.dart';
 
 part 'guest.dart';
 part 'login.dart';

@@ -1,5 +1,8 @@
 part of 'common.dart';
 
+// TEST
+String uid = newUUID();
+
 const String baseURL = 'http://localhost:3000';
 
 final HelperNavigator GHelperNavigator = HelperNavigator.getInstance();
