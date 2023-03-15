@@ -36,10 +36,13 @@ class ServiceLogin {
       if (response.statusCode == STATUS.SUCCESS_CODE) {
         MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
         $loginToken.sink$(convertedItem.token);
-        hiveMLogin.put('token', convertedItem);
+        hiveMLogin.put(id, convertedItem);
       } else {
-        hiveMLogin.put('token', MLogin(token: ''));
+        hiveMLogin.put(id, MLogin(token: ''));
       }
+
+      print('hiveMLogin.keys ${hiveMLogin.keys}');
+      print('hiveMLogin.value ${hiveMLogin.values}');
 
       return completer.complete(RestfulResult.fromMap(
         result,

@@ -80,6 +80,7 @@ class ServiceGuest {
       tokenValue: testID,
     );
 
+    // TODO : test
     String query = 'guest?id=$uid';
 
     http.get(getRequestUri(query), headers: _headers).then((response) {
