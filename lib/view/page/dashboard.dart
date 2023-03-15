@@ -24,8 +24,9 @@ class _ViewDashboardState extends State<ViewDashboard> {
             if (first == 0) {
               GServiceGuest.post(uuid: uid);
               first++;
+            } else {
+              GServiceGuest.get(GServiceGuest.testToken);
             }
-            GServiceGuest.get(GServiceGuest.testToken);
 
             // GServiceMainCategory.get();
             // GServiceSubCategory.get(parent: 'ab3aa1612dbd438a8288ca18d0bff3ee');
