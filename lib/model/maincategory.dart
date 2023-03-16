@@ -1,80 +1,65 @@
 part of 'lib.dart';
 
 class MMainCategory {
-  final String en;
   final String ko;
-  final String history;
+  final String math;
+  final String social;
+  final String science;
+  final String en;
+  final String music;
+  final String art;
+  final String ethics;
+  final String physicalEdu;
+  final String practical;
   MMainCategory._internal({
-    required this.en,
     required this.ko,
-    required this.history,
+    required this.math,
+    required this.social,
+    required this.science,
+    required this.en,
+    required this.music,
+    required this.art,
+    required this.ethics,
+    required this.physicalEdu,
+    required this.practical,
   });
 
   @override
   Map<String, dynamic> get map => {
-        'en': en,
         'ko': ko,
-        'history': history,
+        'math': math,
+        'social': social,
+        'science': science,
+        'en': en,
+        'music': music,
+        'art': art,
+        'ethics': ethics,
+        'physicalEdu': physicalEdu,
+        'practical': practical,
       };
 
   factory MMainCategory.fromMap(Map item) {
-    String en = item['en'] ?? '';
     String ko = item['ko'] ?? '';
-    String history = item['history'] ?? '';
-
+    String math = item['math'] ?? '';
+    String social = item['social'] ?? '';
+    String science = item['science'] ?? '';
+    String en = item['en'] ?? '';
+    String music = item['music'] ?? '';
+    String art = item['art'] ?? '';
+    String ethics = item['ethics'] ?? '';
+    String physicalEdu = item['physicalEdu'] ?? '';
+    String practical = item['practical'] ?? '';
     return MMainCategory._internal(
-      en: en,
       ko: ko,
-      history: history,
+      math: math,
+      social: social,
+      science: science,
+      en: en,
+      music: music,
+      art: art,
+      ethics: ethics,
+      physicalEdu: physicalEdu,
+      practical: practical,
     );
   }
 }
-
-// class MMainCategory {
-//   final String id;
-//   final String type;
-//   final String mainCategory;
-//   // final String? subCategory;
-
-//   MMainCategory({
-//     required this.id,
-//     required this.type,
-//     required this.mainCategory,
-//     // this.subCategory,
-//   });
-
-//   @override
-//   Map<String, dynamic> get map => {
-//         'id': id,
-//         'type': type,
-//         'maincategory': mainCategory,
-//         // 'subcategory': subCategory,
-//       };
-
-//   factory MMainCategory.fromMap(Map item) {
-//     String id = item['id'] ?? '';
-//     String type = item['type'] ?? '';
-//     String mainCategory = item['maincategory'] ?? '';
-//     // String subCategory = item['subcategory'] ?? '';
-
-//     return MMainCategory(
-//       id: id,
-//       type: type,
-//       mainCategory: mainCategory,
-//       // subCategory: subCategory,
-//     );
-//   }
-
-//   MMainCategory copyWith({
-//     String? id,
-//     String? type,
-//     String? mainCategory,
-//     // String? subCategory,
-//   }) =>
-//       MMainCategory(
-//         id: id ?? this.id,
-//         type: type ?? this.type,
-//         mainCategory: mainCategory ?? this.mainCategory,
-//         // subCategory: subCategory ?? this.subCategory,
-//       );
-// }
