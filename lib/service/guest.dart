@@ -3,19 +3,21 @@ part of 'lib.dart';
 // @HiveType(typeId: HIVE_ID.GUEST)
 // TODO : move to imyong APP
 class MGuest extends MCommonBase {
-  late List<String> currentQuestion;
-  late List<String> wrongQuestion;
+  final List<String> wishQuestion;
+  final List<String> currentQuestion;
+  final List<String> wrongQuestion;
   MGuest._internal({
+    required this.wishQuestion,
     required this.currentQuestion,
     required this.wrongQuestion,
     required super.id,
     required super.createdAt,
     required super.updatedAt,
   });
-  // }) : this.tmp = tmp == 0 ? 1 : tmp;
 
   factory MGuest.fromMap(Map<String, dynamic> item) {
     String id = item['id'] ?? '';
+    List<String> wishQuestion = List<String>.from(item['wishQuestion'] ?? []);
     int createdAt = item['createdAt'] ?? 0;
     int updatedAt = item['updatedAt'] ?? 0;
     List<String> currentQuestion =
@@ -26,6 +28,7 @@ class MGuest extends MCommonBase {
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      wishQuestion: wishQuestion,
       currentQuestion: currentQuestion,
       wrongQuestion: wrongQuestion,
     );
@@ -77,6 +80,7 @@ class ServiceGuest {
       tokenValue: testID,
     );
 
+    // TODO : test
     String query = 'guest?id=$uid';
 
     http.get(getRequestUri(query), headers: _headers).then((response) {

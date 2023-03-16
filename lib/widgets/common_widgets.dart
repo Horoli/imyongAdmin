@@ -37,10 +37,6 @@ void buildErrorDialog(
       );
     },
   );
-
-  // Timer(const Duration(milliseconds: 2000), () {
-  //   GHelperNavigator.pushLogin();
-  // });
 }
 
 Widget buildBorderContainer({Widget? child}) {
