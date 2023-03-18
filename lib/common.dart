@@ -37,7 +37,8 @@ part 'global.dart';
 
 // widgets
 part 'widgets/common_widgets.dart';
-part 'widgets/categories_tile.dart';
+part 'widgets/tile/categories_tile.dart';
+part 'widgets/question_edit_form.dart';
 
 part 'helper/navigator.dart';
 

@@ -17,9 +17,10 @@ class MGuest extends MCommonBase {
 
   factory MGuest.fromMap(Map<String, dynamic> item) {
     String id = item['id'] ?? '';
-    List<String> wishQuestion = List<String>.from(item['wishQuestion'] ?? []);
     int createdAt = item['createdAt'] ?? 0;
     int updatedAt = item['updatedAt'] ?? 0;
+
+    List<String> wishQuestion = List<String>.from(item['wishQuestion'] ?? []);
     List<String> currentQuestion =
         List<String>.from(item['currentQuestion'] ?? []);
     List<String> wrongQuestion = List<String>.from(item['wrongQuestion'] ?? []);

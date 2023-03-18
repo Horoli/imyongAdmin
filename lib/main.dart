@@ -17,13 +17,13 @@ Future<void> main() async {
   GServiceTheme.fetch();
 
   await _initHive();
-  _registerHiveAdapter();
   _initService();
   runApp(AppRoot());
 }
 
 Future<void> _initHive() async {
   await Hive.initFlutter();
+  _registerHiveAdapter();
   hiveMLogin = await Hive.openBox('login');
 }
 

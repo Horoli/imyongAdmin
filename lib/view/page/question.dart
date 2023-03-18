@@ -1,13 +1,13 @@
 part of '/common.dart';
 
 class ViewQuestion extends StatefulWidget {
-  const ViewQuestion({Key? key}) : super(key: key);
+  const ViewQuestion({super.key});
 
   @override
-  _ViewQuestionState createState() => _ViewQuestionState();
+  ViewQuestionState createState() => ViewQuestionState();
 }
 
-class _ViewQuestionState extends State<ViewQuestion> {
+class ViewQuestionState extends State<ViewQuestion> {
   TextEditingController ctrCategory = TextEditingController();
 
   //
@@ -125,6 +125,7 @@ class _ViewQuestionState extends State<ViewQuestion> {
   @override
   void initState() {
     super.initState();
+    GServiceMainCategory.get();
     GServiceSubCategory.get(isNoChildren: true);
     GServiceSubCategory.getAll();
     GServiceQuestion.get();
@@ -165,91 +166,9 @@ class _ViewQuestionState extends State<ViewQuestion> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        TextEditingController _ctrQuestion =
-            TextEditingController(text: selectedQuestion.question);
-        TextEditingController _ctrAnswer =
-            TextEditingController(text: selectedQuestion.answer);
-        TextEditingController _ctrDifficulty =
-            TextEditingController(text: selectedQuestion.difficulty);
-        TextEditingController _ctrCategoryID =
-            TextEditingController(text: selectedQuestion.categoryID);
         return AlertDialog(
-          content: SingleChildScrollView(
-            child: SizedBox(
-              width: 500,
-              height: 500,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Text('edit'),
-                          buildTextField(
-                            ctr: _ctrQuestion,
-                            label: 'question',
-                          ),
-                          buildTextField(
-                            ctr: _ctrAnswer,
-                            label: 'answer',
-                          ),
-                          buildTextField(
-                            ctr: _ctrDifficulty,
-                            label: 'difficulty',
-                          ),
-                          buildTextField(
-                            ctr: _ctrCategoryID,
-                            label: 'category',
-                          ),
-                        ],
-                      ).expand(),
-                      Column(
-                        children: [
-                          Text('select category'),
-                          TStreamBuilder(
-                            stream: GServiceSubCategory.$subCategory.browse$,
-                            builder: (BuildContext context, _) {
-                              return buildBorderContainer(
-                                child: ListView.builder(
-                                  itemCount: filteredSubcategory.length,
-                                  itemBuilder: (context, index) {
-                                    return QuestionCategoryTile(
-                                      selected: _ctrCategoryID.text ==
-                                          filteredSubcategory[index].id,
-                                      name: filteredSubcategory[index].name,
-                                      onChanged: (bool? changed) {
-                                        setState(() {
-                                          changed!
-                                              ? _ctrCategoryID.text =
-                                                  filteredSubcategory[index].id
-                                              : _ctrCategoryID.text = '';
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).expand(),
-                        ],
-                      ).expand(),
-                    ],
-                  ).expand(),
-                  buildElevatedButton(
-                    width: double.infinity,
-                    child: Text('complete'),
-                    onPressed: () {
-                      GServiceQuestion.patch(
-                        id: selectedQuestion.id,
-                        question: _ctrQuestion.text,
-                        answer: _ctrAnswer.text,
-                        categoryID: _ctrCategoryID.text,
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
+          content: FormQuestionEdit(
+            selectedQuestion: selectedQuestion,
           ),
         );
       },
