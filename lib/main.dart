@@ -23,7 +23,6 @@ Future<void> main() async {
 
 Future<void> _initHive() async {
   await Hive.initFlutter();
-  _registerHiveAdapter();
   hiveMLogin = await Hive.openBox('login');
 }
 

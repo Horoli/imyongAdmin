@@ -1,7 +1,7 @@
 part of '/common.dart';
 
 class ViewCategory extends StatefulWidget {
-  const ViewCategory({Key? key}) : super(key: key);
+  const ViewCategory({super.key});
 
   @override
   _ViewCategoryState createState() => _ViewCategoryState();
