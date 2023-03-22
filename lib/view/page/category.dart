@@ -4,10 +4,10 @@ class ViewCategory extends StatefulWidget {
   const ViewCategory({super.key});
 
   @override
-  _ViewCategoryState createState() => _ViewCategoryState();
+  ViewCategoryState createState() => ViewCategoryState();
 }
 
-class _ViewCategoryState extends State<ViewCategory> {
+class ViewCategoryState extends State<ViewCategory> {
   final TextEditingController ctrMainCategory = TextEditingController();
   final TextEditingController ctrSubCategory = TextEditingController();
   final TextEditingController ctrInputCategory = TextEditingController();

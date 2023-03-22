@@ -16,6 +16,7 @@ Future<void> main() async {
 
   GServiceTheme.fetch();
 
+  _registerHiveAdapter();
   await _initHive();
   _initService();
   runApp(AppRoot());

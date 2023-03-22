@@ -1,13 +1,15 @@
 part of '/common.dart';
 
 class ViewHome extends StatefulWidget {
-  const ViewHome({Key? key}) : super(key: key);
+  const ViewHome({
+    super.key,
+  });
 
   @override
-  _ViewHomeState createState() => _ViewHomeState();
+  ViewHomeState createState() => ViewHomeState();
 }
 
-class _ViewHomeState extends State<ViewHome>
+class ViewHomeState extends State<ViewHome>
     with SingleTickerProviderStateMixin {
   late TabController ctrTab;
   late int tabIndex = 0;
@@ -21,6 +23,7 @@ class _ViewHomeState extends State<ViewHome>
     // ViewMainCategory(),
     // ViewSubCategory(),
     ViewQuestion(),
+    // Container(),
     ViewSetting(),
   ];
 
