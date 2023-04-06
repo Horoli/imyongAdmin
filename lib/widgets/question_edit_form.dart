@@ -1,9 +1,9 @@
 part of '/common.dart';
 
 class FormQuestionEdit extends StatefulWidget {
-  MQuestion? selectedQuestion;
+  MQuestion selectedQuestion;
   FormQuestionEdit({
-    this.selectedQuestion,
+    required this.selectedQuestion,
     super.key,
   });
 
@@ -12,17 +12,16 @@ class FormQuestionEdit extends StatefulWidget {
 }
 
 class FormQuestionEditState extends State<FormQuestionEdit> {
+  MQuestion get selectedQuestion => widget.selectedQuestion;
+
   // selectedCheck
   String selectedMainCategory = '';
 
-  late final TextEditingController _ctrQuestion =
-      TextEditingController(text: widget.selectedQuestion!.question);
-  late final TextEditingController _ctrAnswer =
-      TextEditingController(text: widget.selectedQuestion!.answer);
-  late final TextEditingController _ctrDifficulty =
-      TextEditingController(text: widget.selectedQuestion!.difficulty);
-  late final TextEditingController _ctrCategoryID =
-      TextEditingController(text: widget.selectedQuestion!.categoryID);
+  late final TextEditingController _ctrQuestion = TextEditingController();
+  late final TextEditingController _ctrAnswer = TextEditingController();
+  late final TextEditingController _ctrDifficulty = TextEditingController();
+  late final TextEditingController _ctrCategoryID = TextEditingController();
+  final TStream<List<String>> $base64Images = TStream<List<String>>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +49,11 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               child: Text('complete'),
               onPressed: () {
                 GServiceQuestion.patch(
-                  id: widget.selectedQuestion!.id,
+                  id: selectedQuestion.id,
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
-                  images: [],
+                  images: $base64Images.lastValue,
                 );
               },
             )
@@ -171,14 +170,26 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     return Column(
       children: [
         Text('images'),
+        buildElevatedButton(
+          child: Text('image Select'),
+          onPressed: () async {
+            // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
+            await selectImageFile(multiSelect: true).then((v) {
+              $base64Images.sink$(v);
+            });
+          },
+        ).expand(),
         buildBorderContainer(
-          child: ListView.builder(
-            itemCount: widget.selectedQuestion!.images.length,
-            itemBuilder: (context, index) {
-              return Image.memory(
-                  base64Decode(widget.selectedQuestion!.images[index]));
-            },
-          ),
+          child: TStreamBuilder(
+              stream: $base64Images.browse$,
+              builder: (context, List<String> images) {
+                return ListView.builder(
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Image.memory(base64Decode(images[index]));
+                  },
+                );
+              }),
         ).expand(),
       ],
     );
@@ -187,6 +198,15 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   @override
   void initState() {
     super.initState();
+    initData();
+  }
+
+  void initData() {
+    _ctrQuestion.text = selectedQuestion.question;
+    _ctrAnswer.text = selectedQuestion.answer;
+    _ctrDifficulty.text = selectedQuestion.difficulty;
+    _ctrCategoryID.text = selectedQuestion.categoryID;
+    $base64Images.sink$(selectedQuestion.images);
   }
 
   @override
