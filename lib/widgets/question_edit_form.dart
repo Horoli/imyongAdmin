@@ -42,6 +42,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
 
                 // TODO : 메인 카테고리를 parents로 가지는 서브카테고리 리스트 출력
                 buildSubCategoriesFields().expand(),
+                buildImagesFields().expand(),
               ],
             ).expand(),
             buildElevatedButton(
@@ -53,6 +54,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
+                  images: [],
                 );
               },
             )
@@ -160,6 +162,23 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               ),
             );
           },
+        ).expand(),
+      ],
+    );
+  }
+
+  Widget buildImagesFields() {
+    return Column(
+      children: [
+        Text('images'),
+        buildBorderContainer(
+          child: ListView.builder(
+            itemCount: widget.selectedQuestion!.images.length,
+            itemBuilder: (context, index) {
+              return Image.memory(
+                  base64Decode(widget.selectedQuestion!.images[index]));
+            },
+          ),
         ).expand(),
       ],
     );

@@ -16,6 +16,7 @@ class ServiceQuestion {
     required String categoryID,
     String difficulty = 'normal',
     int score = 3,
+    List<String> images = const [],
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
     //
@@ -31,6 +32,7 @@ class ServiceQuestion {
       "categoryID": categoryID,
       "difficulty": difficulty,
       "score": score,
+      "images": images,
     });
 
     http
@@ -88,6 +90,7 @@ class ServiceQuestion {
     required String categoryID,
     String difficulty = 'normal',
     int score = 3,
+    required List<String> images,
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
@@ -103,6 +106,7 @@ class ServiceQuestion {
       "categoryID": categoryID,
       "difficulty": difficulty,
       "score": score,
+      "images": images,
     });
 
     http

@@ -15,6 +15,7 @@ class ViewQuestionState extends State<ViewQuestion> {
   Map<String, MSubCategory> get getAllCategory =>
       GServiceSubCategory.allSubCategory;
 
+  final TStream<List<String>> $base64Images = TStream<List<String>>();
   //
   @override
   Widget build(BuildContext context) {
@@ -22,79 +23,126 @@ class ViewQuestionState extends State<ViewQuestion> {
     return buildBorderContainer(
       child: Row(
         children: [
-          buildBorderContainer(
-            child: Column(
-              children: [
-                const Text('question list'),
-                TStreamBuilder(
-                    stream: GServiceQuestion.$questions.browse$,
-                    builder: (context, List<MQuestion> questions) {
-                      return ListView.builder(
-                        itemCount: questions.length,
-                        itemBuilder: (context, index) {
-                          return QuestionTile(
-                            question: questions[index].question,
-                            answer: questions[index].answer,
-                            category: questions[index].categoryID,
-                            edit: const Icon(Icons.abc),
-                            onPressedAction: () {
-                              buildEditQuestionDialog(questions[index]);
-                              print(questions[index].id);
-                            },
-                          );
-                        },
-                      );
-                    }).expand(),
-              ],
-            ),
-          ).expand(),
-          buildBorderContainer(
-            child: Column(
-              children: [
-                buildTextField(label: 'enter question'),
-                buildTextField(label: 'enter answer'),
-                buildTextField(label: 'enter score'),
-                buildElevatedButton(
-                  width: double.infinity,
-                  child: Text('select difficulty'),
-                  onPressed: () {
-                    buildCategoriesDialog(create());
+          buildQuestions().expand(),
+          buildInputFields().expand(),
+          buildCompleteFields().expand(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildQuestions() {
+    return buildBorderContainer(
+      child: Column(
+        children: [
+          const Text('question list'),
+          TStreamBuilder(
+              stream: GServiceQuestion.$questions.browse$,
+              builder: (context, List<MQuestion> questions) {
+                return ListView.builder(
+                  itemCount: questions.length,
+                  itemBuilder: (context, index) {
+                    return QuestionTile(
+                      question: questions[index].question,
+                      answer: questions[index].answer,
+                      category: questions[index].categoryID,
+                      edit: const Icon(Icons.abc),
+                      onPressedAction: () {
+                        buildEditQuestionDialog(questions[index]);
+                        print(questions[index].id);
+                      },
+                    );
                   },
-                ).expand(),
-                const Text('selectCategory'),
-                buildCategoriesTile().expand(),
-              ],
-            ),
+                );
+              }).expand(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildInputFields() {
+    return buildBorderContainer(
+      child: Column(
+        children: [
+          buildTextField(label: 'enter question'),
+          buildTextField(label: 'enter answer'),
+          buildTextField(label: 'enter score'),
+          // buildElevatedButton(
+          //   width: double.infinity,
+          //   child: Text('select difficulty'),
+          //   onPressed: () {
+          //     buildCategoriesDialog(popDifficulty());
+          //   },
+          // ).expand(),
+
+          const Text('selectCategory'),
+          buildTextField(
+            ctr: ctrCategory,
+            label: 'selectedCategory ID',
+            readOnly: true,
+          ),
+          buildCategories().expand(),
+          buildImageSelectFields().expand(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildImageSelectFields() {
+    return buildBorderContainer(
+      child: Row(
+        children: [
+          buildElevatedButton(
+            child: Text('image Select'),
+            onPressed: () async {
+              // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
+              await selectImageFile(multiSelect: true).then((v) {
+                $base64Images.sink$(v);
+              });
+            },
           ).expand(),
-          buildBorderContainer(
-            child: Column(
-              children: [
-                buildTextField(
-                  ctr: ctrCategory,
-                  label: 'selectedCategory ID',
-                  readOnly: true,
+          TStreamBuilder(
+            stream: $base64Images.browse$,
+            builder: (buildContext, List<String> base64Images) {
+              // base64Images를 ListView로 이미지를 보여주는 widget
+              return buildBorderContainer(
+                child: ListView.builder(
+                  itemCount: base64Images.length,
+                  itemBuilder: (context, index) {
+                    return Image.memory(base64Decode(base64Images[index]));
+                  },
                 ),
-                buildElevatedButton(
-                  child: Text('post'),
-                  onPressed: () async {
-                    GServiceQuestion.post(categoryID: ctrCategory.text);
-                  },
-                ).expand(),
-                buildElevatedButton(
-                  child: Text('dialog'),
-                  onPressed: () async {
-                    // buildCategoriesDialog(create());
-                  },
-                ).expand(),
-              ],
-            ),
+              );
+            },
           ).expand(),
         ],
       ),
     );
   }
 
-  Widget buildCategoriesTile({bool isEdit = false}) {
+  Widget buildCompleteFields() {
+    return buildBorderContainer(
+      child: Column(
+        children: [
+          buildElevatedButton(
+            child: Text('post'),
+            onPressed: () async {
+              GServiceQuestion.post(
+                categoryID: ctrCategory.text,
+                images: $base64Images.lastValue,
+              );
+            },
+          ).expand(),
+          buildElevatedButton(
+            child: Text('delete'),
+            onPressed: () async {},
+          ).expand(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCategories({bool isEdit = false}) {
     return TStreamBuilder(
       stream: GServiceSubCategory.$subCategory.browse$,
       builder: (BuildContext context, _) {
@@ -141,7 +189,7 @@ class ViewQuestionState extends State<ViewQuestion> {
     );
   }
 
-  List<SimpleDialogOption> create() {
+  List<SimpleDialogOption> popDifficulty() {
     List<String> difficulty =
         List<String>.from(GServiceDifficulty.difficulty.map.values);
     print('difficulty $difficulty');
@@ -162,6 +210,7 @@ class ViewQuestionState extends State<ViewQuestion> {
     );
   }
 
+  // TODO : listView에 포함된 question을 edit하는 pop
   Future<void> buildEditQuestionDialog(MQuestion selectedQuestion) {
     return showDialog(
       context: context,

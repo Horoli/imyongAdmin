@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:imyong/common.dart';
 
 import 'package:hive/hive.dart';
@@ -13,6 +15,13 @@ import 'preset/color.dart' as COLOR;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    const int megabyte = 1000000;
+    SystemChannels.skia
+        .invokeMethod('Skia.setResourceCacheMaxBytes', 512 * megabyte);
+    await Future<void>.delayed(Duration.zero);
+  }
 
   GServiceTheme.fetch();
 
