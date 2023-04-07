@@ -64,11 +64,11 @@ class ServiceQuestion {
 
     http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
       Map result = json.decode(response.body);
+      print('result $result');
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {
         questionList.add(MQuestion.fromMap(item));
       }
-      print('questionList $questionList');
       //
       $questions.sink$(questionList);
       //
@@ -77,7 +77,7 @@ class ServiceQuestion {
         message: 'ok',
       ));
     }).catchError((error) {
-      print('error $error');
+      print('question get Error $error');
     });
 
     return completer.future;

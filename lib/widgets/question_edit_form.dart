@@ -206,6 +206,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;
     _ctrCategoryID.text = selectedQuestion.categoryID;
+    print('selectedQuestion.images ${selectedQuestion.images}');
     $base64Images.sink$(selectedQuestion.images);
   }
 

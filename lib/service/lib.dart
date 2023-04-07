@@ -30,3 +30,4 @@ part 'subcategory.dart';
 part 'theme.dart';
 part 'type.dart';
 part 'difficulty.dart';
+part 'image.dart';
