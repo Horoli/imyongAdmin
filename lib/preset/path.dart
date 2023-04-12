@@ -10,5 +10,6 @@ const String CATEGORY_QUERY = 'category?id=';
 
 const String QUESTION = 'question';
 const String QUESTION_QUERY = 'question?id=';
+const String QUESTION_IMAGE = 'image/';
 
 const String DIFFICULTY = 'difficulty';

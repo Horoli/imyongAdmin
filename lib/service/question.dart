@@ -32,7 +32,7 @@ class ServiceQuestion {
       "categoryID": categoryID,
       "difficulty": difficulty,
       "score": score,
-      "images": images,
+      "images": images, // post할때는 images를 보냄
     });
 
     http
@@ -40,9 +40,9 @@ class ServiceQuestion {
             body: _encodeData, headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
-      print('result $result');
+      print('post result $result');
 
-      get();
+      // get();
 
       if (result['statusCode'] == 403) {
         GHelperNavigator.pushLogin();
@@ -64,9 +64,10 @@ class ServiceQuestion {
 
     http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
       Map result = json.decode(response.body);
-      print('result $result');
+      print('get result $result');
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {
+        print('get item $item');
         questionList.add(MQuestion.fromMap(item));
       }
       //
@@ -76,6 +77,33 @@ class ServiceQuestion {
         statusCode: STATUS.SUCCESS_CODE,
         message: 'ok',
       ));
+    }).catchError((error) {
+      print('question get Error $error');
+    });
+
+    return completer.future;
+  }
+
+  Future<RestfulResult> getImage(String imageID) {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: hiveMLogin.values.first.token,
+    );
+
+    http
+        .get(getRequestUri(PATH.QUESTION_IMAGE + imageID), headers: _headers)
+        .then((response) {
+      String imageResult = base64Encode(response.bodyBytes);
+
+      completer.complete(
+        RestfulResult(
+          statusCode: STATUS.SUCCESS_CODE,
+          message: 'ok',
+          data: imageResult,
+        ),
+      );
     }).catchError((error) {
       print('question get Error $error');
     });

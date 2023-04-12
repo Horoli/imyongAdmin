@@ -21,7 +21,8 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   late final TextEditingController _ctrAnswer = TextEditingController();
   late final TextEditingController _ctrDifficulty = TextEditingController();
   late final TextEditingController _ctrCategoryID = TextEditingController();
-  final TStream<List<String>> $base64Images = TStream<List<String>>();
+  final TStream<List<String>> $imageIDs = TStream<List<String>>();
+  final TStream<List<String>> $modifyBase64Images = TStream<List<String>>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,9 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
 
                 // TODO : 메인 카테고리를 parents로 가지는 서브카테고리 리스트 출력
                 buildSubCategoriesFields().expand(),
-                buildImagesFields().expand(),
+
+                buildShowImagesFields().expand(),
+                buildEditImageFields().expand(),
               ],
             ).expand(),
             buildElevatedButton(
@@ -53,7 +56,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
-                  images: $base64Images.lastValue,
+                  images: $modifyBase64Images.lastValue,
                 );
               },
             )
@@ -166,33 +169,67 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     );
   }
 
-  Widget buildImagesFields() {
+  Widget buildShowImagesFields() {
     return Column(
       children: [
         Text('images'),
+        buildBorderContainer(
+          child: TStreamBuilder(
+            stream: $imageIDs.browse$,
+            builder: (context, List<String> imageIDs) {
+              return ListView.builder(
+                itemCount: imageIDs.length,
+                itemBuilder: (context, index) {
+                  Future<RestfulResult> getImage =
+                      GServiceQuestion.getImage(imageIDs[index]);
+
+                  return FutureBuilder(
+                    future: getImage,
+                    builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
+                      if (snapshot.hasData) {
+                        return Image.memory(base64Decode(snapshot.data!.data));
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ).expand(),
+      ],
+    );
+  }
+
+  Widget buildEditImageFields() {
+    return Column(
+      children: [
         buildElevatedButton(
           child: Text('image Select'),
           onPressed: () async {
             // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
             await selectImageFile(multiSelect: true).then((v) {
-              $base64Images.sink$(v);
+              $modifyBase64Images.sink$(v);
             });
           },
         ).expand(),
-        buildBorderContainer(
-          child: TStreamBuilder(
-              stream: $base64Images.browse$,
-              builder: (context, List<String> images) {
-                return ListView.builder(
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    return Image.memory(base64Decode(images[index]));
-                  },
+        TStreamBuilder(
+          stream: $modifyBase64Images.browse$,
+          builder: (context, List<String> base64Images) {
+            return ListView.builder(
+              itemCount: base64Images.length,
+              itemBuilder: (context, index) {
+                return Image.memory(
+                  base64Decode($modifyBase64Images.lastValue[index]),
                 );
-              }),
+              },
+            );
+          },
         ).expand(),
       ],
     );
+
+    return Container();
   }
 
   @override
@@ -206,8 +243,9 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;
     _ctrCategoryID.text = selectedQuestion.categoryID;
-    print('selectedQuestion.images ${selectedQuestion.images}');
-    $base64Images.sink$(selectedQuestion.images);
+    print('selectedQuestion.images ${selectedQuestion.imageIDs}');
+    $imageIDs.sink$(selectedQuestion.imageIDs);
+    $modifyBase64Images.sink$([]);
   }
 
   @override

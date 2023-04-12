@@ -131,6 +131,7 @@ class ViewQuestionState extends State<ViewQuestion> {
                 categoryID: ctrCategory.text,
                 images: $base64Images.lastValue,
               );
+              GServiceQuestion.get();
             },
           ).expand(),
           buildElevatedButton(
