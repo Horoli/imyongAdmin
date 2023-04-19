@@ -54,9 +54,6 @@ class _ViewLoginState extends State<ViewLogin> {
                           ctrPW.text,
                         );
 
-                        print('result $result');
-                        // print(result.data);
-
                         if (result.isSuccess) {
                           return GHelperNavigator.pushHome();
                         }

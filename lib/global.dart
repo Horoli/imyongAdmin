@@ -3,12 +3,12 @@ part of 'common.dart';
 // TEST
 String uid = newUUID();
 
-const String baseURL = 'http://localhost:3000';
+// const String baseURL = 'http://localhost:3000';
 
 final HelperNavigator GHelperNavigator = HelperNavigator.getInstance();
 final GlobalKey<NavigatorState> GNavigatorKey = GlobalKey<NavigatorState>();
 
-Uri getRequestUri(String path) => Uri.parse(p.join(baseURL, path));
+Uri getRequestUri(String path) => Uri.parse(p.join(URL, path));
 
 Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
   Map<String, String> headers = {

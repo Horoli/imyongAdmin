@@ -9,13 +9,15 @@ class ViewQuestion extends StatefulWidget {
 
 class ViewQuestionState extends State<ViewQuestion> {
   TextEditingController ctrCategory = TextEditingController();
-
+  TextEditingController ctrQuestion = TextEditingController();
+  TextEditingController ctrAnswer = TextEditingController();
   //
   List<MSubCategory> get filteredSubcategory => GServiceSubCategory.subCategory;
   Map<String, MSubCategory> get getAllCategory =>
       GServiceSubCategory.allSubCategory;
 
-  final TStream<List<String>> $base64Images = TStream<List<String>>();
+  final TStream<List<String>> $base64Images = TStream<List<String>>()
+    ..sink$([]);
   //
   @override
   Widget build(BuildContext context) {
@@ -64,9 +66,9 @@ class ViewQuestionState extends State<ViewQuestion> {
     return buildBorderContainer(
       child: Column(
         children: [
-          buildTextField(label: 'enter question'),
-          buildTextField(label: 'enter answer'),
-          buildTextField(label: 'enter score'),
+          buildTextField(ctr: ctrQuestion, label: 'enter question'),
+          buildTextField(ctr: ctrAnswer, label: 'enter answer'),
+          // buildTextField(label: 'enter score'),
           // buildElevatedButton(
           //   width: double.infinity,
           //   child: Text('select difficulty'),
@@ -74,7 +76,6 @@ class ViewQuestionState extends State<ViewQuestion> {
           //     buildCategoriesDialog(popDifficulty());
           //   },
           // ).expand(),
-
           const Text('selectCategory'),
           buildTextField(
             ctr: ctrCategory,
@@ -92,14 +93,24 @@ class ViewQuestionState extends State<ViewQuestion> {
     return buildBorderContainer(
       child: Row(
         children: [
-          buildElevatedButton(
-            child: Text('image Select'),
-            onPressed: () async {
-              // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
-              await selectImageFile(multiSelect: true).then((v) {
-                $base64Images.sink$(v);
-              });
-            },
+          Column(
+            children: [
+              buildElevatedButton(
+                child: Text('image Select'),
+                onPressed: () async {
+                  // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
+                  await selectImageFile(multiSelect: true).then((v) {
+                    $base64Images.sink$(v);
+                  });
+                },
+              ).expand(),
+              buildElevatedButton(
+                child: Text('image cancel'),
+                onPressed: () async {
+                  $base64Images.sink$([]);
+                },
+              ).expand(),
+            ],
           ).expand(),
           TStreamBuilder(
             stream: $base64Images.browse$,
@@ -109,6 +120,7 @@ class ViewQuestionState extends State<ViewQuestion> {
                 child: ListView.builder(
                   itemCount: base64Images.length,
                   itemBuilder: (context, index) {
+                    print('base64Images $base64Images');
                     return Image.memory(base64Decode(base64Images[index]));
                   },
                 ),
@@ -128,6 +140,8 @@ class ViewQuestionState extends State<ViewQuestion> {
             child: Text('post'),
             onPressed: () async {
               GServiceQuestion.post(
+                question: ctrQuestion.text,
+                answer: ctrAnswer.text,
                 categoryID: ctrCategory.text,
                 images: $base64Images.lastValue,
               );

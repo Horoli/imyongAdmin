@@ -11,12 +11,12 @@ class ServiceQuestion {
   List<MQuestion> get questions => $questions.lastValue;
 
   Future<RestfulResult> post({
-    String question = 'question',
-    String answer = 'answer',
+    required String question,
+    required String answer,
     required String categoryID,
     String difficulty = 'normal',
     int score = 3,
-    List<String> images = const [],
+    List<String>? images = const [],
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
     //

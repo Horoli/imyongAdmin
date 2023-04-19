@@ -50,6 +50,7 @@ class ServiceLogin {
       ));
     }).catchError((error) {
       print('Error: $error');
+
       GHelperNavigator.pushLogin();
       return completer.complete(
         RestfulResult(
