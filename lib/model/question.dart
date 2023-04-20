@@ -27,7 +27,7 @@ class MQuestion extends MCommonBase {
         'categoryID': categoryID,
         'difficulty': difficulty,
         'score': score,
-        'images': imageIDs,
+        'imagesIDs': imageIDs,
         'id': id,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
