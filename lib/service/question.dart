@@ -133,7 +133,7 @@ class ServiceQuestion {
     required String categoryID,
     String difficulty = 'normal',
     int score = 3,
-    required List<String> images,
+    List<String>? images,
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
@@ -149,7 +149,7 @@ class ServiceQuestion {
       "categoryID": categoryID,
       "difficulty": difficulty,
       "score": score,
-      "images": images,
+      "images": images ?? [],
     });
 
     http

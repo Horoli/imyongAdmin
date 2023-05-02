@@ -54,7 +54,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
                   // TODO : 수정된 이미지가 없으면 기존 이미지를 사용
-                  images: $modifyBase64Images.lastValue.isEmpty
+                  images: $modifyBase64Images.lastValue == []
                       ? $imageIDs.lastValue
                       : $modifyBase64Images.lastValue,
                 );
