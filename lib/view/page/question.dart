@@ -44,11 +44,16 @@ class ViewQuestionState extends State<ViewQuestion> {
                 return ListView.builder(
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
+                    // TODO : categoryID를 이용해서 category를 가져옴
+                    MSubCategory getSubCategory = GServiceSubCategory
+                        .allSubCategory[questions[index].categoryID]!;
+
                     return QuestionTile(
+                      mainCategory: getSubCategory.parent,
+                      subCategory: getSubCategory.name,
                       question: questions[index].question,
                       answer: questions[index].answer,
-                      category: questions[index].categoryID,
-                      edit: const Icon(Icons.abc),
+                      edit: const Icon(Icons.edit),
                       onPressedAction: () {
                         buildEditQuestionDialog(questions[index]);
                         print(questions[index].id);
@@ -66,7 +71,11 @@ class ViewQuestionState extends State<ViewQuestion> {
     return buildBorderContainer(
       child: Column(
         children: [
-          buildTextField(ctr: ctrQuestion, label: 'enter question'),
+          buildTextField(
+            ctr: ctrQuestion,
+            label: 'enter question',
+            maxLines: 5,
+          ),
           buildTextField(ctr: ctrAnswer, label: 'enter answer'),
           // buildTextField(label: 'enter score'),
           // buildElevatedButton(
@@ -96,7 +105,8 @@ class ViewQuestionState extends State<ViewQuestion> {
           Column(
             children: [
               buildElevatedButton(
-                child: Text('image Select'),
+                width: double.infinity,
+                child: Text('이미지 선택'),
                 onPressed: () async {
                   // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
                   await selectImageFile(multiSelect: true).then((v) {
@@ -105,7 +115,8 @@ class ViewQuestionState extends State<ViewQuestion> {
                 },
               ).expand(),
               buildElevatedButton(
-                child: Text('image cancel'),
+                width: double.infinity,
+                child: Text('이미지 선택 취소'),
                 onPressed: () async {
                   $base64Images.sink$([]);
                 },
@@ -120,7 +131,7 @@ class ViewQuestionState extends State<ViewQuestion> {
                 child: ListView.builder(
                   itemCount: base64Images.length,
                   itemBuilder: (context, index) {
-                    print('base64Images $base64Images');
+                    // print('base64Images $base64Images');
                     return Image.memory(base64Decode(base64Images[index]));
                   },
                 ),
@@ -137,19 +148,36 @@ class ViewQuestionState extends State<ViewQuestion> {
       child: Column(
         children: [
           buildElevatedButton(
-            child: Text('post'),
+            width: double.infinity,
+            child: Text('저장'),
             onPressed: () async {
-              GServiceQuestion.post(
+              RestfulResult result = await GServiceQuestion.post(
                 question: ctrQuestion.text,
                 answer: ctrAnswer.text,
                 categoryID: ctrCategory.text,
                 images: $base64Images.lastValue,
               );
+              // TODO : 서버 연결에 따른 예외처리
+              if (!result.isSuccess) {
+                showSnackBar(
+                  msg: result.message,
+                  context: context,
+                );
+                return;
+              }
+
               GServiceQuestion.get();
+
+              showSnackBar(
+                msg: '저장되었습니다.',
+                context: context,
+              );
             },
           ).expand(),
           buildElevatedButton(
-            child: Text('delete'),
+            color: Colors.black,
+            width: double.infinity,
+            child: Text('삭제(미구현)'),
             onPressed: () async {},
           ).expand(),
         ],
@@ -207,7 +235,6 @@ class ViewQuestionState extends State<ViewQuestion> {
   List<SimpleDialogOption> popDifficulty() {
     List<String> difficulty =
         List<String>.from(GServiceDifficulty.difficulty.map.values);
-    print('difficulty $difficulty');
     return List.generate(
       difficulty.length,
       (int index) {
@@ -230,9 +257,37 @@ class ViewQuestionState extends State<ViewQuestion> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: FormQuestionEdit(
-            selectedQuestion: selectedQuestion,
+        return ScaffoldMessenger(
+          child: Builder(
+            builder: (context) => Scaffold(
+              backgroundColor: Colors.transparent,
+              body: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Navigator.of(context).pop(),
+                child: GestureDetector(
+                  onTap: () {},
+
+                  child: AlertDialog(
+                    content: FormQuestionEdit(
+                      selectedQuestion: selectedQuestion,
+                    ),
+                  ),
+                  // child: AlertDialog(
+                  //   contentPadding: EdgeInsets.zero,
+                  //   content: SizedBox(
+                  //     width: width * 0.9,
+                  //     height: height * 0.6,
+                  //     child: Column(
+                  //       children: [
+                  //         Text(question.answer).expand(),
+                  //         buildImageList(question.imageIDs).expand(),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                ),
+              ),
+            ),
           ),
         );
       },

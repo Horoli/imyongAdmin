@@ -7,7 +7,7 @@ class ServiceQuestion {
 
   ServiceQuestion._internal();
 
-  TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>();
+  final TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>();
   List<MQuestion> get questions => $questions.lastValue;
 
   Future<RestfulResult> post({
@@ -40,14 +40,29 @@ class ServiceQuestion {
             body: _encodeData, headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
-      print('post result $result');
 
-      // get();
-
-      if (result['statusCode'] == 403) {
-        GHelperNavigator.pushLogin();
-        return Error();
+      if (result['statusCode'] != 200) {
+        completer.complete(
+          RestfulResult(
+            statusCode: result['statusCode'],
+            message: result['message'],
+          ),
+        );
+        return;
       }
+
+      MQuestion question = MQuestion.fromMap(result['data']);
+
+      completer.complete(
+        RestfulResult(
+          statusCode: 200,
+          message: 'ok',
+          data: question,
+        ),
+      );
+    }).catchError((error) {
+      print(error);
+      print('question post Error $error');
     });
 
     //
@@ -142,14 +157,37 @@ class ServiceQuestion {
             body: _encodeData, headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
-      print('result $result');
 
-      get();
+      print('patch result $result');
 
-      if (result['statusCode'] == 403) {
-        GHelperNavigator.pushLogin();
-        return Error();
+      // TODO : 입력된 값이 없는 경우 exception 처리
+      if (result['statusCode'] != 200) {
+        completer.complete(
+          RestfulResult(
+            statusCode: result['statusCode'],
+            message: result['message'],
+          ),
+        );
+        return;
       }
+
+      MQuestion question = MQuestion.fromMap(result['data']);
+
+      completer.complete(
+        RestfulResult(
+          statusCode: result['statusCode'],
+          message: result['message'],
+          data: question,
+        ),
+      );
+    }).catchError((error) {
+      print('question patch Error $error');
+      completer.complete(
+        RestfulResult(
+          statusCode: STATUS.UNKNOWN_CODE,
+          message: 'error',
+        ),
+      );
     });
 
     return completer.future;

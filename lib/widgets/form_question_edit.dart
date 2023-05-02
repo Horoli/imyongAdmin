@@ -15,7 +15,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   MQuestion get selectedQuestion => widget.selectedQuestion;
 
   // selectedCheck
-  String selectedMainCategory = '';
+  late String selectedMainCategory = '';
 
   late final TextEditingController _ctrQuestion = TextEditingController();
   late final TextEditingController _ctrAnswer = TextEditingController();
@@ -36,13 +36,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               children: [
                 // TODO : 메인카테고리를 선택
                 buildEditFields().expand(),
-
                 // TODO : 메인 카테고리를 선택하여 해당 카테고리로 필터링한것들만 가져옴
                 buildMainCategoriesFields().expand(),
-
                 // TODO : 메인 카테고리를 parents로 가지는 서브카테고리 리스트 출력
                 buildSubCategoriesFields().expand(),
-
                 buildShowImagesFields().expand(),
                 buildEditImageFields().expand(),
               ],
@@ -50,14 +47,24 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
             buildElevatedButton(
               width: double.infinity,
               child: Text('complete'),
-              onPressed: () {
-                GServiceQuestion.patch(
+              onPressed: () async {
+                RestfulResult result = await GServiceQuestion.patch(
                   id: selectedQuestion.id,
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
                   images: $modifyBase64Images.lastValue,
                 );
+
+                if (result.statusCode != 200) {
+                  showSnackBar(msg: result.message, context: context);
+                  return;
+                }
+
+                // TODO : 수정이 완료되면 스트림을 갱신
+                GServiceQuestion.get();
+                // showSnackBar(msg: '문제 수정 완료', context: context);
+                Navigator.pop(context);
               },
             )
           ],
@@ -204,32 +211,37 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildEditImageFields() {
     return Column(
       children: [
-        buildElevatedButton(
-          child: Text('image Select'),
-          onPressed: () async {
-            // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
-            await selectImageFile(multiSelect: true).then((v) {
-              $modifyBase64Images.sink$(v);
-            });
-          },
-        ).expand(),
-        TStreamBuilder(
-          stream: $modifyBase64Images.browse$,
-          builder: (context, List<String> base64Images) {
-            return ListView.builder(
-              itemCount: base64Images.length,
-              itemBuilder: (context, index) {
-                return Image.memory(
-                  base64Decode($modifyBase64Images.lastValue[index]),
-                );
-              },
-            );
-          },
+        Text('image Select'),
+        buildBorderContainer(
+          child: TStreamBuilder(
+            stream: $modifyBase64Images.browse$,
+            builder: (context, List<String> base64Images) {
+              return Column(
+                children: [
+                  buildElevatedButton(
+                    child: Text('image Select'),
+                    onPressed: () async {
+                      // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
+                      await selectImageFile(multiSelect: true).then((v) {
+                        $modifyBase64Images.sink$(v);
+                      });
+                    },
+                  ),
+                  ListView.builder(
+                    itemCount: base64Images.length,
+                    itemBuilder: (context, index) {
+                      return Image.memory(
+                        base64Decode($modifyBase64Images.lastValue[index]),
+                      );
+                    },
+                  ).expand(),
+                ],
+              );
+            },
+          ),
         ).expand(),
       ],
     );
-
-    return Container();
   }
 
   @override
@@ -239,11 +251,17 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   }
 
   void initData() {
+    MSubCategory getSubCategory =
+        GServiceSubCategory.allSubCategory[selectedQuestion.categoryID]!;
+    selectedMainCategory = getSubCategory.parent;
+
     _ctrQuestion.text = selectedQuestion.question;
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;
     _ctrCategoryID.text = selectedQuestion.categoryID;
-    print('selectedQuestion.images ${selectedQuestion.imageIDs}');
+
+    // selectedMainCategory = selectedQuestion.
+    // print('selectedQuestion.images ${selectedQuestion.imageIDs}');
     $imageIDs.sink$(selectedQuestion.imageIDs);
     $modifyBase64Images.sink$([]);
   }

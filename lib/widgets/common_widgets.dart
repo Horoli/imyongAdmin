@@ -75,6 +75,7 @@ Widget buildTextField({
   TextEditingController? ctr,
   bool obscureText = false,
   required String label,
+  int maxLines = 1,
   String hint = '',
   bool readOnly = false,
 }) {
@@ -83,7 +84,7 @@ Widget buildTextField({
     child: TextFormField(
       controller: ctr,
       // expands: true,
-      // maxLines: null,
+      maxLines: maxLines,
       // maxLength: null,
       textAlign: TextAlign.center,
       textAlignVertical: TextAlignVertical.center,

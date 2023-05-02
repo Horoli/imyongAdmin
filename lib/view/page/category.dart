@@ -162,8 +162,8 @@ class ViewCategoryState extends State<ViewCategory> {
                     // selectedSubCategory에 저장하고
                     // delete 버튼 누르면 삭제 할 수 있게 기능 추가
                     return CategoriesTile(
-                      name: subCategories[index].name,
                       parent: parentName,
+                      name: subCategories[index].name,
                       children: childrenName,
                       selected: selectedCategoriesId
                           .contains(subCategories[index].id),

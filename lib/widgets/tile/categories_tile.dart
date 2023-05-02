@@ -59,8 +59,8 @@ class CategoriesTile extends CommonTile {
     return Row(
       children: [
         buildCheckBoxCell(),
-        buildCell(name).expand(),
         buildCell(parent).expand(),
+        buildCell(name).expand(),
         buildCell('${children}').expand(),
       ],
     );
@@ -89,13 +89,15 @@ class QuestionCategoryTile extends CommonTile {
 }
 
 class QuestionTile extends CommonTile {
+  String mainCategory;
+  String subCategory;
   String question;
   String answer;
-  String category;
   Widget edit; // use icon
   QuestionTile({
+    required this.mainCategory,
+    required this.subCategory,
     required this.question,
-    required this.category,
     required this.answer,
     required this.edit,
     super.selected = false,
@@ -108,9 +110,10 @@ class QuestionTile extends CommonTile {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        buildCell(mainCategory).expand(),
+        buildCell(subCategory).expand(),
         buildCell(question).expand(),
         buildCell(answer).expand(),
-        buildCell(category).expand(),
         // TODO : add cell
         // ...
         buildPressButton(edit).expand(),
