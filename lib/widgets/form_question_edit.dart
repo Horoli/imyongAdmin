@@ -53,7 +53,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
                   categoryID: _ctrCategoryID.text,
-                  images: $modifyBase64Images.lastValue,
+                  // TODO : 수정된 이미지가 없으면 기존 이미지를 사용
+                  images: $modifyBase64Images.lastValue.isEmpty
+                      ? $imageIDs.lastValue
+                      : $modifyBase64Images.lastValue,
                 );
 
                 if (result.statusCode != 200) {
