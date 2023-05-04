@@ -26,22 +26,27 @@ class ViewQuestionState extends State<ViewQuestion> {
       child: Row(
         children: [
           buildQuestions().expand(),
-          buildInputFields().expand(),
-          buildCompleteFields().expand(),
+          Column(
+            children: [
+              buildInputFields().expand(flex: 5),
+              buildCompleteFields().expand(),
+            ],
+          ).expand()
         ],
       ),
     );
   }
 
   Widget buildQuestions() {
-    return buildBorderContainer(
-      child: Column(
-        children: [
-          const Text('question list'),
-          TStreamBuilder(
-              stream: GServiceQuestion.$questions.browse$,
-              builder: (context, List<MQuestion> questions) {
-                return ListView.builder(
+    return Column(
+      children: [
+        const Text(LABEL.QUESTION_LIST),
+        QuestionHeaderTile(),
+        TStreamBuilder(
+            stream: GServiceQuestion.$questions.browse$,
+            builder: (context, List<MQuestion> questions) {
+              return buildBorderContainer(
+                child: ListView.builder(
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     // TODO : categoryID를 이용해서 category를 가져옴
@@ -56,90 +61,100 @@ class ViewQuestionState extends State<ViewQuestion> {
                       edit: const Icon(Icons.edit),
                       onPressedAction: () {
                         buildEditQuestionDialog(questions[index]);
-                        print(questions[index].id);
                       },
                     );
                   },
-                );
-              }).expand(),
-        ],
-      ),
+                ),
+              );
+            }).expand(),
+      ],
     );
   }
 
   Widget buildInputFields() {
-    return buildBorderContainer(
-      child: Column(
-        children: [
-          buildTextField(
-            ctr: ctrQuestion,
-            label: 'enter question',
-            maxLines: 5,
-          ),
-          buildTextField(ctr: ctrAnswer, label: 'enter answer'),
-          // buildTextField(label: 'enter score'),
-          // buildElevatedButton(
-          //   width: double.infinity,
-          //   child: Text('select difficulty'),
-          //   onPressed: () {
-          //     buildCategoriesDialog(popDifficulty());
-          //   },
-          // ).expand(),
-          const Text('selectCategory'),
-          buildTextField(
-            ctr: ctrCategory,
-            label: 'selectedCategory ID',
-            readOnly: true,
-          ),
-          buildCategories().expand(),
-          buildImageSelectFields().expand(),
-        ],
-      ),
+    return Column(
+      children: [
+        const Text(LABEL.ADD_QUESTION),
+        Row(
+          children: [
+            Column(
+              children: [
+                buildTextField(
+                  ctr: ctrQuestion,
+                  label: TEXT_FIELD.ENTER_QUESTION,
+                  maxLines: 5,
+                ),
+                buildTextField(
+                  ctr: ctrAnswer,
+                  label: TEXT_FIELD.ENTER_ANSWER,
+                ),
+                // buildTextField(label: 'enter score'),
+                // buildElevatedButton(
+                //   width: double.infinity,
+                //   child: Text('select difficulty'),
+                //   onPressed: () {
+                //     buildCategoriesDialog(popDifficulty());
+                //   },
+                // ).expand(),
+                const Text(LABEL.SELECT_CATEGORY),
+                buildTextField(
+                  ctr: ctrCategory,
+                  label: TEXT_FIELD.SELECT_CATEGORY,
+                  readOnly: true,
+                ),
+                buildCategories().expand()
+              ],
+            ).expand(),
+            buildImageSelectFields().expand(),
+          ],
+        ).expand(),
+      ],
     );
   }
 
   Widget buildImageSelectFields() {
-    return buildBorderContainer(
-      child: Row(
-        children: [
-          Column(
-            children: [
-              buildElevatedButton(
-                width: double.infinity,
-                child: Text('이미지 선택'),
-                onPressed: () async {
-                  // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
-                  await selectImageFile(multiSelect: true).then((v) {
-                    $base64Images.sink$(v);
-                  });
+    return Column(
+      children: [
+        Row(
+          children: [
+            buildElevatedButton(
+              width: double.infinity,
+              child: const Text(LABEL.SELECT_IMAGE),
+              onPressed: () async {
+                // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
+                await selectImageFile(multiSelect: true).then((v) {
+                  $base64Images.sink$(v);
+                });
+              },
+            ).expand(),
+            buildElevatedButton(
+              width: double.infinity,
+              child: const Text(LABEL.CANCEL_IMAGE),
+              onPressed: () async {
+                $base64Images.sink$([]);
+              },
+            ).expand(),
+          ],
+        ).expand(),
+        TStreamBuilder(
+          stream: $base64Images.browse$,
+          builder: (buildContext, List<String> base64Images) {
+            // base64Images를 ListView로 이미지를 보여주는 widget
+            return buildBorderContainer(
+              child: ListView.builder(
+                itemCount: base64Images.length,
+                itemBuilder: (context, index) {
+                  return buildBorderContainer(
+                    child: Image.memory(
+                      base64Decode(base64Images[index]),
+                    ),
+                  );
                 },
-              ).expand(),
-              buildElevatedButton(
-                width: double.infinity,
-                child: Text('이미지 선택 취소'),
-                onPressed: () async {
-                  $base64Images.sink$([]);
-                },
-              ).expand(),
-            ],
-          ).expand(),
-          TStreamBuilder(
-            stream: $base64Images.browse$,
-            builder: (buildContext, List<String> base64Images) {
-              // base64Images를 ListView로 이미지를 보여주는 widget
-              return buildBorderContainer(
-                child: ListView.builder(
-                  itemCount: base64Images.length,
-                  itemBuilder: (context, index) {
-                    // print('base64Images $base64Images');
-                    return Image.memory(base64Decode(base64Images[index]));
-                  },
-                ),
-              );
-            },
-          ).expand(),
-        ],
-      ),
+              ),
+            );
+          },
+        ).expand(flex: 10),
+      ],
     );
   }
 
@@ -149,7 +164,7 @@ class ViewQuestionState extends State<ViewQuestion> {
         children: [
           buildElevatedButton(
             width: double.infinity,
-            child: Text('저장'),
+            child: const Text(LABEL.SAVE),
             onPressed: () async {
               RestfulResult result = await GServiceQuestion.post(
                 question: ctrQuestion.text,
@@ -177,7 +192,7 @@ class ViewQuestionState extends State<ViewQuestion> {
           buildElevatedButton(
             color: Colors.black,
             width: double.infinity,
-            child: Text('삭제(미구현)'),
+            child: const Text(LABEL.DELETE),
             onPressed: () async {},
           ).expand(),
         ],

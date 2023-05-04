@@ -40,8 +40,12 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                 buildMainCategoriesFields().expand(),
                 // TODO : 메인 카테고리를 parents로 가지는 서브카테고리 리스트 출력
                 buildSubCategoriesFields().expand(),
-                buildShowImagesFields().expand(),
-                buildEditImageFields().expand(),
+                Column(
+                  children: [
+                    buildShowImagesFields().expand(),
+                    buildEditImageFields().expand(),
+                  ],
+                ).expand(),
               ],
             ).expand(),
             buildElevatedButton(
@@ -79,22 +83,23 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildEditFields() {
     return Column(
       children: [
-        Text('edit'),
+        const Text(LABEL.EDIT),
         buildTextField(
           ctr: _ctrQuestion,
-          label: 'question',
+          label: TEXT_FIELD.ENTER_QUESTION,
+          maxLines: 5,
         ),
         buildTextField(
           ctr: _ctrAnswer,
-          label: 'answer',
+          label: TEXT_FIELD.ENTER_ANSWER,
         ),
-        buildTextField(
-          ctr: _ctrDifficulty,
-          label: 'difficulty',
-        ),
+        // buildTextField(
+        //   ctr: _ctrDifficulty,
+        //   label: 'difficulty',
+        // ),
         buildTextField(
           ctr: _ctrCategoryID,
-          label: 'category',
+          label: TEXT_FIELD.SELECT_CATEGORY,
         ),
       ],
     );
@@ -103,7 +108,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildMainCategoriesFields() {
     return Column(
       children: [
-        Text('select Subject(mainCategory)'),
+        const Text(LABEL.SELECT_SUBJECT),
         TStreamBuilder(
           stream: GServiceMainCategory.$mainCategory.browse$,
           builder: (BuildContext context, MMainCategory mainCategory) {
@@ -141,7 +146,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildSubCategoriesFields() {
     return Column(
       children: [
-        Text('select category'),
+        const Text(LABEL.SELECT_CATEGORY),
         TStreamBuilder(
           stream: GServiceSubCategory.$subCategory.browse$,
           builder: (
@@ -182,7 +187,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildShowImagesFields() {
     return Column(
       children: [
-        Text('images'),
+        const Text(LABEL.SAVED_IMAGE),
         buildBorderContainer(
           child: TStreamBuilder(
             stream: $imageIDs.browse$,
@@ -197,9 +202,15 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                     future: getImage,
                     builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
                       if (snapshot.hasData) {
-                        return Image.memory(base64Decode(snapshot.data!.data));
+                        return buildBorderContainer(
+                          child: Image.memory(
+                            base64Decode(snapshot.data!.data),
+                          ),
+                        );
                       }
-                      return CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     },
                   );
                 },
@@ -214,7 +225,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Widget buildEditImageFields() {
     return Column(
       children: [
-        Text('image Select'),
+        const Text(LABEL.SELECT_IMAGE),
         buildBorderContainer(
           child: TStreamBuilder(
             stream: $modifyBase64Images.browse$,
@@ -222,7 +233,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               return Column(
                 children: [
                   buildElevatedButton(
-                    child: Text('image Select'),
+                    child: const Text(LABEL.SELECT_IMAGE),
                     onPressed: () async {
                       // TODO : image를 선택해서 선택한 이미지를 $base64Images에 sink
                       await selectImageFile(multiSelect: true).then((v) {
@@ -233,8 +244,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   ListView.builder(
                     itemCount: base64Images.length,
                     itemBuilder: (context, index) {
-                      return Image.memory(
-                        base64Decode($modifyBase64Images.lastValue[index]),
+                      return buildBorderContainer(
+                        child: Image.memory(
+                          base64Decode($modifyBase64Images.lastValue[index]),
+                        ),
                       );
                     },
                   ).expand(),

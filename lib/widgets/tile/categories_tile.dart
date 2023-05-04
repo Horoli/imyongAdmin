@@ -88,6 +88,28 @@ class QuestionCategoryTile extends CommonTile {
   }
 }
 
+class QuestionHeaderTile extends CommonTile {
+  QuestionHeaderTile({
+    super.selected = false,
+    super.onChanged,
+    super.onPressedAction,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        buildCell('과목').expand(),
+        buildCell('카테고리').expand(),
+        buildCell('문제').expand(),
+        buildCell('답안').expand(),
+        buildCell('수정').expand(),
+      ],
+    );
+  }
+}
+
 class QuestionTile extends CommonTile {
   String mainCategory;
   String subCategory;
@@ -121,3 +143,22 @@ class QuestionTile extends CommonTile {
     );
   }
 }
+
+// class TableQuestion extends StatefulWidget {
+//   TableQuestion({super.key});
+
+//   @override
+//   TableQuestionState createState() => TableQuestionState();
+// }
+
+// class TableQuestionState extends State<TableQuestion> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+
+
+//       ],
+//     );
+//   }
+// }

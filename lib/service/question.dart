@@ -79,10 +79,10 @@ class ServiceQuestion {
 
     http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
       Map result = json.decode(response.body);
-      print('get result $result');
+      // print('get result $result');
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {
-        print('get item $item');
+        // print('get item $item');
         questionList.add(MQuestion.fromMap(item));
       }
       //
