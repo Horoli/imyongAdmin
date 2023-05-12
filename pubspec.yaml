@@ -16,15 +16,15 @@ dependencies:
   tnd_core:
     git:
       url: "https://git.technolda.com/Technolda/tnd_core.git"
-      ref: v2
+      ref: v1.5
   tnd_pkg_widget:
     git:
       url: "https://git.technolda.com/Technolda/tnd_pkg_widget.git"
-      ref: v2
+      ref: v1.5
   tnd_pkg_repository:
     git:
       url: "https://git.technolda.com/Technolda/tnd_pkg_repository.git"
-      ref: v2
+      ref: v1.5
 
   hive: 2.0.4
   hive_flutter: 1.1.0
