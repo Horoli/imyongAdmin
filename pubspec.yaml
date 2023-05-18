@@ -26,11 +26,8 @@ dependencies:
       url: "https://git.technolda.com/Technolda/tnd_pkg_repository.git"
       ref: v1.5
 
-  hive: 2.0.4
-  hive_flutter: 1.1.0
   cupertino_icons: ^1.0.2
   file_picker: ^4.6.1
-  localstorage: ^4.0.0+1
   shared_preferences: ^2.1.1
 
 dev_dependencies:
