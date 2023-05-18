@@ -34,7 +34,9 @@ Future<void> main() async {
 }
 
 Future<void> _initLocalStorage() async {
-  localStorage = LocalStorage('local.json');
+  print('bzxczxc');
+  localStorage = LocalStorage('imyong.json');
+  print(localStorage.getItem('loginToken'));
 
   // themeStorage = LocalStorage('theme');
 }
