@@ -15,7 +15,8 @@ class ServiceMainCategory {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      tokenValue: hiveMLogin.values.first.token,
+      // tokenValue: hiveMLogin.values.first.token
+      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
     );
 
     http.get(getRequestUri(PATH.CATEGORY), headers: _headers).then(

@@ -281,9 +281,13 @@ class ViewCategoryState extends State<ViewCategory> {
   @override
   void initState() {
     super.initState();
-    GServiceMainCategory.get();
-    GServiceSubCategory.getAll();
-    GServiceSubCategory.get();
+    _initData();
+  }
+
+  Future _initData() async {
+    await GServiceMainCategory.get();
+    await GServiceSubCategory.getAll();
+    await GServiceSubCategory.get();
   }
 
   void resetFunction() {

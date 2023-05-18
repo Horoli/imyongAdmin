@@ -26,5 +26,7 @@ class _ViewDashboardState extends State<ViewDashboard> {
   @override
   void initState() {
     super.initState();
+    print(localStorage.getItem(PATH.STORAGE_TOKEN));
+    print(localStorage.getItem(PATH.STORAGE_TOKEN) == null);
   }
 }

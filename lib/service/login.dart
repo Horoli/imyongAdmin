@@ -4,19 +4,19 @@ class ServiceLogin {
   static ServiceLogin? _instance;
   factory ServiceLogin.getInstance() => _instance ??= ServiceLogin._internal();
 
-  TStream<String> $loginToken = TStream<String>()..sink$('');
+  TStream<String> $token = TStream<String>()..sink$('');
 
-  String get loginToken => $loginToken.lastValue;
+  String get token => $token.lastValue;
 
   ServiceLogin._internal();
 
-  void hiveBoxlistener() {
-    hiveMLogin.watch().listen((event) {
-      print('event $event');
-    });
-  }
+  // void hiveBoxlistener() {
+  //   hiveMLogin.watch().listen((event) {
+  //     print('event $event');
+  //   });
+  // }
 
-  Future<RestfulResult> post(String id, String pw) async {
+  Future<RestfulResult> Post(String id, String pw) async {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     String encodeData = jsonEncode({"id": id, "pw": pw});
@@ -25,24 +25,28 @@ class ServiceLogin {
         .post(getRequestUri(PATH.LOGIN),
             headers: createHeaders(), body: encodeData)
         .then((response) {
-      if (response == null) {
+      if (response.isNull) {
         return completer.complete(RestfulResult(
           statusCode: STATUS.UNKNOWN_CODE,
           message: STATUS.UNKNOWN_MSG,
         ));
       }
       Map result = json.decode(response.body);
+      print('result $result');
 
       if (response.statusCode == STATUS.SUCCESS_CODE) {
+        print('bbbbb');
         MLogin convertedItem = MLogin.fromMap(result['data'] ?? {});
-        $loginToken.sink$(convertedItem.token);
-        hiveMLogin.put(id, convertedItem);
+        $token.sink$(convertedItem.token);
+        localStorage.setItem(PATH.STORAGE_TOKEN, convertedItem.token);
       } else {
-        hiveMLogin.put(id, MLogin(token: ''));
+        print('aaaaaaaaaaaaaaaaaaaaaaaa');
+        localStorage.setItem(PATH.STORAGE_TOKEN, '');
+        // hiveMLogin.put(id, MLogin(token: ''));
       }
 
-      print('hiveMLogin.keys ${hiveMLogin.keys}');
-      print('hiveMLogin.value ${hiveMLogin.values}');
+      // print('hiveMLogin.keys ${hiveMLogin.keys}');
+      // print('hiveMLogin.value ${hiveMLogin.values}');
 
       return completer.complete(RestfulResult.fromMap(
         result,

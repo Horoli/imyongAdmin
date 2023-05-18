@@ -127,7 +127,6 @@ class _VieMainCategoryState extends State<ViewMainCategory> {
   @override
   void initState() {
     super.initState();
-    GServiceMainCategory.get();
     // GServiceType.get(isCategoryView: true);
   }
 

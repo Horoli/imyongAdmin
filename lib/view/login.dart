@@ -49,7 +49,7 @@ class _ViewLoginState extends State<ViewLogin> {
                       child: TAutoSizeText('login'),
                       onPressed: () async {
                         //
-                        RestfulResult result = await GServiceLogin.post(
+                        RestfulResult result = await GServiceLogin.Post(
                           ctrID.text,
                           ctrPW.text,
                         );

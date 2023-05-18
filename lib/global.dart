@@ -3,14 +3,14 @@ part of 'common.dart';
 // TEST
 String uid = newUUID();
 
-// const String baseURL = 'http://localhost:3000';
-
 final HelperNavigator GHelperNavigator = HelperNavigator.getInstance();
 final GlobalKey<NavigatorState> GNavigatorKey = GlobalKey<NavigatorState>();
 
 Uri getRequestUri(String path) => Uri.parse(p.join(URL, path));
 
 Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
+  print('tokenKey $tokenKey');
+  print('tokenValue $tokenValue');
   Map<String, String> headers = {
     HEADER.CONTENT_TYPE: HEADER.JSON,
   };
@@ -21,6 +21,8 @@ Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
   return headers;
 }
 
+late final LocalStorage localStorage;
+
 final ServiceTheme GServiceTheme = ServiceTheme.getInstance();
 late ServiceType GServiceType;
 late ServiceLogin GServiceLogin;
@@ -30,4 +32,4 @@ late ServiceSubCategory GServiceSubCategory;
 late ServiceQuestion GServiceQuestion;
 late ServiceDifficulty GServiceDifficulty;
 
-late final Box<MLogin> hiveMLogin;
+// late final Box<MLogin> hiveMLogin;

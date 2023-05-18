@@ -23,7 +23,10 @@ class ServiceQuestion {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      tokenValue: hiveMLogin.values.first.token,
+
+      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
+      // tokenValue: localStorage.getItem('token'),
+      // tokenValue: hiveMLogin.values.first.token,
     );
 
     String _encodeData = jsonEncode({
@@ -74,7 +77,10 @@ class ServiceQuestion {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      tokenValue: hiveMLogin.values.first.token,
+
+      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
+      // tokenValue: localStorage.getItem('token'),
+      // tokenValue: hiveMLogin.values.first.token,
     );
 
     http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
@@ -104,7 +110,10 @@ class ServiceQuestion {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      tokenValue: hiveMLogin.values.first.token,
+
+      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
+      // tokenValue: localStorage.getItem('token'),
+      // tokenValue: hiveMLogin.values.first.token,
     );
 
     http
@@ -139,7 +148,10 @@ class ServiceQuestion {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      tokenValue: hiveMLogin.values.first.token,
+
+      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
+      // tokenValue: localStorage.getItem('token'),
+      // tokenValue: hiveMLogin.values.first.token,
     );
 
     String _encodeData = jsonEncode({
