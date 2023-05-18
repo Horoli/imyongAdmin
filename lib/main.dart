@@ -12,6 +12,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:tnd_core/tnd_core.dart';
 import 'package:tnd_pkg_widget/preset/color.dart';
 import 'package:tnd_pkg_widget/tnd_pkg_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'preset/router.dart' as ROUTER;
 import 'preset/color.dart' as COLOR;
 
@@ -35,8 +36,10 @@ Future<void> main() async {
 
 Future<void> _initLocalStorage() async {
   print('bzxczxc');
-  localStorage = LocalStorage('imyong.json');
-  print(localStorage.getItem('loginToken'));
+  // localStorage = LocalStorage('local');
+  GSharedPreferences = await SharedPreferences.getInstance();
+
+  // print(localStorage.getItem('loginToken'));
 
   // themeStorage = LocalStorage('theme');
 }

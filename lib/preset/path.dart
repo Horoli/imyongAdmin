@@ -15,5 +15,3 @@ const String QUESTION_QUERY = 'question?id=';
 const String QUESTION_IMAGE = 'image/';
 
 const String DIFFICULTY = 'difficulty';
-
-const String STORAGE_TOKEN = 'loginToken';

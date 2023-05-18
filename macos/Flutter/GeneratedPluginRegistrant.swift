@@ -8,7 +8,7 @@ import Foundation
 import connectivity_macos
 import device_info_plus_macos
 import path_provider_macos
-import shared_preferences_macos
+import shared_preferences_foundation
 import sqflite
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

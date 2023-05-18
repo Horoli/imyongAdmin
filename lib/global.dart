@@ -21,7 +21,8 @@ Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
   return headers;
 }
 
-late final LocalStorage localStorage;
+// late final LocalStorage localStorage;
+late final SharedPreferences GSharedPreferences;
 
 final ServiceTheme GServiceTheme = ServiceTheme.getInstance();
 late ServiceType GServiceType;
@@ -31,5 +32,3 @@ late ServiceMainCategory GServiceMainCategory;
 late ServiceSubCategory GServiceSubCategory;
 late ServiceQuestion GServiceQuestion;
 late ServiceDifficulty GServiceDifficulty;
-
-// late final Box<MLogin> hiveMLogin;

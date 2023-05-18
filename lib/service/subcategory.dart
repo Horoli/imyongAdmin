@@ -24,10 +24,7 @@ class ServiceSubCategory {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-      // tokenValue: hiveMLogin.values.first.token,
-
-      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
-      // tokenValue: localStorage.getItem('token'),
+      tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
     http
@@ -65,10 +62,7 @@ class ServiceSubCategory {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-
-      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
-      // tokenValue: localStorage.getItem('token'),
-      // tokenValue: hiveMLogin.values.first.token,
+      tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
     http.get(getRequestUri(query), headers: _headers).then(
@@ -104,10 +98,7 @@ class ServiceSubCategory {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-
-      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
-      // tokenValue: localStorage.getItem('token'),
-      // tokenValue: hiveMLogin.values.first.token,
+      tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
     String _encodeData = jsonEncode({
@@ -146,10 +137,7 @@ class ServiceSubCategory {
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
-
-      tokenValue: localStorage.getItem(PATH.STORAGE_TOKEN),
-      // tokenValue: localStorage.getItem('token'),
-      // tokenValue: hiveMLogin.values.first.token,
+      tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
     String _encodeData = jsonEncode({

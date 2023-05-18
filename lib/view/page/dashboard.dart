@@ -15,9 +15,15 @@ class _ViewDashboardState extends State<ViewDashboard> {
     return buildBorderContainer(
       child: Container(
         color: Colors.blue,
-        child: ElevatedButton(
-          child: Text('a'),
-          onPressed: () {},
+        child: Column(
+          children: [
+            // ElevatedButton(
+            //   child: Text('a'),
+            //   onPressed: () {
+            //     print(GSharedPreferences.getString('token'));
+            //   },
+            // ).expand(),
+          ],
         ),
       ),
     );
@@ -26,6 +32,5 @@ class _ViewDashboardState extends State<ViewDashboard> {
   @override
   void initState() {
     super.initState();
-    print(localStorage.getItem(PATH.STORAGE_TOKEN));
   }
 }
