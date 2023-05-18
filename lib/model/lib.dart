@@ -14,7 +14,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 // preset
 import 'package:imyong/preset/color.dart' as COLOR;
 import 'package:imyong/preset/path.dart' as PATH;
-import 'package:imyong/preset/hive_id.dart' as HIVE_ID;
 import 'package:imyong/preset/router.dart' as ROUTER;
 import 'package:imyong/preset/tab.dart' as TAB;
 
