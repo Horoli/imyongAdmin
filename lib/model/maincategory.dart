@@ -1,6 +1,7 @@
 part of 'lib.dart';
 
 class MMainCategory {
+  final String general;
   final String ko;
   final String math;
   final String social;
@@ -12,6 +13,7 @@ class MMainCategory {
   final String physicalEdu;
   final String practical;
   MMainCategory._internal({
+    required this.general,
     required this.ko,
     required this.math,
     required this.social,
@@ -26,6 +28,7 @@ class MMainCategory {
 
   @override
   Map<String, dynamic> get map => {
+        'general': general,
         'ko': ko,
         'math': math,
         'social': social,
@@ -39,6 +42,7 @@ class MMainCategory {
       };
 
   factory MMainCategory.fromMap(Map item) {
+    String general = item['general'] ?? '';
     String ko = item['ko'] ?? '';
     String math = item['math'] ?? '';
     String social = item['social'] ?? '';
@@ -50,6 +54,7 @@ class MMainCategory {
     String physicalEdu = item['physicalEdu'] ?? '';
     String practical = item['practical'] ?? '';
     return MMainCategory._internal(
+      general: general,
       ko: ko,
       math: math,
       social: social,
