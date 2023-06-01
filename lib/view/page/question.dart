@@ -8,9 +8,11 @@ class ViewQuestion extends StatefulWidget {
 }
 
 class ViewQuestionState extends State<ViewQuestion> {
-  TextEditingController ctrCategory = TextEditingController();
-  TextEditingController ctrQuestion = TextEditingController();
-  TextEditingController ctrAnswer = TextEditingController();
+  final TextEditingController ctrCategory = TextEditingController();
+  final TextEditingController ctrQuestion = TextEditingController();
+  final TextEditingController ctrAnswer = TextEditingController();
+  final TextEditingController ctrInfo = TextEditingController();
+  final TextEditingController ctrDescription = TextEditingController();
   //
   List<MSubCategory> get filteredSubcategory => GServiceSubCategory.subCategory;
   Map<String, MSubCategory> get getAllCategory =>
@@ -45,6 +47,7 @@ class ViewQuestionState extends State<ViewQuestion> {
         TStreamBuilder(
             stream: GServiceQuestion.$questions.browse$,
             builder: (context, List<MQuestion> questions) {
+              print('question[0] ${questions[0].description}');
               return buildBorderContainer(
                 child: ListView.builder(
                   itemCount: questions.length,
@@ -74,11 +77,12 @@ class ViewQuestionState extends State<ViewQuestion> {
   Widget buildInputFields() {
     return Column(
       children: [
-        const Text(LABEL.ADD_QUESTION),
+        const Text(LABEL.QUESTION_ADD),
         Row(
           children: [
             Column(
               children: [
+                const Text(LABEL.QUESTION_INFO_INPUT),
                 buildTextField(
                   ctr: ctrQuestion,
                   label: TEXT_FIELD.ENTER_QUESTION,
@@ -88,24 +92,22 @@ class ViewQuestionState extends State<ViewQuestion> {
                   ctr: ctrAnswer,
                   label: TEXT_FIELD.ENTER_ANSWER,
                 ),
-                // buildTextField(label: 'enter score'),
-                // buildElevatedButton(
-                //   width: double.infinity,
-                //   child: Text('select difficulty'),
-                //   onPressed: () {
-                //     buildCategoriesDialog(popDifficulty());
-                //   },
-                // ).expand(),
-                const Text(LABEL.SELECT_CATEGORY),
                 buildTextField(
-                  ctr: ctrCategory,
-                  label: TEXT_FIELD.SELECT_CATEGORY,
-                  readOnly: true,
+                  label: '학자',
+                  ctr: ctrInfo,
                 ),
-                buildCategories().expand()
+                buildTextField(
+                  label: '비고',
+                  ctr: ctrDescription,
+                ),
               ],
             ).expand(),
-            buildImageSelectFields().expand(),
+            Column(
+              children: [
+                buildSelectCategory().expand(),
+                buildImageSelectFields().expand(),
+              ],
+            ).expand(),
           ],
         ).expand(),
       ],
@@ -171,6 +173,8 @@ class ViewQuestionState extends State<ViewQuestion> {
                 answer: ctrAnswer.text,
                 categoryID: ctrCategory.text,
                 images: $base64Images.lastValue,
+                info: ctrInfo.text,
+                description: ctrDescription.text,
               );
               // TODO : 서버 연결에 따른 예외처리
               if (!result.isSuccess) {
@@ -200,31 +204,36 @@ class ViewQuestionState extends State<ViewQuestion> {
     );
   }
 
-  Widget buildCategories({bool isEdit = false}) {
-    return TStreamBuilder(
-      stream: GServiceSubCategory.$subCategory.browse$,
-      builder: (BuildContext context, _) {
-        return buildBorderContainer(
-          child: ListView.builder(
-            itemCount: filteredSubcategory.length,
-            itemBuilder: (context, index) {
-              return QuestionCategoryTile(
-                selected: ctrCategory.text == filteredSubcategory[index].id,
-                name: filteredSubcategory[index].name,
-                onChanged: (bool? changed) {
-                  setState(() {
-                    if (!isEdit) {
-                      changed!
-                          ? ctrCategory.text = filteredSubcategory[index].id
-                          : ctrCategory.text = '';
-                    }
-                  });
+  Widget buildSelectCategory({bool isEdit = false}) {
+    return Column(
+      children: [
+        const Text(LABEL.SELECT_CATEGORY),
+        TStreamBuilder(
+          stream: GServiceSubCategory.$subCategory.browse$,
+          builder: (BuildContext context, _) {
+            return buildBorderContainer(
+              child: ListView.builder(
+                itemCount: filteredSubcategory.length,
+                itemBuilder: (context, index) {
+                  return QuestionCategoryTile(
+                    selected: ctrCategory.text == filteredSubcategory[index].id,
+                    name: filteredSubcategory[index].name,
+                    onChanged: (bool? changed) {
+                      setState(() {
+                        if (!isEdit) {
+                          changed!
+                              ? ctrCategory.text = filteredSubcategory[index].id
+                              : ctrCategory.text = '';
+                        }
+                      });
+                    },
+                  );
                 },
-              );
-            },
-          ),
-        );
-      },
+              ),
+            );
+          },
+        ).expand(),
+      ],
     );
   }
 

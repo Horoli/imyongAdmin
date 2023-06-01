@@ -21,6 +21,8 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   late final TextEditingController _ctrAnswer = TextEditingController();
   late final TextEditingController _ctrDifficulty = TextEditingController();
   late final TextEditingController _ctrCategoryID = TextEditingController();
+  late final TextEditingController _ctrInfo = TextEditingController();
+  late final TextEditingController _ctrDescription = TextEditingController();
   final TStream<List<String>> $imageIDs = TStream<List<String>>();
   final TStream<List<String>> $modifyBase64Images = TStream<List<String>>();
 
@@ -61,6 +63,8 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   images: $modifyBase64Images.lastValue == []
                       ? $imageIDs.lastValue
                       : $modifyBase64Images.lastValue,
+                  info: _ctrInfo.text,
+                  description: _ctrDescription.text,
                 );
 
                 if (result.statusCode != 200) {
@@ -93,14 +97,18 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
           ctr: _ctrAnswer,
           label: TEXT_FIELD.ENTER_ANSWER,
         ),
-        // buildTextField(
-        //   ctr: _ctrDifficulty,
-        //   label: 'difficulty',
-        // ),
         buildTextField(
-          ctr: _ctrCategoryID,
-          label: TEXT_FIELD.SELECT_CATEGORY,
+          ctr: _ctrInfo,
+          label: '학자',
         ),
+        buildTextField(
+          ctr: _ctrDescription,
+          label: '비고',
+        ),
+        // buildTextField(
+        //   ctr: _ctrCategoryID,
+        //   label: TEXT_FIELD.SELECT_CATEGORY,
+        // ),
       ],
     );
   }
@@ -275,9 +283,9 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;
     _ctrCategoryID.text = selectedQuestion.categoryID;
+    _ctrDescription.text = selectedQuestion.description;
+    _ctrInfo.text = selectedQuestion.info;
 
-    // selectedMainCategory = selectedQuestion.
-    // print('selectedQuestion.images ${selectedQuestion.imageIDs}');
     $imageIDs.sink$(selectedQuestion.imageIDs);
     $modifyBase64Images.sink$([]);
   }

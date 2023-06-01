@@ -14,6 +14,8 @@ class ServiceQuestion {
     required String question,
     required String answer,
     required String categoryID,
+    required String info,
+    String description = '',
     String difficulty = 'normal',
     int score = 3,
     List<String>? images = const [],
@@ -33,6 +35,8 @@ class ServiceQuestion {
       "difficulty": difficulty,
       "score": score,
       "images": images, // post할때는 images를 보냄
+      "info": info,
+      "description": description,
     });
 
     http
@@ -131,6 +135,8 @@ class ServiceQuestion {
     required String question,
     required String answer,
     required String categoryID,
+    required String info,
+    String description = '',
     String difficulty = 'normal',
     int score = 3,
     List<String>? images,
@@ -150,6 +156,8 @@ class ServiceQuestion {
       "difficulty": difficulty,
       "score": score,
       "images": images ?? [],
+      "info": info,
+      "description": description,
     });
 
     http

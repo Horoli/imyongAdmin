@@ -7,6 +7,8 @@ class MQuestion extends MCommonBase {
   final String difficulty;
   final int score;
   final List<String> imageIDs;
+  final String info;
+  final String description;
 
   MQuestion({
     required super.id,
@@ -18,6 +20,8 @@ class MQuestion extends MCommonBase {
     required this.difficulty,
     required this.score,
     required this.imageIDs,
+    required this.info,
+    required this.description,
   });
 
   @override
@@ -31,6 +35,8 @@ class MQuestion extends MCommonBase {
         'id': id,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
+        'info': info,
+        'description': description,
       };
 
   factory MQuestion.fromMap(Map item) {
@@ -43,6 +49,8 @@ class MQuestion extends MCommonBase {
     String difficulty = item['difficulty'] ?? '';
     int score = item['score'] ?? 0;
     List<String> imageIDs = List<String>.from(item['imageIDs'] ?? []);
+    String info = item['info'] ?? '';
+    String description = item['description'] ?? '';
 
     return MQuestion(
       id: id,
@@ -54,6 +62,8 @@ class MQuestion extends MCommonBase {
       difficulty: difficulty,
       score: score,
       imageIDs: imageIDs,
+      info: info,
+      description: description,
     );
   }
 
@@ -67,6 +77,8 @@ class MQuestion extends MCommonBase {
     String? difficulty,
     int? score,
     List<String>? imageIDs,
+    String? info,
+    String? description,
   }) =>
       MQuestion(
         id: id ?? this.id,
@@ -78,5 +90,7 @@ class MQuestion extends MCommonBase {
         difficulty: difficulty ?? this.difficulty,
         score: score ?? this.score,
         imageIDs: imageIDs ?? this.imageIDs,
+        info: info ?? this.info,
+        description: description ?? this.description,
       );
 }

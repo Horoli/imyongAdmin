@@ -1,7 +1,8 @@
 const String SAVE = '저장';
 const String DELETE = '삭제(미구현)';
 const String QUESTION_LIST = '문제 목록';
-const String ADD_QUESTION = '문제 추가';
+const String QUESTION_INFO_INPUT = '문제 정보 입력';
+const String QUESTION_ADD = '문제 추가';
 
 const String EDIT = '세부내용 수정';
 const String SELECT_SUBJECT = '과목 선택';
