@@ -61,6 +61,8 @@ class ViewQuestionState extends State<ViewQuestion> {
                       subCategory: getSubCategory.name,
                       question: questions[index].question,
                       answer: questions[index].answer,
+                      info: questions[index].info,
+                      description: questions[index].description,
                       edit: const Icon(Icons.edit),
                       onPressedAction: () {
                         buildEditQuestionDialog(questions[index]);

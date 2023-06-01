@@ -104,6 +104,8 @@ class QuestionHeaderTile extends CommonTile {
         buildCell('카테고리').expand(),
         buildCell('문제').expand(),
         buildCell('답안').expand(),
+        buildCell('학자').expand(),
+        buildCell('비고').expand(),
         buildCell('수정').expand(),
       ],
     );
@@ -115,6 +117,8 @@ class QuestionTile extends CommonTile {
   String subCategory;
   String question;
   String answer;
+  String info;
+  String description;
   Widget edit; // use icon
   QuestionTile({
     required this.mainCategory,
@@ -122,6 +126,8 @@ class QuestionTile extends CommonTile {
     required this.question,
     required this.answer,
     required this.edit,
+    required this.info,
+    required this.description,
     super.selected = false,
     super.onChanged,
     super.onPressedAction,
@@ -136,6 +142,8 @@ class QuestionTile extends CommonTile {
         buildCell(subCategory).expand(),
         buildCell(question).expand(),
         buildCell(answer).expand(),
+        buildCell(info).expand(),
+        buildCell(description).expand(),
         // TODO : add cell
         // ...
         buildPressButton(edit).expand(),
@@ -143,22 +151,3 @@ class QuestionTile extends CommonTile {
     );
   }
 }
-
-// class TableQuestion extends StatefulWidget {
-//   TableQuestion({super.key});
-
-//   @override
-//   TableQuestionState createState() => TableQuestionState();
-// }
-
-// class TableQuestionState extends State<TableQuestion> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-
-
-//       ],
-//     );
-//   }
-// }
