@@ -1,4 +1,4 @@
-const String URL = 'http://horoli.kr:3000/';
+const String URL = 'http://api.horoli.kr:3000/';
 // const String URL = 'http://localhost:3000';
 const String TYPE = 'type';
 
