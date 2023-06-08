@@ -81,7 +81,9 @@ class ServiceQuestion {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http.get(getRequestUri(PATH.QUESTION), headers: _headers).then((response) {
+    http
+        .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
+        .then((response) {
       Map result = json.decode(response.body);
       // print('get result $result');
       List<MQuestion> questionList = [];

@@ -11,6 +11,7 @@ const String CATEGORY = 'category';
 const String CATEGORY_QUERY = 'category?id=';
 
 const String QUESTION = 'question';
+// const String QUESTION_QUERY = 'question/wish/';
 const String QUESTION_QUERY = 'question?id=';
 const String QUESTION_IMAGE = 'image/';
 
