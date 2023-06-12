@@ -45,33 +45,63 @@ class ViewQuestionState extends State<ViewQuestion> {
         const Text(LABEL.QUESTION_LIST),
         QuestionHeaderTile(),
         TStreamBuilder(
-            stream: GServiceQuestion.$questions.browse$,
-            builder: (context, List<MQuestion> questions) {
-              print('question[0] ${questions[0].description}');
-              return buildBorderContainer(
-                child: ListView.builder(
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    // TODO : categoryID를 이용해서 category를 가져옴
-                    MSubCategory getSubCategory = GServiceSubCategory
-                        .allSubCategory[questions[index].categoryID]!;
+          stream: GServiceQuestion.$questions.browse$,
+          builder: (context, List<MQuestion> questions) {
+            print('question[0] ${questions[0].description}');
+            return buildBorderContainer(
+              child: ListView.builder(
+                itemCount: questions.length,
+                itemBuilder: (context, index) {
+                  // TODO : categoryID를 이용해서 category를 가져옴
+                  MSubCategory getSubCategory = GServiceSubCategory
+                      .allSubCategory[questions[index].categoryID]!;
 
-                    return QuestionTile(
-                      mainCategory: getSubCategory.parent,
-                      subCategory: getSubCategory.name,
-                      question: questions[index].question,
-                      answer: questions[index].answer,
-                      info: questions[index].info,
-                      description: questions[index].description,
-                      edit: const Icon(Icons.edit),
-                      onPressedAction: () {
-                        buildEditQuestionDialog(questions[index]);
-                      },
-                    );
-                  },
-                ),
-              );
-            }).expand(),
+                  return QuestionTile(
+                    mainCategory: getSubCategory.parent,
+                    subCategory: getSubCategory.name,
+                    question: questions[index].question,
+                    answer: questions[index].answer,
+                    info: questions[index].info,
+                    description: questions[index].description,
+                    edit: const Icon(Icons.edit),
+                    onPressedAction: () {
+                      buildEditQuestionDialog(questions[index]);
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        ).expand(),
+        //
+        TStreamBuilder(
+          stream: GServiceQuestion.$questionCount.browse$,
+          builder: (context, int questionCount) {
+            int paginationCount = GServiceQuestion.$paginationCount.lastValue;
+            int buttonCount = (questionCount / paginationCount).ceil();
+            return TStreamBuilder(
+                stream: GServiceQuestion.$paginationPage.browse$,
+                builder: (context, int page) {
+                  return Row(
+                    children: List.generate(
+                      buttonCount,
+                      (index) => buildElevatedButton(
+                        child: Text('${index + 1}'),
+                        color: page == index + 1 ? Colors.blue : Colors.black,
+                        onPressed: () {
+                          GServiceQuestion.$paginationPage.sink$(index + 1);
+
+                          GServiceQuestion.getPagination(
+                            paginationPage: index + 1,
+                            paginationCount: paginationCount,
+                          );
+                        },
+                      ),
+                    ),
+                  ).sizedBox(height: 100);
+                });
+          },
+        ),
       ],
     );
   }
@@ -187,7 +217,10 @@ class ViewQuestionState extends State<ViewQuestion> {
                 return;
               }
 
-              GServiceQuestion.get();
+              GServiceQuestion.getPagination(
+                paginationCount: GServiceQuestion.$paginationCount.lastValue,
+                paginationPage: GServiceQuestion.$paginationPage.lastValue,
+              );
 
               showSnackBar(
                 msg: '저장되었습니다.',
@@ -245,7 +278,10 @@ class ViewQuestionState extends State<ViewQuestion> {
     GServiceMainCategory.get();
     GServiceSubCategory.get(isNoChildren: true);
     GServiceSubCategory.getAll();
-    GServiceQuestion.get();
+    GServiceQuestion.getPagination(
+      paginationCount: GServiceQuestion.$paginationCount.lastValue,
+      paginationPage: GServiceQuestion.$paginationPage.lastValue,
+    );
     GServiceDifficulty.get();
   }
 

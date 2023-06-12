@@ -7,6 +7,10 @@ class ServiceQuestion {
 
   ServiceQuestion._internal();
 
+  final TStream<int> $questionCount = TStream<int>()..sink$(0);
+  final TStream<int> $paginationPage = TStream<int>()..sink$(1);
+  final TStream<int> $paginationCount = TStream<int>()..sink$(20);
+
   final TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>();
   List<MQuestion> get questions => $questions.lastValue;
 
@@ -73,7 +77,10 @@ class ServiceQuestion {
     return completer.future;
   }
 
-  Future<RestfulResult> get() {
+  Future<RestfulResult> getPagination({
+    required int paginationPage,
+    required int paginationCount,
+  }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     final Map<String, String> _headers = createHeaders(
@@ -82,10 +89,19 @@ class ServiceQuestion {
     );
 
     http
-        .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
+        // .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
+        .get(
+            getRequestUri(PATH.QUESTION_PAGINATION +
+                paginationPage.toString() +
+                '/' +
+                paginationCount.toString()),
+            headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
-      // print('get result $result');
+
+      int questionCount = int.parse(result['questionCount'].toString());
+      $questionCount.sink$(questionCount);
+
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {
         // print('get item $item');
