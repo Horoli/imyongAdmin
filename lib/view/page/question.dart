@@ -83,6 +83,7 @@ class ViewQuestionState extends State<ViewQuestion> {
                 stream: GServiceQuestion.$paginationPage.browse$,
                 builder: (context, int page) {
                   return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       buttonCount,
                       (index) => buildElevatedButton(
