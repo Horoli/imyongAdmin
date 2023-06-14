@@ -7,9 +7,9 @@ class ServiceQuestion {
 
   ServiceQuestion._internal();
 
-  final TStream<int> $questionCount = TStream<int>()..sink$(0);
-  final TStream<int> $paginationPage = TStream<int>()..sink$(1);
-  final TStream<int> $paginationCount = TStream<int>()..sink$(20);
+  final TStream<int> $totalQuestionCount = TStream<int>()..sink$(0);
+  final TStream<int> $selectedPaginationPage = TStream<int>()..sink$(1);
+  final TStream<int> $showPaginationCount = TStream<int>()..sink$(20);
 
   final TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>();
   List<MQuestion> get questions => $questions.lastValue;
@@ -78,8 +78,8 @@ class ServiceQuestion {
   }
 
   Future<RestfulResult> getPagination({
-    required int paginationPage,
-    required int paginationCount,
+    required int selectedpaginationPage,
+    required int showPaginationCount,
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
@@ -92,19 +92,18 @@ class ServiceQuestion {
         // .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
         .get(
             getRequestUri(PATH.QUESTION_PAGINATION +
-                paginationPage.toString() +
+                selectedpaginationPage.toString() +
                 '/' +
-                paginationCount.toString()),
+                showPaginationCount.toString()),
             headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
 
-      int questionCount = int.parse(result['questionCount'].toString());
-      $questionCount.sink$(questionCount);
+      int questionCount = int.parse(result['totalValueCount'].toString());
+      $totalQuestionCount.sink$(questionCount);
 
       List<MQuestion> questionList = [];
       for (dynamic item in List.from(result['data'])) {
-        // print('get item $item');
         questionList.add(MQuestion.fromMap(item));
       }
       //
@@ -115,7 +114,7 @@ class ServiceQuestion {
         message: 'ok',
       ));
     }).catchError((error) {
-      print('question get Error $error');
+      print('question : getPagination Error $error');
     });
 
     return completer.future;

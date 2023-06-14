@@ -9,8 +9,6 @@ final GlobalKey<NavigatorState> GNavigatorKey = GlobalKey<NavigatorState>();
 Uri getRequestUri(String path) => Uri.parse(p.join(URL, path));
 
 Map<String, String> createHeaders({String? tokenKey, String? tokenValue}) {
-  print('tokenKey $tokenKey');
-  print('tokenValue $tokenValue');
   Map<String, String> headers = {
     HEADER.CONTENT_TYPE: HEADER.JSON,
   };

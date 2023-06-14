@@ -47,7 +47,6 @@ class ViewQuestionState extends State<ViewQuestion> {
         TStreamBuilder(
           stream: GServiceQuestion.$questions.browse$,
           builder: (context, List<MQuestion> questions) {
-            print('question[0] ${questions[0].description}');
             return buildBorderContainer(
               child: ListView.builder(
                 itemCount: questions.length,
@@ -73,38 +72,70 @@ class ViewQuestionState extends State<ViewQuestion> {
             );
           },
         ).expand(),
+        buildPaginationButtons()
         //
-        TStreamBuilder(
-          stream: GServiceQuestion.$questionCount.browse$,
-          builder: (context, int questionCount) {
-            int paginationCount = GServiceQuestion.$paginationCount.lastValue;
-            int buttonCount = (questionCount / paginationCount).ceil();
-            return TStreamBuilder(
-                stream: GServiceQuestion.$paginationPage.browse$,
-                builder: (context, int page) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      buttonCount,
-                      (index) => buildElevatedButton(
-                        child: Text('${index + 1}'),
-                        color: page == index + 1 ? Colors.blue : Colors.black,
-                        onPressed: () {
-                          GServiceQuestion.$paginationPage.sink$(index + 1);
-
-                          GServiceQuestion.getPagination(
-                            paginationPage: index + 1,
-                            paginationCount: paginationCount,
-                          );
-                        },
-                      ),
-                    ),
-                  ).sizedBox(height: 100);
-                });
-          },
-        ),
       ],
     );
+  }
+
+  Widget buildPaginationButtons() {
+    return TStreamBuilder(
+      stream: GServiceQuestion.$totalQuestionCount.browse$,
+      builder: (context, int totalQuestionCount) {
+        return TStreamBuilder(
+          initialData: 1,
+          stream: GServiceQuestion.$selectedPaginationPage.browse$,
+          builder: (context, int selectedPage) {
+            int showPaginationCount =
+                GServiceQuestion.$showPaginationCount.lastValue;
+
+            List<int> showPages = getPaginationButton(
+              selectedPage,
+              showPaginationCount,
+              totalQuestionCount,
+            );
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: showPages
+                  .map((page) => buildElevatedButton(
+                        child: Text('$page'),
+                        color:
+                            selectedPage == page ? Colors.blue : Colors.black,
+                        onPressed: () {
+                          GServiceQuestion.$selectedPaginationPage.sink$(page);
+
+                          GServiceQuestion.getPagination(
+                            selectedpaginationPage: page,
+                            showPaginationCount: showPaginationCount,
+                          );
+                        },
+                      ))
+                  .toList(),
+            ).sizedBox(height: 100);
+          },
+        );
+      },
+    );
+  }
+
+  // 입력받은 page를 기준으로 -2 ~ +2의 페이지를 가져옴. 단, 1페이지와 마지막 페이지는 제외
+  List<int> getPaginationButton(
+    int selectedPage,
+    int showPaginationCount,
+    int totalQuestionCount,
+  ) {
+    int buttonCount = (totalQuestionCount / showPaginationCount).ceil();
+    List<int> pages = [];
+
+    // TODO : page를 선택할 때, 1페이지와 마지막 페이지를 제외하고 -2 ~ +2의 페이지를 선택할 수 있도록 함
+    for (int i = selectedPage - 2; i <= selectedPage + 2; i++) {
+      if (i > 0 && i <= buttonCount) {
+        pages.add(i);
+      }
+    }
+
+    return pages;
   }
 
   Widget buildInputFields() {
@@ -219,8 +250,10 @@ class ViewQuestionState extends State<ViewQuestion> {
               }
 
               GServiceQuestion.getPagination(
-                paginationCount: GServiceQuestion.$paginationCount.lastValue,
-                paginationPage: GServiceQuestion.$paginationPage.lastValue,
+                showPaginationCount:
+                    GServiceQuestion.$showPaginationCount.lastValue,
+                selectedpaginationPage:
+                    GServiceQuestion.$selectedPaginationPage.lastValue,
               );
 
               showSnackBar(
@@ -280,8 +313,9 @@ class ViewQuestionState extends State<ViewQuestion> {
     GServiceSubCategory.get(isNoChildren: true);
     GServiceSubCategory.getAll();
     GServiceQuestion.getPagination(
-      paginationCount: GServiceQuestion.$paginationCount.lastValue,
-      paginationPage: GServiceQuestion.$paginationPage.lastValue,
+      showPaginationCount: GServiceQuestion.$showPaginationCount.lastValue,
+      selectedpaginationPage:
+          GServiceQuestion.$selectedPaginationPage.lastValue,
     );
     GServiceDifficulty.get();
   }

@@ -74,8 +74,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
 
                 // TODO : 수정이 완료되면 스트림을 갱신
                 GServiceQuestion.getPagination(
-                  paginationCount: GServiceQuestion.$paginationCount.lastValue,
-                  paginationPage: GServiceQuestion.$paginationPage.lastValue,
+                  showPaginationCount:
+                      GServiceQuestion.$showPaginationCount.lastValue,
+                  selectedpaginationPage:
+                      GServiceQuestion.$selectedPaginationPage.lastValue,
                 );
 
                 // showSnackBar(msg: '문제 수정 완료', context: context);
