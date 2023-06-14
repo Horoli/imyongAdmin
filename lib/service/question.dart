@@ -99,7 +99,7 @@ class ServiceQuestion {
         .then((response) {
       Map result = json.decode(response.body);
 
-      int questionCount = int.parse(result['totalValueCount'].toString());
+      int questionCount = int.parse(result['totalQuestionCount'].toString());
       $totalQuestionCount.sink$(questionCount);
 
       List<MQuestion> questionList = [];
