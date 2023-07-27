@@ -30,3 +30,12 @@ late ServiceMainCategory GServiceMainCategory;
 late ServiceSubCategory GServiceSubCategory;
 late ServiceQuestion GServiceQuestion;
 late ServiceDifficulty GServiceDifficulty;
+
+MSubCategory emptySubCategory = MSubCategory(
+  id: '',
+  createdAt: 0,
+  updatedAt: 0,
+  name: '',
+  parent: '',
+  children: [],
+);

@@ -8,9 +8,11 @@ class ServiceMainCategory {
   ServiceMainCategory._internal();
 
   TStream<MMainCategory> $mainCategory = TStream<MMainCategory>();
+  // type : String //  ex: "en", "math"
+  TStream<String> $selectedCategory = TStream<String>()..sink$('');
   MMainCategory get mainCategory => $mainCategory.lastValue;
 
-  Future<RestfulResult> get() {
+  Future<RestfulResult> get() async {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     final Map<String, String> _headers = createHeaders(
@@ -33,9 +35,14 @@ class ServiceMainCategory {
         MMainCategory main = MMainCategory.fromMap(item);
 
         $mainCategory.sink$(main);
+        $selectedCategory.sink$(main.map.keys.first);
+        print('selectedCategory ${$selectedCategory.lastValue}');
 
-        completer.complete(
-            RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
+        completer.complete(RestfulResult(
+          statusCode: STATUS.SUCCESS_CODE,
+          message: 'ok',
+          data: main,
+        ));
       },
     ).catchError((error) {
       // TODO : server가 실행 중이지 않으면 login페이지로 이동

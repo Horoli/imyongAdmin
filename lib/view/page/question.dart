@@ -139,43 +139,55 @@ class ViewQuestionState extends State<ViewQuestion> {
   }
 
   Widget buildInputFields() {
+    //     const Text(LABEL.QUESTION_ADD),
     return Column(
       children: [
-        const Text(LABEL.QUESTION_ADD),
-        Row(
-          children: [
-            Column(
-              children: [
-                const Text(LABEL.QUESTION_INFO_INPUT),
-                buildTextField(
-                  ctr: ctrQuestion,
-                  label: TEXT_FIELD.ENTER_QUESTION,
-                  maxLines: 5,
-                ),
-                buildTextField(
-                  ctr: ctrAnswer,
-                  label: TEXT_FIELD.ENTER_ANSWER,
-                ),
-                buildTextField(
-                  label: '학자',
-                  ctr: ctrInfo,
-                ),
-                buildTextField(
-                  label: '비고',
-                  ctr: ctrDescription,
-                ),
-              ],
-            ).expand(),
-            Column(
-              children: [
-                buildSelectCategory().expand(),
-                buildImageSelectFields().expand(),
-              ],
-            ).expand(),
-          ],
+        WidgetCategoriesSelect().expand(),
+        buildBorderContainer(
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  const Text(LABEL.QUESTION_INFO_INPUT),
+                  buildTextField(
+                    ctr: ctrQuestion,
+                    label: TEXT_FIELD.ENTER_QUESTION,
+                    maxLines: 5,
+                  ),
+                  buildTextField(
+                    ctr: ctrAnswer,
+                    label: TEXT_FIELD.ENTER_ANSWER,
+                  ),
+                  buildTextField(
+                    label: '학자',
+                    ctr: ctrInfo,
+                  ),
+                  buildTextField(
+                    label: '비고',
+                    ctr: ctrDescription,
+                  ),
+                ],
+              ).expand(),
+              //
+              Column(
+                children: [
+                  // buildSelectCategory().expand(),
+                  buildImageSelectFields().expand(),
+                ],
+              ).expand(),
+            ],
+          ),
         ).expand(),
       ],
     );
+    // return Column(
+    //   children: [
+    //     Row(
+    //       children: [
+    //       ],
+    //     ).expand(),
+    //   ],
+    // );
   }
 
   Widget buildImageSelectFields() {

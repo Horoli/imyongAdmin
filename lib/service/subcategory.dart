@@ -17,6 +17,11 @@ class ServiceSubCategory {
 
   List<String> selectedCategoriesId = [];
 
+  TStream<MSubCategory> $selectedSubCategory = TStream<MSubCategory>()
+    ..sink$(emptySubCategory);
+  TStream<MSubCategory> $selectedSubInSubCategory = TStream<MSubCategory>()
+    ..sink$(emptySubCategory);
+
   // TODO : DEV CODE // subCategories의 전체 데이터를
   // 한번 가져와야 데이터를 활용할 수 있음. 가져 온뒤 별도의 stream에 저장
   Future<RestfulResult> getAll() {
@@ -54,8 +59,24 @@ class ServiceSubCategory {
 
     // parent가 빈값이면 /subcategory(url),
     // parent에 입력 값이 있으면 /category?id=$parent(query)
-    String query =
-        parent == '' ? PATH.SUBCATEGORY : '${PATH.CATEGORY_QUERY}$parent';
+
+    print('step 1');
+
+    if (parent == '') {
+      completer.complete(RestfulResult(
+        statusCode: STATUS.UNKNOWN_CODE,
+        message: 'error: parent is empty',
+      ));
+
+      return completer.future;
+    }
+
+    print('step 2');
+
+    // String query =
+    //     parent == '' ? PATH.SUBCATEGORY : '${PATH.CATEGORY_QUERY}$parent';
+
+    String query = '${PATH.CATEGORY_QUERY}$parent';
     if (isNoChildren) {
       query = 'nochildrencategory';
     }
@@ -77,8 +98,11 @@ class ServiceSubCategory {
 
         $subCategory.sink$(subList);
 
-        completer.complete(
-            RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
+        completer.complete(RestfulResult(
+          statusCode: STATUS.SUCCESS_CODE,
+          message: 'ok',
+          data: subList,
+        ));
       },
     ).catchError((error) {
       print('error $error');
@@ -91,7 +115,6 @@ class ServiceSubCategory {
   //
   Future<RestfulResult> post({
     required String name,
-    BuildContext? context,
     String parent = '',
   }) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();

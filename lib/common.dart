@@ -42,6 +42,7 @@ part 'global.dart';
 part 'widgets/common_widgets.dart';
 part 'widgets/tile/categories_tile.dart';
 part 'widgets/form_question_edit.dart';
+part 'widgets/categories_select.dart';
 
 part 'helper/navigator.dart';
 
