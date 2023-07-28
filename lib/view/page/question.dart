@@ -21,6 +21,9 @@ class ViewQuestionState extends State<ViewQuestion> {
   final TStream<List<String>> $base64Images = TStream<List<String>>()
     ..sink$([]);
   //
+
+  late final TStream<MSubCategory> $selectedSubInSubCategory =
+      TStream<MSubCategory>()..sink$(emptySubCategory);
   @override
   Widget build(BuildContext context) {
     //
@@ -51,13 +54,16 @@ class ViewQuestionState extends State<ViewQuestion> {
               child: ListView.builder(
                 itemCount: questions.length,
                 itemBuilder: (context, index) {
-                  // TODO : categoryID를 이용해서 category를 가져옴
-                  MSubCategory getSubCategory = GServiceSubCategory
+                  MSubCategory getSubInSubCategory = GServiceSubCategory
                       .allSubCategory[questions[index].categoryID]!;
+
+                  MSubCategory getSubCategory = GServiceSubCategory
+                      .allSubCategory[getSubInSubCategory.parent]!;
 
                   return QuestionTile(
                     mainCategory: getSubCategory.parent,
                     subCategory: getSubCategory.name,
+                    subInSubCategory: getSubInSubCategory.name,
                     question: questions[index].question,
                     answer: questions[index].answer,
                     info: questions[index].info,
@@ -142,7 +148,9 @@ class ViewQuestionState extends State<ViewQuestion> {
     //     const Text(LABEL.QUESTION_ADD),
     return Column(
       children: [
-        WidgetCategoriesSelect().expand(),
+        WidgetCategoriesSelect(
+          $selectedSubInSubCategory: $selectedSubInSubCategory,
+        ).expand(),
         buildBorderContainer(
           child: Row(
             children: [
@@ -247,7 +255,7 @@ class ViewQuestionState extends State<ViewQuestion> {
               RestfulResult result = await GServiceQuestion.post(
                 question: ctrQuestion.text,
                 answer: ctrAnswer.text,
-                categoryID: ctrCategory.text,
+                categoryID: $selectedSubInSubCategory.lastValue.id,
                 images: $base64Images.lastValue,
                 info: ctrInfo.text,
                 description: ctrDescription.text,
@@ -375,25 +383,11 @@ class ViewQuestionState extends State<ViewQuestion> {
                 onTap: () => Navigator.of(context).pop(),
                 child: GestureDetector(
                   onTap: () {},
-
                   child: AlertDialog(
                     content: FormQuestionEdit(
                       selectedQuestion: selectedQuestion,
                     ),
                   ),
-                  // child: AlertDialog(
-                  //   contentPadding: EdgeInsets.zero,
-                  //   content: SizedBox(
-                  //     width: width * 0.9,
-                  //     height: height * 0.6,
-                  //     child: Column(
-                  //       children: [
-                  //         Text(question.answer).expand(),
-                  //         buildImageList(question.imageIDs).expand(),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ),
               ),
             ),

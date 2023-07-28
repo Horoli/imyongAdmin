@@ -15,6 +15,10 @@ class ViewCategoryState extends State<ViewCategory> {
   final TextEditingController ctrSelectedSubCategory = TextEditingController();
 
   List<MSubCategory> get subCategories => GServiceSubCategory.subCategory;
+
+  final TStream<MSubCategory> $selectedSubCategory = TStream<MSubCategory>()
+    ..sink$(emptySubCategory);
+
   //
   List<String> get selectedCategoriesId =>
       GServiceSubCategory.selectedCategoriesId;
@@ -24,7 +28,8 @@ class ViewCategoryState extends State<ViewCategory> {
     return buildBorderContainer(
       child: Column(
         children: [
-          WidgetCategoriesSelect().expand(),
+          WidgetCategoriesSelect($selectedSubCategory: $selectedSubCategory)
+              .expand(),
           TStreamBuilder(
             stream: GServiceMainCategory.$selectedCategory.browse$,
             builder: (context, String selectedCategory) {
@@ -56,7 +61,7 @@ class ViewCategoryState extends State<ViewCategory> {
             readOnly: true,
           ),
           TStreamBuilder(
-              stream: GServiceSubCategory.$selectedSubCategory.browse$,
+              stream: $selectedSubCategory.browse$,
               builder: (context, MSubCategory selectedSubCategory) {
                 ctrSelectedSubCategory.text = selectedSubCategory.name;
                 return buildTextField(
@@ -75,8 +80,7 @@ class ViewCategoryState extends State<ViewCategory> {
             width: double.infinity,
             child: Text('add'),
             onPressed: () async {
-              MSubCategory parent =
-                  GServiceSubCategory.$selectedSubCategory.lastValue;
+              MSubCategory parent = $selectedSubCategory.lastValue;
 
               RestfulResult result = await GServiceSubCategory.post(
                 name: ctrInputCategoryName.text,

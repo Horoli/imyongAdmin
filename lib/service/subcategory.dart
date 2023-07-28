@@ -60,8 +60,6 @@ class ServiceSubCategory {
     // parent가 빈값이면 /subcategory(url),
     // parent에 입력 값이 있으면 /category?id=$parent(query)
 
-    print('step 1');
-
     if (parent == '') {
       completer.complete(RestfulResult(
         statusCode: STATUS.UNKNOWN_CODE,
@@ -70,8 +68,6 @@ class ServiceSubCategory {
 
       return completer.future;
     }
-
-    print('step 2');
 
     // String query =
     //     parent == '' ? PATH.SUBCATEGORY : '${PATH.CATEGORY_QUERY}$parent';
@@ -89,6 +85,7 @@ class ServiceSubCategory {
     http.get(getRequestUri(query), headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
+        print('result $result');
         List<MSubCategory> subList = [];
         for (dynamic item in List.from(result['data'])) {
           subList.add(MSubCategory.fromMap(item));

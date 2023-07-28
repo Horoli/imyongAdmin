@@ -115,6 +115,7 @@ class QuestionHeaderTile extends CommonTile {
 class QuestionTile extends CommonTile {
   String mainCategory;
   String subCategory;
+  String subInSubCategory;
   String question;
   String answer;
   String info;
@@ -123,6 +124,7 @@ class QuestionTile extends CommonTile {
   QuestionTile({
     required this.mainCategory,
     required this.subCategory,
+    required this.subInSubCategory,
     required this.question,
     required this.answer,
     required this.edit,
@@ -140,6 +142,7 @@ class QuestionTile extends CommonTile {
       children: [
         buildCell(mainCategory).expand(),
         buildCell(subCategory).expand(),
+        buildCell(subInSubCategory).expand(),
         buildCell(question).expand(),
         buildCell(answer).expand(),
         buildCell(info).expand(),

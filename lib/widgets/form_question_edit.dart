@@ -26,6 +26,12 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   final TStream<List<String>> $imageIDs = TStream<List<String>>();
   final TStream<List<String>> $modifyBase64Images = TStream<List<String>>();
 
+  final TStream<String> $selectedMainCategory = TStream<String>();
+  final TStream<MSubCategory> $selectedSubCategory = TStream<MSubCategory>()
+    ..sink$(emptySubCategory);
+  final TStream<MSubCategory> $selectedSubInSubCategory =
+      TStream<MSubCategory>()..sink$(emptySubCategory);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -38,10 +44,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               children: [
                 // TODO : 메인카테고리를 선택
                 buildEditFields().expand(),
-                // TODO : 메인 카테고리를 선택하여 해당 카테고리로 필터링한것들만 가져옴
-                buildMainCategoriesFields().expand(),
-                // TODO : 메인 카테고리를 parents로 가지는 서브카테고리 리스트 출력
-                buildSubCategoriesFields().expand(),
+                WidgetCategoriesSelect(
+                  isVertical: true,
+                  $selectedSubInSubCategory: $selectedSubInSubCategory,
+                ).expand(),
                 Column(
                   children: [
                     buildShowImagesFields().expand(),
@@ -58,7 +64,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   id: selectedQuestion.id,
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
-                  categoryID: _ctrCategoryID.text,
+                  categoryID: $selectedSubInSubCategory.lastValue.id,
                   // TODO : 수정된 이미지가 없으면 기존 이미지를 사용
                   images: $modifyBase64Images.lastValue == []
                       ? $imageIDs.lastValue
@@ -115,85 +121,6 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
         //   ctr: _ctrCategoryID,
         //   label: TEXT_FIELD.SELECT_CATEGORY,
         // ),
-      ],
-    );
-  }
-
-  Widget buildMainCategoriesFields() {
-    return Column(
-      children: [
-        const Text(LABEL.SELECT_SUBJECT),
-        TStreamBuilder(
-          stream: GServiceMainCategory.$mainCategory.browse$,
-          builder: (BuildContext context, MMainCategory mainCategory) {
-            List<String> mainCategories =
-                List<String>.from(mainCategory.map.keys);
-            return buildBorderContainer(
-              child: ListView.builder(
-                itemCount: mainCategories.length,
-                itemBuilder: (context, int index) {
-                  return buildElevatedButton(
-                    child: Text(mainCategories[index]),
-                    color: selectedMainCategory == mainCategories[index]
-                        ? Colors.amber
-                        : Colors.blue,
-                    onPressed: () {
-                      setState(() {
-                        if (selectedMainCategory == mainCategories[index]) {
-                          selectedMainCategory = '';
-                          return;
-                        }
-
-                        selectedMainCategory = mainCategories[index];
-                      });
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        ).expand(),
-      ],
-    );
-  }
-
-  Widget buildSubCategoriesFields() {
-    return Column(
-      children: [
-        const Text(LABEL.SELECT_CATEGORY),
-        TStreamBuilder(
-          stream: GServiceSubCategory.$subCategory.browse$,
-          builder: (
-            BuildContext context,
-            List<MSubCategory> subcategory,
-          ) {
-            // TODO : 가져옴 전체 카테고리 아이템에서 선택한 메인카테고리를 parent로 갖고 있는
-            // subCategory만 필터링
-            List<MSubCategory> filteredSub = subcategory
-                .where((sub) => sub.parent.contains(selectedMainCategory))
-                .toList();
-
-            print('filteredSub $filteredSub');
-            return buildBorderContainer(
-              child: ListView.builder(
-                itemCount: filteredSub.length,
-                itemBuilder: (context, index) {
-                  return QuestionCategoryTile(
-                    selected: _ctrCategoryID.text == filteredSub[index].id,
-                    name: filteredSub[index].name,
-                    onChanged: (bool? changed) {
-                      setState(() {
-                        changed!
-                            ? _ctrCategoryID.text = filteredSub[index].id
-                            : _ctrCategoryID.text = '';
-                      });
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        ).expand(),
       ],
     );
   }
@@ -280,10 +207,20 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     initData();
   }
 
-  void initData() {
-    MSubCategory getSubCategory =
-        GServiceSubCategory.allSubCategory[selectedQuestion.categoryID]!;
-    selectedMainCategory = getSubCategory.parent;
+  Future initData() async {
+    // MSubCategory getSubCategory =
+    //     GServiceSubCategory.allSubCategory[selectedQuestion.categoryID]!;
+
+    print(widget.selectedQuestion.categoryID);
+
+    // RestfulResult getSubCategory = await GServiceSubCategory.get(
+    //   parent: widget.selectedQuestion.categoryID,
+    //   // isNoChildren: true,
+    // );
+
+    // print('getSubCategory.data ${getSubCategory.data}');
+
+    // selectedMainCategory = getSubCategory.parent;
 
     _ctrQuestion.text = selectedQuestion.question;
     _ctrAnswer.text = selectedQuestion.answer;

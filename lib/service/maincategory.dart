@@ -36,7 +36,7 @@ class ServiceMainCategory {
 
         $mainCategory.sink$(main);
         $selectedCategory.sink$(main.map.keys.first);
-        print('selectedCategory ${$selectedCategory.lastValue}');
+        // print('selectedCategory ${$selectedCategory.lastValue}');
 
         completer.complete(RestfulResult(
           statusCode: STATUS.SUCCESS_CODE,
