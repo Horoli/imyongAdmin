@@ -101,7 +101,8 @@ class QuestionHeaderTile extends CommonTile {
     return Row(
       children: [
         buildCell('과목').expand(),
-        buildCell('카테고리').expand(),
+        buildCell('카테고리_1').expand(),
+        buildCell('카테고리_2').expand(),
         buildCell('문제').expand(),
         buildCell('답안').expand(),
         buildCell('학자').expand(),

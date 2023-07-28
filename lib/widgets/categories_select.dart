@@ -109,9 +109,7 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             },
           ).expand(),
         ],
@@ -164,7 +162,13 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                           },
                         );
                       }
-                      return const Center(child: CircularProgressIndicator());
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: CircularProgressIndicator()),
+                          Center(child: Text(LABEL.SELECT_SUBCATEGORY))
+                        ],
+                      );
                     },
                   );
                 },
@@ -225,7 +229,13 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                           },
                         );
                       }
-                      return const Center(child: CircularProgressIndicator());
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: CircularProgressIndicator()),
+                          Center(child: Text(LABEL.SELECT_SUB_IN_SUBCATEGORY))
+                        ],
+                      );
                     },
                   );
                 },
