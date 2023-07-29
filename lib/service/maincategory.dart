@@ -9,7 +9,7 @@ class ServiceMainCategory {
 
   TStream<MMainCategory> $mainCategory = TStream<MMainCategory>();
   // type : String //  ex: "en", "math"
-  TStream<String> $selectedCategory = TStream<String>()..sink$('');
+  TStream<String> $selectedMainCategory = TStream<String>()..sink$('');
   MMainCategory get mainCategory => $mainCategory.lastValue;
 
   Future<RestfulResult> get() async {
@@ -20,7 +20,11 @@ class ServiceMainCategory {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http.get(getRequestUri(PATH.CATEGORY), headers: _headers).then(
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.CATEGORY)
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY);
+
+    http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
 
@@ -35,7 +39,7 @@ class ServiceMainCategory {
         MMainCategory main = MMainCategory.fromMap(item);
 
         $mainCategory.sink$(main);
-        $selectedCategory.sink$(main.map.keys.first);
+        $selectedMainCategory.sink$(main.map.keys.first);
         // print('selectedCategory ${$selectedCategory.lastValue}');
 
         completer.complete(RestfulResult(

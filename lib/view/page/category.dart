@@ -26,12 +26,15 @@ class ViewCategoryState extends State<ViewCategory> {
   Widget build(BuildContext context) {
     //
     return buildBorderContainer(
-      child: Column(
+      child: Row(
         children: [
-          WidgetCategoriesSelect($selectedSubCategory: $selectedSubCategory)
+          WidgetCategoriesSelect(
+                  $selectedMainCategory:
+                      GServiceMainCategory.$selectedMainCategory,
+                  $selectedSubCategory: $selectedSubCategory)
               .expand(),
           TStreamBuilder(
-            stream: GServiceMainCategory.$selectedCategory.browse$,
+            stream: GServiceMainCategory.$selectedMainCategory.browse$,
             builder: (context, String selectedCategory) {
               if (selectedCategory.isEmpty) {
                 return buildBorderContainer(
@@ -91,7 +94,7 @@ class ViewCategoryState extends State<ViewCategory> {
                 buildErrorDialog(result.message, result.statusCode, context);
               }
 
-              GServiceSubCategory.$selectedSubCategory.sink$(parent);
+              $selectedSubCategory.sink$(parent);
             },
           ).expand(),
           buildElevatedButton(
@@ -124,8 +127,8 @@ class ViewCategoryState extends State<ViewCategory> {
 
               print('step3');
               ctrSubCategory.text = '';
-              GServiceSubCategory.getAll();
-              GServiceSubCategory.get(parent: ctrMainCategory.text);
+              // GServiceSubCategory.getAll();
+              GServiceSubCategory.getByParent(parent: ctrMainCategory.text);
 
               print('result $result');
             },
@@ -164,7 +167,7 @@ class ViewCategoryState extends State<ViewCategory> {
         ),
         onPressed: () {
           ctrSubCategory.text = subCategories[index].id;
-          GServiceSubCategory.get(parent: ctrSubCategory.text);
+          GServiceSubCategory.getByParent(parent: ctrSubCategory.text);
           Navigator.pop(context);
         },
       ),

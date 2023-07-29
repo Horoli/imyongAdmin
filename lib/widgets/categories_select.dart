@@ -82,26 +82,12 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                               $selectedMainCategory.sink$('');
                               $selectedSubCategory.sink$(emptySubCategory);
                               $selectedSubInSubCategory.sink$(emptySubCategory);
-
-                              // GServiceMainCategory.$selectedCategory.sink$('');
-                              // GServiceSubCategory.$selectedSubCategory
-                              // .sink$(emptySubCategory);
-                              // GServiceSubCategory.$selectedSubInSubCategory
-                              //     .sink$(emptySubCategory);
                               return;
                             }
 
                             $selectedMainCategory.sink$(keyOfMainCategory);
                             $selectedSubCategory.sink$(emptySubCategory);
                             $selectedSubInSubCategory.sink$(emptySubCategory);
-
-                            // TODO : 다른 값을 눌렀을때 서브 카테고리 초기화
-                            // GServiceMainCategory.$selectedCategory
-                            //     .sink$(keyOfMainCategory);
-                            // GServiceSubCategory.$selectedSubCategory
-                            //     .sink$(emptySubCategory);
-                            // GServiceSubCategory.$selectedSubInSubCategory
-                            //     .sink$(emptySubCategory);
                           },
                         ).sizedBox(height: kToolbarHeight);
                       },
@@ -128,14 +114,11 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
             builder: (context, String selectedMainCategory) {
               return TStreamBuilder(
                 stream: $selectedSubCategory.browse$,
-                // stream: GServiceSubCategory.$selectedSubCategory.browse$,
                 builder: (context, MSubCategory selectedSubCategory) {
                   return FutureBuilder(
-                    future:
-                        GServiceSubCategory.get(parent: selectedMainCategory),
+                    future: GServiceSubCategory.getByParent(
+                        parent: selectedMainCategory),
                     builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
-                      // print('selectedSubCategory ${snapshot.data?.data}');
-                      // print('hasData ${snapshot.hasData}');
                       if (snapshot.data?.data != null) {
                         List<MSubCategory> subCategories = snapshot.data?.data;
                         return ListView.separated(
@@ -153,10 +136,6 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                                     .sink$(subCategories[index]);
                                 $selectedSubInSubCategory
                                     .sink$(emptySubCategory);
-                                // GServiceSubCategory.$selectedSubCategory
-                                //     .sink$(subCategories[index]);
-                                // GServiceSubCategory.$selectedSubInSubCategory
-                                //     .sink$(emptySubCategory);
                               },
                             ).sizedBox(height: kToolbarHeight);
                           },
@@ -187,15 +166,13 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
           const Center(child: Text('sub in subcategory')),
           TStreamBuilder(
             stream: $selectedSubCategory.browse$,
-            // stream: GServiceSubCategory.$selectedSubCategory.browse$,
             builder: (context, MSubCategory selectedSubCategory) {
               return TStreamBuilder(
                 stream: $selectedSubInSubCategory.browse$,
-                // stream: GServiceSubCategory.$selectedSubInSubCategory.browse$,
                 builder: (context, MSubCategory selectedSubInSubCategory) {
                   return FutureBuilder(
-                    future:
-                        GServiceSubCategory.get(parent: selectedSubCategory.id),
+                    future: GServiceSubCategory.getByParent(
+                        parent: selectedSubCategory.id),
                     builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
                       if (snapshot.data?.data != null) {
                         List<MSubCategory> subCategories = snapshot.data?.data;
@@ -211,19 +188,19 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
                                   ? Colors.amber
                                   : Colors.blue,
                               onPressed: () {
-                                if (selectedSubInSubCategory.id == indexId) {
+                                // TODO : category에서는 sub in subCategory를 변경하지 못하게 버튼 disable
+
+                                if (widget.$selectedSubInSubCategory != null) {
+                                  if (selectedSubInSubCategory.id == indexId) {
+                                    $selectedSubInSubCategory
+                                        .sink$(emptySubCategory);
+
+                                    return;
+                                  }
+
                                   $selectedSubInSubCategory
-                                      .sink$(emptySubCategory);
-
-                                  // GServiceSubCategory.$selectedSubInSubCategory
-                                  //     .sink$(emptySubCategory);
-                                  return;
+                                      .sink$(subCategories[index]);
                                 }
-
-                                $selectedSubInSubCategory
-                                    .sink$(subCategories[index]);
-                                // GServiceSubCategory.$selectedSubInSubCategory
-                                //     .sink$(subCategories[index]);
                               },
                             ).sizedBox(height: kToolbarHeight);
                           },
@@ -254,12 +231,10 @@ class WidgetCategoriesSelectState extends State<WidgetCategoriesSelect> {
   }
 
   void _initStream() {
-    // GServiceMainCategory.$selectedCategory.sink$('');
-    // GServiceSubCategory.$selectedSubCategory.sink$(emptySubCategory);
-    // GServiceSubCategory.$selectedSubInSubCategory.sink$(emptySubCategory);
-
-    $selectedMainCategory.sink$('');
-    $selectedSubCategory.sink$(emptySubCategory);
-    $selectedSubInSubCategory.sink$(emptySubCategory);
+    if (widget.$selectedMainCategory == null) {
+      $selectedMainCategory.sink$('');
+      $selectedSubCategory.sink$(emptySubCategory);
+      $selectedSubInSubCategory.sink$(emptySubCategory);
+    }
   }
 }

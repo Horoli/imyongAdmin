@@ -18,7 +18,11 @@ class ServiceDifficulty {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http.get(getRequestUri(PATH.DIFFICULTY), headers: _headers).then(
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.DIFFICULTY)
+        : Uri.https(PATH.FORIEGN_URL, PATH.DIFFICULTY);
+
+    http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
 

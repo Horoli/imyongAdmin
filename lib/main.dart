@@ -36,7 +36,7 @@ Future<void> _initLocalStorage() async {
 }
 
 Future _initService() async {
-  GServiceType = ServiceType.getInstance();
+  // GServiceType = ServiceType.getInstance();
   GServiceLogin = ServiceLogin.getInstance();
   GServiceGuest = ServiceGuest.getInstance();
   GServiceMainCategory = ServiceMainCategory.getInstance();

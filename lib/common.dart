@@ -54,6 +54,5 @@ part 'view/home.dart';
 part 'view/page/dashboard.dart';
 part 'view/page/question.dart';
 part 'view/page/guest.dart';
-part 'view/page/maincategory.dart';
 part 'view/page/category.dart';
 part 'view/page/setting.dart';

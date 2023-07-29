@@ -59,9 +59,12 @@ class ServiceGuest {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
     String encodeData = jsonEncode({"id": uuid});
 
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.GUEST)
+        : Uri.https(PATH.FORIEGN_URL, PATH.GUEST);
+
     http
-        .post(getRequestUri(PATH.GUEST),
-            headers: createHeaders(), body: encodeData)
+        .post(query, headers: createHeaders(), body: encodeData)
         .then((response) {
       Map<String, dynamic> item =
           Map.from(jsonDecode(response.body)['data'] ?? {});
@@ -82,9 +85,14 @@ class ServiceGuest {
     );
 
     // TODO : test
-    String query = 'guest?id=$uid';
+    // String query = 'guest?id=$uid';
+    Map<String, String> queryParameters = {'id': uid};
 
-    http.get(getRequestUri(query), headers: _headers).then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.GUEST, queryParameters)
+        : Uri.https(PATH.LOCAL_URL, PATH.GUEST, queryParameters);
+
+    http.get(query, headers: _headers).then((response) {
       print('get ${response.body}');
     });
 

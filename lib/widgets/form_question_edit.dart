@@ -26,7 +26,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   final TStream<List<String>> $imageIDs = TStream<List<String>>();
   final TStream<List<String>> $modifyBase64Images = TStream<List<String>>();
 
-  final TStream<String> $selectedMainCategory = TStream<String>();
+  final TStream<String> $selectedMainCategory = TStream<String>()..sink$('');
   final TStream<MSubCategory> $selectedSubCategory = TStream<MSubCategory>()
     ..sink$(emptySubCategory);
   final TStream<MSubCategory> $selectedSubInSubCategory =
@@ -44,14 +44,51 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
               children: [
                 // TODO : 메인카테고리를 선택
                 buildEditFields().expand(),
-                WidgetCategoriesSelect(
-                  isVertical: true,
-                  $selectedSubInSubCategory: $selectedSubInSubCategory,
-                ).expand(),
                 Column(
                   children: [
-                    buildShowImagesFields().expand(),
-                    buildEditImageFields().expand(),
+                    FutureBuilder(
+                        future: asd(),
+                        builder: (
+                          context,
+                          AsyncSnapshot<Map<String, MSubCategory>> snapshot,
+                        ) {
+                          if (snapshot.hasData) {
+                            Map<String, MSubCategory> categories =
+                                snapshot.data!;
+
+                            print(categories['subInSub']!.name);
+                            print(categories['sub']!.name);
+                            print(categories['sub']!.parent);
+
+                            $selectedSubInSubCategory
+                                .sink$(categories['subInSub']!);
+                            $selectedSubCategory.sink$(categories['sub']!);
+                            $selectedMainCategory
+                                .sink$(categories['sub']!.parent);
+
+                            return TStreamBuilder(
+                                stream: $selectedMainCategory.browse$,
+                                builder: (context, snapshot) {
+                                  print('snapshot $snapshot');
+                                  return WidgetCategoriesSelect(
+                                    // isVertical: true,
+                                    $selectedMainCategory:
+                                        $selectedMainCategory,
+                                    $selectedSubCategory: $selectedSubCategory,
+                                    $selectedSubInSubCategory:
+                                        $selectedSubInSubCategory,
+                                  );
+                                });
+                          }
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }).expand(),
+                    Row(
+                      children: [
+                        buildEditImageFields().expand(),
+                        buildShowImagesFields().expand(),
+                      ],
+                    ).expand(),
                   ],
                 ).expand(),
               ],
@@ -207,21 +244,28 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     initData();
   }
 
+  Future<Map<String, MSubCategory>> asd() async {
+    RestfulResult firstResult = await GServiceSubCategory.getById(
+        id: widget.selectedQuestion.categoryID);
+    print('step 1');
+    MSubCategory getSubInSubCategory = firstResult.data!;
+    print('step 2');
+    RestfulResult secondResult =
+        await GServiceSubCategory.getById(id: getSubInSubCategory.parent);
+    print('step 3');
+    MSubCategory getSubCategory = secondResult.data!;
+
+    print('getSubCategory ${getSubCategory.id}');
+
+    Map<String, MSubCategory> categories = {
+      'sub': getSubCategory,
+      'subInSub': getSubInSubCategory,
+    };
+
+    return categories;
+  }
+
   Future initData() async {
-    // MSubCategory getSubCategory =
-    //     GServiceSubCategory.allSubCategory[selectedQuestion.categoryID]!;
-
-    print(widget.selectedQuestion.categoryID);
-
-    // RestfulResult getSubCategory = await GServiceSubCategory.get(
-    //   parent: widget.selectedQuestion.categoryID,
-    //   // isNoChildren: true,
-    // );
-
-    // print('getSubCategory.data ${getSubCategory.data}');
-
-    // selectedMainCategory = getSubCategory.parent;
-
     _ctrQuestion.text = selectedQuestion.question;
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;

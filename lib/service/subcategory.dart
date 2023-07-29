@@ -32,9 +32,13 @@ class ServiceSubCategory {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http
-        .get(getRequestUri('subcategory?map=map'), headers: _headers)
-        .then((value) {
+    Map<String, String> queryParameters = {'map': 'map'};
+
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.SUBCATEGORY, queryParameters)
+        : Uri.https(PATH.FORIEGN_URL, PATH.SUBCATEGORY, queryParameters);
+
+    http.get(query, headers: _headers).then((value) {
       Map result = json.decode(value.body);
       Map<String, MSubCategory> convertResult = {};
       for (dynamic item in result['data'].keys) {
@@ -53,36 +57,81 @@ class ServiceSubCategory {
     return completer.future;
   }
 
-  Future<RestfulResult> get({String parent = '', bool isNoChildren = false}) {
+  // TODO : id가 일치하는 subcategory를 가져오는 함수
+  Future<RestfulResult> getById({required String id}) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
-    selectedCategoriesId = [];
 
-    // parent가 빈값이면 /subcategory(url),
-    // parent에 입력 값이 있으면 /category?id=$parent(query)
-
-    if (parent == '') {
-      completer.complete(RestfulResult(
-        statusCode: STATUS.UNKNOWN_CODE,
-        message: 'error: parent is empty',
-      ));
+    if (id == '') {
+      completer.complete(
+        RestfulResult(
+          statusCode: STATUS.UNKNOWN_CODE,
+          message: 'error: id is empty',
+        ),
+      );
 
       return completer.future;
     }
+    Map<String, String> queryParameters = {'id': id};
 
-    // String query =
-    //     parent == '' ? PATH.SUBCATEGORY : '${PATH.CATEGORY_QUERY}$parent';
-
-    String query = '${PATH.CATEGORY_QUERY}$parent';
-    if (isNoChildren) {
-      query = 'nochildrencategory';
-    }
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.CATEGORY, queryParameters)
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY, queryParameters);
 
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http.get(getRequestUri(query), headers: _headers).then(
+    http.get(query, headers: _headers).then(
+      (response) {
+        Map result = json.decode(response.body);
+        print('result $result');
+
+        MSubCategory getSubCategory = MSubCategory.fromMap(result['data']);
+        print('getSubCategory $getSubCategory');
+
+        completer.complete(RestfulResult(
+          statusCode: STATUS.SUCCESS_CODE,
+          message: 'ok',
+          data: getSubCategory,
+        ));
+      },
+    ).catchError((error) {
+      print('error $error');
+      // GHelperNavigator.pushLogin();
+    });
+
+    return completer.future;
+  }
+
+  Future<RestfulResult> getByParent(
+      {String parent = '', bool isNoChildren = false}) {
+    Completer<RestfulResult> completer = Completer<RestfulResult>();
+    selectedCategoriesId = [];
+
+    if (parent == '') {
+      completer.complete(
+        RestfulResult(
+          statusCode: STATUS.UNKNOWN_CODE,
+          message: 'error: parent is empty',
+        ),
+      );
+
+      return completer.future;
+    }
+
+    Map<String, String> queryParameters = {'parent': parent};
+
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.CATEGORY, queryParameters)
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY, queryParameters);
+
+    final Map<String, String> _headers = createHeaders(
+      tokenKey: HEADER.TOKEN,
+      tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
+    );
+
+    http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
         print('result $result');
@@ -126,10 +175,11 @@ class ServiceSubCategory {
       "parent": parent,
     });
 
-    http
-        .post(getRequestUri(PATH.CATEGORY),
-            body: _encodeData, headers: _headers)
-        .then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.CATEGORY)
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY);
+
+    http.post(query, body: _encodeData, headers: _headers).then((response) {
       Map result = json.decode(response.body);
 
       // name이 입력되지 않았으면 error return
@@ -164,10 +214,11 @@ class ServiceSubCategory {
       "id": id,
     });
 
-    http
-        .delete(getRequestUri(PATH.CATEGORY),
-            body: _encodeData, headers: _headers)
-        .then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.CATEGORY)
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY);
+
+    http.delete(query, body: _encodeData, headers: _headers).then((response) {
       Map result = json.decode(response.body);
       return completer.complete(
         RestfulResult.fromMap(

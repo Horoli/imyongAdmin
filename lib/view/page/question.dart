@@ -22,27 +22,32 @@ class ViewQuestionState extends State<ViewQuestion> {
     ..sink$([]);
   //
 
+  double get height => MediaQuery.of(context).size.height;
+  double get width => MediaQuery.of(context).size.width;
+
   late final TStream<MSubCategory> $selectedSubInSubCategory =
       TStream<MSubCategory>()..sink$(emptySubCategory);
   @override
   Widget build(BuildContext context) {
-    //
-    return buildBorderContainer(
-      child: Row(
-        children: [
-          buildQuestions().expand(),
-          Column(
+    return SingleChildScrollView(
+      child: buildBorderContainer(
+          width: width,
+          height: height * 1.2,
+          child: Row(
             children: [
-              buildInputFields().expand(flex: 5),
-              buildCompleteFields().expand(),
+              buildQuestionsList().expand(),
+              Column(
+                children: [
+                  buildInputFields().expand(flex: 5),
+                  buildCompleteFields().expand(),
+                ],
+              ).expand(),
             ],
-          ).expand()
-        ],
-      ),
+          )),
     );
   }
 
-  Widget buildQuestions() {
+  Widget buildQuestionsList() {
     return Column(
       children: [
         const Text(LABEL.QUESTION_LIST),
@@ -162,40 +167,19 @@ class ViewQuestionState extends State<ViewQuestion> {
                     label: TEXT_FIELD.ENTER_QUESTION,
                     maxLines: 5,
                   ),
-                  buildTextField(
-                    ctr: ctrAnswer,
-                    label: TEXT_FIELD.ENTER_ANSWER,
-                  ),
-                  buildTextField(
-                    label: '학자',
-                    ctr: ctrInfo,
-                  ),
-                  buildTextField(
-                    label: '비고',
-                    ctr: ctrDescription,
-                  ),
+                  buildTextField(ctr: ctrAnswer, label: TEXT_FIELD.ENTER_ANSWER)
+                      .expand(),
+                  buildTextField(ctr: ctrInfo, label: '학자').expand(),
+                  buildTextField(ctr: ctrDescription, label: '비고').expand(),
                 ],
               ).expand(),
               //
-              Column(
-                children: [
-                  // buildSelectCategory().expand(),
-                  buildImageSelectFields().expand(),
-                ],
-              ).expand(),
+              buildImageSelectFields().expand(),
             ],
           ),
         ).expand(),
       ],
     );
-    // return Column(
-    //   children: [
-    //     Row(
-    //       children: [
-    //       ],
-    //     ).expand(),
-    //   ],
-    // );
   }
 
   Widget buildImageSelectFields() {
@@ -330,7 +314,7 @@ class ViewQuestionState extends State<ViewQuestion> {
   void initState() {
     super.initState();
     GServiceMainCategory.get();
-    GServiceSubCategory.get(isNoChildren: true);
+    GServiceSubCategory.getByParent(isNoChildren: true);
     GServiceSubCategory.getAll();
     GServiceQuestion.getPagination(
       showPaginationCount: GServiceQuestion.$showPaginationCount.lastValue,
@@ -338,35 +322,6 @@ class ViewQuestionState extends State<ViewQuestion> {
           GServiceQuestion.$selectedPaginationPage.lastValue,
     );
     GServiceDifficulty.get();
-  }
-
-  Future<void> buildCategoriesDialog(List<Widget> options) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(children: options);
-      },
-    );
-  }
-
-  List<SimpleDialogOption> popDifficulty() {
-    List<String> difficulty =
-        List<String>.from(GServiceDifficulty.difficulty.map.values);
-    return List.generate(
-      difficulty.length,
-      (int index) {
-        return SimpleDialogOption(
-          child: Row(
-            children: [
-              Text(difficulty[index]),
-            ],
-          ),
-          onPressed: () {
-            // ctrCategory.text = filteredSubcategory[index].id;
-          },
-        );
-      },
-    );
   }
 
   // TODO : listView에 포함된 question을 edit하는 pop
@@ -399,6 +354,7 @@ class ViewQuestionState extends State<ViewQuestion> {
 
   @override
   void dispose() {
+    GServiceQuestion.$selectedPaginationPage.sink$(0);
     super.dispose();
   }
 }

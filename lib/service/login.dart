@@ -10,20 +10,16 @@ class ServiceLogin {
 
   ServiceLogin._internal();
 
-  // void hiveBoxlistener() {
-  //   hiveMLogin.watch().listen((event) {
-  //     print('event $event');
-  //   });
-  // }
-
   Future<RestfulResult> Post(String id, String pw) async {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     String encodeData = jsonEncode({"id": id, "pw": pw});
 
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.LOGIN)
+        : Uri.https(PATH.FORIEGN_URL, PATH.LOGIN);
     http
-        .post(getRequestUri(PATH.LOGIN),
-            headers: createHeaders(), body: encodeData)
+        .post(query, headers: createHeaders(), body: encodeData)
         .then((response) {
       if (response.isNull) {
         return completer.complete(RestfulResult(

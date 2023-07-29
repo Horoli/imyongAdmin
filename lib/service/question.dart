@@ -43,10 +43,11 @@ class ServiceQuestion {
       "description": description,
     });
 
-    http
-        .post(getRequestUri(PATH.QUESTION),
-            body: _encodeData, headers: _headers)
-        .then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.QUESTION)
+        : Uri.https(PATH.FORIEGN_URL, PATH.QUESTION);
+
+    http.post(query, body: _encodeData, headers: _headers).then((response) {
       Map result = json.decode(response.body);
 
       if (result['statusCode'] != 200) {
@@ -88,14 +89,15 @@ class ServiceQuestion {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL,
+            '${PATH.QUESTION_PAGINATION}/${selectedpaginationPage}/${showPaginationCount}')
+        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY);
+    print('query $query');
+
     http
         // .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
-        .get(
-            getRequestUri(PATH.QUESTION_PAGINATION +
-                selectedpaginationPage.toString() +
-                '/' +
-                showPaginationCount.toString()),
-            headers: _headers)
+        .get(query, headers: _headers)
         .then((response) {
       Map result = json.decode(response.body);
 
@@ -128,9 +130,17 @@ class ServiceQuestion {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
-    http
-        .get(getRequestUri(PATH.QUESTION_IMAGE + imageID), headers: _headers)
-        .then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(
+            PATH.LOCAL_URL,
+            '${PATH.QUESTION_IMAGE}/${imageID}',
+          )
+        : Uri.https(
+            PATH.FORIEGN_URL,
+            '${PATH.QUESTION_IMAGE}/${imageID}',
+          );
+
+    http.get(query, headers: _headers).then((response) {
       String imageResult = base64Encode(response.bodyBytes);
 
       completer.complete(
@@ -177,10 +187,11 @@ class ServiceQuestion {
       "description": description,
     });
 
-    http
-        .patch(getRequestUri(PATH.QUESTION),
-            body: _encodeData, headers: _headers)
-        .then((response) {
+    Uri query = PATH.IS_LOCAL
+        ? Uri.http(PATH.LOCAL_URL, PATH.QUESTION)
+        : Uri.https(PATH.FORIEGN_URL, PATH.QUESTION);
+
+    http.patch(query, body: _encodeData, headers: _headers).then((response) {
       Map result = json.decode(response.body);
 
       print('patch result $result');
