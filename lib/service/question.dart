@@ -92,7 +92,8 @@ class ServiceQuestion {
     Uri query = PATH.IS_LOCAL
         ? Uri.http(PATH.LOCAL_URL,
             '${PATH.QUESTION_PAGINATION}/${selectedpaginationPage}/${showPaginationCount}')
-        : Uri.https(PATH.FORIEGN_URL, PATH.CATEGORY);
+        : Uri.https(PATH.FORIEGN_URL,
+            '${PATH.QUESTION_PAGINATION}/${selectedpaginationPage}/${showPaginationCount}');
     print('query $query');
 
     http
