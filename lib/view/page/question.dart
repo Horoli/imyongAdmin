@@ -354,7 +354,7 @@ class ViewQuestionState extends State<ViewQuestion> {
 
   @override
   void dispose() {
-    GServiceQuestion.$selectedPaginationPage.sink$(0);
+    GServiceQuestion.$selectedPaginationPage.sink$(1);
     super.dispose();
   }
 }
