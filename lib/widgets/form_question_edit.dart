@@ -47,7 +47,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                 Column(
                   children: [
                     FutureBuilder(
-                        future: asd(),
+                        future: initFuture(),
                         builder: (
                           context,
                           AsyncSnapshot<Map<String, MSubCategory>> snapshot,
@@ -244,7 +244,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     initData();
   }
 
-  Future<Map<String, MSubCategory>> asd() async {
+  Future<Map<String, MSubCategory>> initFuture() async {
     RestfulResult firstResult = await GServiceSubCategory.getById(
         id: widget.selectedQuestion.categoryID);
     print('step 1');
