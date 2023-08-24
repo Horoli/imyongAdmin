@@ -98,7 +98,7 @@ class ServiceSubCategory {
         ));
       },
     ).catchError((error) {
-      print('error $error');
+      print('subCategory getbyId error $error');
       // GHelperNavigator.pushLogin();
     });
 

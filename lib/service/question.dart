@@ -11,7 +11,8 @@ class ServiceQuestion {
   final TStream<int> $selectedPaginationPage = TStream<int>()..sink$(1);
   final TStream<int> $showPaginationCount = TStream<int>()..sink$(20);
 
-  final TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>();
+  final TStream<List<MQuestion>> $questions = TStream<List<MQuestion>>()
+    ..sink$([]);
   List<MQuestion> get questions => $questions.lastValue;
 
   Future<RestfulResult> post({
