@@ -40,6 +40,7 @@ class ServiceSubCategory {
 
     http.get(query, headers: _headers).then((value) {
       Map result = json.decode(value.body);
+      print('sub $result');
       Map<String, MSubCategory> convertResult = {};
       for (dynamic item in result['data'].keys) {
         String convertItem = item.toString();
@@ -151,7 +152,7 @@ class ServiceSubCategory {
         ));
       },
     ).catchError((error) {
-      print('error $error');
+      print('subcategory getByParent error $error');
       // GHelperNavigator.pushLogin();
     });
 

@@ -20,10 +20,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   late final TextEditingController _ctrQuestion = TextEditingController();
   late final TextEditingController _ctrAnswer = TextEditingController();
   late final TextEditingController _ctrDifficulty = TextEditingController();
-  late final TextEditingController _ctrCategoryID = TextEditingController();
+  late final TextEditingController _ctrcategoryId = TextEditingController();
   late final TextEditingController _ctrInfo = TextEditingController();
   late final TextEditingController _ctrDescription = TextEditingController();
-  final TStream<List<String>> $imageIDs = TStream<List<String>>();
+  final TStream<List<String>> $imageIds = TStream<List<String>>();
   final TStream<List<String>> $modifyBase64Images = TStream<List<String>>();
 
   final TStream<String> $selectedMainCategory = TStream<String>()..sink$('');
@@ -101,10 +101,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                   id: selectedQuestion.id,
                   question: _ctrQuestion.text,
                   answer: _ctrAnswer.text,
-                  categoryID: $selectedSubInSubCategory.lastValue.id,
+                  categoryId: $selectedSubInSubCategory.lastValue.id,
                   // TODO : 수정된 이미지가 없으면 기존 이미지를 사용
                   images: $modifyBase64Images.lastValue == []
-                      ? $imageIDs.lastValue
+                      ? $imageIds.lastValue
                       : $modifyBase64Images.lastValue,
                   info: _ctrInfo.text,
                   description: _ctrDescription.text,
@@ -155,7 +155,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
           label: '비고',
         ),
         // buildTextField(
-        //   ctr: _ctrCategoryID,
+        //   ctr: _ctrcategoryId,
         //   label: TEXT_FIELD.SELECT_CATEGORY,
         // ),
       ],
@@ -168,13 +168,13 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
         const Text(LABEL.SAVED_IMAGE),
         buildBorderContainer(
           child: TStreamBuilder(
-            stream: $imageIDs.browse$,
-            builder: (context, List<String> imageIDs) {
+            stream: $imageIds.browse$,
+            builder: (context, List<String> imageIds) {
               return ListView.builder(
-                itemCount: imageIDs.length,
+                itemCount: imageIds.length,
                 itemBuilder: (context, index) {
                   Future<RestfulResult> getImage =
-                      GServiceQuestion.getImage(imageIDs[index]);
+                      GServiceQuestion.getImage(imageIds[index]);
 
                   return FutureBuilder(
                     future: getImage,
@@ -246,7 +246,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
 
   Future<Map<String, MSubCategory>> initFuture() async {
     RestfulResult firstResult = await GServiceSubCategory.getById(
-        id: widget.selectedQuestion.categoryID);
+        id: widget.selectedQuestion.categoryId);
     print('step 1');
     MSubCategory getSubInSubCategory = firstResult.data!;
     print('step 2');
@@ -269,11 +269,11 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrQuestion.text = selectedQuestion.question;
     _ctrAnswer.text = selectedQuestion.answer;
     _ctrDifficulty.text = selectedQuestion.difficulty;
-    _ctrCategoryID.text = selectedQuestion.categoryID;
+    _ctrcategoryId.text = selectedQuestion.categoryId;
     _ctrDescription.text = selectedQuestion.description;
     _ctrInfo.text = selectedQuestion.info;
 
-    $imageIDs.sink$(selectedQuestion.imageIDs);
+    $imageIds.sink$(selectedQuestion.imageIds);
     $modifyBase64Images.sink$([]);
   }
 

@@ -60,7 +60,7 @@ class ViewQuestionState extends State<ViewQuestion> {
                 itemCount: questions.length,
                 itemBuilder: (context, index) {
                   MSubCategory getSubInSubCategory = GServiceSubCategory
-                      .allSubCategory[questions[index].categoryID]!;
+                      .allSubCategory[questions[index].categoryId]!;
 
                   MSubCategory getSubCategory = GServiceSubCategory
                       .allSubCategory[getSubInSubCategory.parent]!;
@@ -239,7 +239,7 @@ class ViewQuestionState extends State<ViewQuestion> {
               RestfulResult result = await GServiceQuestion.post(
                 question: ctrQuestion.text,
                 answer: ctrAnswer.text,
-                categoryID: $selectedSubInSubCategory.lastValue.id,
+                categoryId: $selectedSubInSubCategory.lastValue.id,
                 images: $base64Images.lastValue,
                 info: ctrInfo.text,
                 description: ctrDescription.text,

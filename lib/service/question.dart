@@ -17,7 +17,7 @@ class ServiceQuestion {
   Future<RestfulResult> post({
     required String question,
     required String answer,
-    required String categoryID,
+    required String categoryId,
     required String info,
     String description = '',
     String difficulty = 'normal',
@@ -35,7 +35,7 @@ class ServiceQuestion {
     String _encodeData = jsonEncode({
       "question": question,
       "answer": answer,
-      "categoryID": categoryID,
+      "categoryId": categoryId,
       "difficulty": difficulty,
       "score": score,
       "images": images, // post할때는 images를 보냄
@@ -162,7 +162,7 @@ class ServiceQuestion {
     required String id,
     required String question,
     required String answer,
-    required String categoryID,
+    required String categoryId,
     required String info,
     String description = '',
     String difficulty = 'normal',
@@ -180,7 +180,7 @@ class ServiceQuestion {
       "id": id,
       "question": question,
       "answer": answer,
-      "categoryID": categoryID,
+      "categoryId": categoryId,
       "difficulty": difficulty,
       "score": score,
       "images": images ?? [],

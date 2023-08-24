@@ -27,6 +27,7 @@ class ServiceMainCategory {
     http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
+        print('result $result');
 
         // TODO : tokenExpire
         if (result['statusCode'] == 403) {
@@ -51,7 +52,7 @@ class ServiceMainCategory {
     ).catchError((error) {
       // TODO : server가 실행 중이지 않으면 login페이지로 이동
       GHelperNavigator.pushLogin();
-      print('error $error');
+      print('maincategory error $error');
       return error;
     });
 

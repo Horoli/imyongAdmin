@@ -3,10 +3,10 @@ part of 'lib.dart';
 class MQuestion extends MCommonBase {
   final String question;
   final String answer;
-  final String categoryID;
+  final String categoryId;
   final String difficulty;
   final int score;
-  final List<String> imageIDs;
+  final List<String> imageIds;
   final String info;
   final String description;
 
@@ -16,10 +16,10 @@ class MQuestion extends MCommonBase {
     required super.updatedAt,
     required this.question,
     required this.answer,
-    required this.categoryID,
+    required this.categoryId,
     required this.difficulty,
     required this.score,
-    required this.imageIDs,
+    required this.imageIds,
     required this.info,
     required this.description,
   });
@@ -28,10 +28,10 @@ class MQuestion extends MCommonBase {
   Map<String, dynamic> get map => {
         'question': question,
         'answer': answer,
-        'categoryID': categoryID,
+        'categoryId': categoryId,
         'difficulty': difficulty,
         'score': score,
-        'imagesIDs': imageIDs,
+        'imageIds': imageIds,
         'id': id,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
@@ -45,10 +45,10 @@ class MQuestion extends MCommonBase {
     int updatedAt = item['updatedAt'] ?? '';
     String question = item['question'] ?? '';
     String answer = item['answer'] ?? '';
-    String categoryID = item['categoryID'] ?? '';
+    String categoryId = item['categoryId'] ?? '';
     String difficulty = item['difficulty'] ?? '';
     int score = item['score'] ?? 0;
-    List<String> imageIDs = List<String>.from(item['imageIDs'] ?? []);
+    List<String> imageIds = List<String>.from(item['imageIds'] ?? []);
     String info = item['info'] ?? '';
     String description = item['description'] ?? '';
 
@@ -58,10 +58,10 @@ class MQuestion extends MCommonBase {
       updatedAt: updatedAt,
       question: question,
       answer: answer,
-      categoryID: categoryID,
+      categoryId: categoryId,
       difficulty: difficulty,
       score: score,
-      imageIDs: imageIDs,
+      imageIds: imageIds,
       info: info,
       description: description,
     );
@@ -73,10 +73,10 @@ class MQuestion extends MCommonBase {
     int? updatedAt,
     String? question,
     String? answer,
-    String? categoryID,
+    String? categoryId,
     String? difficulty,
     int? score,
-    List<String>? imageIDs,
+    List<String>? imageIds,
     String? info,
     String? description,
   }) =>
@@ -86,10 +86,10 @@ class MQuestion extends MCommonBase {
         updatedAt: updatedAt ?? this.updatedAt,
         question: question ?? this.question,
         answer: answer ?? this.answer,
-        categoryID: categoryID ?? this.categoryID,
+        categoryId: categoryId ?? this.categoryId,
         difficulty: difficulty ?? this.difficulty,
         score: score ?? this.score,
-        imageIDs: imageIDs ?? this.imageIDs,
+        imageIds: imageIds ?? this.imageIds,
         info: info ?? this.info,
         description: description ?? this.description,
       );
