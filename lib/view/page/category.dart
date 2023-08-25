@@ -101,8 +101,6 @@ class ViewCategoryState extends State<ViewCategory> {
             width: double.infinity,
             child: Text('delete'),
             onPressed: () async {
-              print('step1');
-
               if (selectedCategoriesId.isEmpty) {
                 buildErrorDialog('selectedCategory is empty.', 403, context);
                 return;
@@ -116,7 +114,6 @@ class ViewCategoryState extends State<ViewCategory> {
               }
 
               if (!result.isSuccess) {
-                print('result $result');
                 buildErrorDialog(
                   result.message,
                   result.statusCode,
@@ -125,12 +122,9 @@ class ViewCategoryState extends State<ViewCategory> {
                 return;
               }
 
-              print('step3');
               ctrSubCategory.text = '';
               // GServiceSubCategory.getAll();
               GServiceSubCategory.getByParent(parent: ctrMainCategory.text);
-
-              print('result $result');
             },
           ).expand(),
           // buildElevatedButton(

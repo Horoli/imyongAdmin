@@ -40,7 +40,6 @@ class ServiceSubCategory {
 
     http.get(query, headers: _headers).then((value) {
       Map result = json.decode(value.body);
-      print('sub $result');
       Map<String, MSubCategory> convertResult = {};
       for (dynamic item in result['data'].keys) {
         String convertItem = item.toString();
@@ -53,7 +52,7 @@ class ServiceSubCategory {
       completer.complete(
           RestfulResult(statusCode: STATUS.SUCCESS_CODE, message: 'ok'));
     }).catchError((error) {
-      print('getAll error ${error}');
+      print('subCategory getAll error ${error}');
     });
     return completer.future;
   }
@@ -86,10 +85,8 @@ class ServiceSubCategory {
     http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
-        print('result $result');
 
         MSubCategory getSubCategory = MSubCategory.fromMap(result['data']);
-        print('getSubCategory $getSubCategory');
 
         completer.complete(RestfulResult(
           statusCode: STATUS.SUCCESS_CODE,
@@ -98,7 +95,7 @@ class ServiceSubCategory {
         ));
       },
     ).catchError((error) {
-      print('subCategory getbyId error $error');
+      print('subCategory getById error $error');
       // GHelperNavigator.pushLogin();
     });
 
@@ -135,13 +132,10 @@ class ServiceSubCategory {
     http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
-        print('result $result');
         List<MSubCategory> subList = [];
         for (dynamic item in List.from(result['data'])) {
           subList.add(MSubCategory.fromMap(item));
         }
-
-        print('subList $subList');
 
         $subCategory.sink$(subList);
 
@@ -185,7 +179,6 @@ class ServiceSubCategory {
 
       // name이 입력되지 않았으면 error return
       if (name == '') {
-        print('statusCode : ${response.statusCode}');
         return completer.complete(RestfulResult.fromMap(
           result,
           response.statusCode,
@@ -196,7 +189,9 @@ class ServiceSubCategory {
         result,
         response.statusCode,
       ));
-    }).catchError((error) {});
+    }).catchError((error) {
+      print('subcategory post error $error');
+    });
 
     return completer.future;
   }

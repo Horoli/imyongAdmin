@@ -20,8 +20,8 @@ class _ViewLoginState extends State<ViewLogin> {
         final double width = constraints.maxWidth;
         final double height = constraints.maxHeight;
 
-        print(width * 0.4);
-        print(height * 0.4);
+        // print(width * 0.4);
+        // print(height * 0.4);
 
         return Scaffold(
           body: Center(

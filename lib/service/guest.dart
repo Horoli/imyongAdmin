@@ -68,7 +68,6 @@ class ServiceGuest {
         .then((response) {
       Map<String, dynamic> item =
           Map.from(jsonDecode(response.body)['data'] ?? {});
-      print('item $item');
 
       $testToken.sink$(item['token'].toString());
     });
@@ -78,7 +77,6 @@ class ServiceGuest {
   Future<RestfulResult> get(String testID) async {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
-    print('testID $testID');
     final Map<String, String> _headers = createHeaders(
       tokenKey: HEADER.TOKEN,
       tokenValue: testID,
@@ -92,9 +90,7 @@ class ServiceGuest {
         ? Uri.http(PATH.LOCAL_URL, PATH.GUEST, queryParameters)
         : Uri.https(PATH.LOCAL_URL, PATH.GUEST, queryParameters);
 
-    http.get(query, headers: _headers).then((response) {
-      print('get ${response.body}');
-    });
+    http.get(query, headers: _headers).then((response) {});
 
     // if (response.statusCode != STATUS.SUCCESS_CODE) {
     //   throw Exception(STATUS.LOAD_FAILED_MSG);

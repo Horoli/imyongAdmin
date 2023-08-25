@@ -27,7 +27,6 @@ class ServiceMainCategory {
     http.get(query, headers: _headers).then(
       (response) {
         Map result = json.decode(response.body);
-        print('result $result');
 
         // TODO : tokenExpire
         if (result['statusCode'] == 403) {
@@ -41,7 +40,6 @@ class ServiceMainCategory {
 
         $mainCategory.sink$(main);
         $selectedMainCategory.sink$(main.map.keys.first);
-        // print('selectedCategory ${$selectedCategory.lastValue}');
 
         completer.complete(RestfulResult(
           statusCode: STATUS.SUCCESS_CODE,

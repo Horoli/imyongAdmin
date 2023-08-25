@@ -71,7 +71,6 @@ class ServiceQuestion {
         ),
       );
     }).catchError((error) {
-      print(error);
       print('question post Error $error');
     });
 
@@ -95,7 +94,6 @@ class ServiceQuestion {
             '${PATH.QUESTION_PAGINATION}/${selectedpaginationPage}/${showPaginationCount}')
         : Uri.https(PATH.FORIEGN_URL,
             '${PATH.QUESTION_PAGINATION}/${selectedpaginationPage}/${showPaginationCount}');
-    print('query $query');
 
     http
         // .get(getRequestUri(PATH.QUESTION_QUERY), headers: _headers)
@@ -146,8 +144,6 @@ class ServiceQuestion {
             queryParameters,
           );
 
-    print('query $query');
-
     http.get(query, headers: _headers).then((response) {
       String imageResult = base64Encode(response.bodyBytes);
 
@@ -159,7 +155,7 @@ class ServiceQuestion {
         ),
       );
     }).catchError((error) {
-      print('question get Error $error');
+      print('question getImage Error $error');
     });
 
     return completer.future;
@@ -201,8 +197,6 @@ class ServiceQuestion {
 
     http.patch(query, body: _encodeData, headers: _headers).then((response) {
       Map result = json.decode(response.body);
-
-      print('patch result $result');
 
       // TODO : 입력된 값이 없는 경우 exception 처리
       if (result['statusCode'] != 200) {

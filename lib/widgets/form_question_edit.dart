@@ -56,9 +56,9 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                             Map<String, MSubCategory> categories =
                                 snapshot.data!;
 
-                            print(categories['subInSub']!.name);
-                            print(categories['sub']!.name);
-                            print(categories['sub']!.parent);
+                            // print(categories['subInSub']!.name);
+                            // print(categories['sub']!.name);
+                            // print(categories['sub']!.parent);
 
                             $selectedSubInSubCategory
                                 .sink$(categories['subInSub']!);
@@ -69,7 +69,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                             return TStreamBuilder(
                                 stream: $selectedMainCategory.browse$,
                                 builder: (context, snapshot) {
-                                  print('snapshot $snapshot');
+                                  // print('snapshot $snapshot');
                                   return WidgetCategoriesSelect(
                                     // isVertical: true,
                                     $selectedMainCategory:
@@ -218,7 +218,6 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                     future: getImage,
                     builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
                       if (snapshot.hasData) {
-                        print('pppppppppppppppp ${snapshot.data!.data}');
                         return buildBorderContainer(
                           child: Image.memory(
                             base64Decode(snapshot.data!.data),
@@ -248,16 +247,10 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
   Future<Map<String, MSubCategory>> initFuture() async {
     RestfulResult firstResult = await GServiceSubCategory.getById(
         id: widget.selectedQuestion.categoryId);
-    print('step 1');
     MSubCategory getSubInSubCategory = firstResult.data!;
-    print('step 2');
     RestfulResult secondResult =
         await GServiceSubCategory.getById(id: getSubInSubCategory.parent);
-    print('step 3');
     MSubCategory getSubCategory = secondResult.data!;
-
-    print('getSubCategory ${getSubCategory.id}');
-
     Map<String, MSubCategory> categories = {
       'sub': getSubCategory,
       'subInSub': getSubInSubCategory,
@@ -274,7 +267,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrDescription.text = selectedQuestion.description;
     _ctrInfo.text = selectedQuestion.info;
 
-    print('selectedQuestion.imageIds ${selectedQuestion.imageIds}');
+    // print('selectedQuestion.imageIds ${selectedQuestion.imageIds}');
     $imageIds.sink$(selectedQuestion.imageIds);
     $modifyBase64Images.sink$([]);
   }

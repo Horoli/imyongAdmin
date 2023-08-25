@@ -42,7 +42,7 @@ class ServiceLogin {
         response.statusCode,
       ));
     }).catchError((error) {
-      print('Error: $error');
+      print('login post Error: $error');
 
       GHelperNavigator.pushLogin();
       return completer.complete(

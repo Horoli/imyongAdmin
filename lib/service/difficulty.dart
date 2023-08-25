@@ -44,7 +44,7 @@ class ServiceDifficulty {
     ).catchError((error) {
       // TODO : server가 실행 중이지 않으면 login페이지로 이동
       GHelperNavigator.pushLogin();
-      print('error $error');
+      print('difficulty get error $error');
       return error;
     });
 
