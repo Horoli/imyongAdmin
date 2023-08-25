@@ -162,44 +162,6 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     );
   }
 
-  Widget buildShowImagesFields() {
-    return Column(
-      children: [
-        const Text(LABEL.SAVED_IMAGE),
-        buildBorderContainer(
-          child: TStreamBuilder(
-            stream: $imageIds.browse$,
-            builder: (context, List<String> imageIds) {
-              return ListView.builder(
-                itemCount: imageIds.length,
-                itemBuilder: (context, index) {
-                  Future<RestfulResult> getImage =
-                      GServiceQuestion.getImage(imageIds[index]);
-
-                  return FutureBuilder(
-                    future: getImage,
-                    builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
-                      if (snapshot.hasData) {
-                        return buildBorderContainer(
-                          child: Image.memory(
-                            base64Decode(snapshot.data!.data),
-                          ),
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ).expand(),
-      ],
-    );
-  }
-
   Widget buildEditImageFields() {
     return Column(
       children: [
@@ -230,6 +192,45 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
                     },
                   ).expand(),
                 ],
+              );
+            },
+          ),
+        ).expand(),
+      ],
+    );
+  }
+
+  Widget buildShowImagesFields() {
+    return Column(
+      children: [
+        const Text(LABEL.SAVED_IMAGE),
+        buildBorderContainer(
+          child: TStreamBuilder(
+            stream: $imageIds.browse$,
+            builder: (context, List<String> imageIds) {
+              return ListView.builder(
+                itemCount: imageIds.length,
+                itemBuilder: (context, index) {
+                  Future<RestfulResult> getImage =
+                      GServiceQuestion.getImage(imageIds[index]);
+
+                  return FutureBuilder(
+                    future: getImage,
+                    builder: (context, AsyncSnapshot<RestfulResult> snapshot) {
+                      if (snapshot.hasData) {
+                        print('pppppppppppppppp ${snapshot.data!.data}');
+                        return buildBorderContainer(
+                          child: Image.memory(
+                            base64Decode(snapshot.data!.data),
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+                },
               );
             },
           ),
@@ -273,6 +274,7 @@ class FormQuestionEditState extends State<FormQuestionEdit> {
     _ctrDescription.text = selectedQuestion.description;
     _ctrInfo.text = selectedQuestion.info;
 
+    print('selectedQuestion.imageIds ${selectedQuestion.imageIds}');
     $imageIds.sink$(selectedQuestion.imageIds);
     $modifyBase64Images.sink$([]);
   }

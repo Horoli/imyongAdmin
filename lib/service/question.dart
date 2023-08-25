@@ -124,7 +124,7 @@ class ServiceQuestion {
     return completer.future;
   }
 
-  Future<RestfulResult> getImage(String imageID) {
+  Future<RestfulResult> getImage(String imageId) {
     Completer<RestfulResult> completer = Completer<RestfulResult>();
 
     final Map<String, String> _headers = createHeaders(
@@ -132,15 +132,21 @@ class ServiceQuestion {
       tokenValue: GSharedPreferences.getString(HEADER.LOCAL_TOKEN),
     );
 
+    Map<String, String> queryParameters = {'id': imageId};
+
     Uri query = PATH.IS_LOCAL
         ? Uri.http(
             PATH.LOCAL_URL,
-            '${PATH.QUESTION_IMAGE}/${imageID}',
+            '${PATH.QUESTION_IMAGE}/',
+            queryParameters,
           )
         : Uri.https(
             PATH.FORIEGN_URL,
-            '${PATH.QUESTION_IMAGE}/${imageID}',
+            '${PATH.QUESTION_IMAGE}/',
+            queryParameters,
           );
+
+    print('query $query');
 
     http.get(query, headers: _headers).then((response) {
       String imageResult = base64Encode(response.bodyBytes);
