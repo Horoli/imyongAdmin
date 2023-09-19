@@ -1,4 +1,4 @@
-const bool IS_LOCAL = true;
+const bool IS_LOCAL = false;
 const String LOCAL_URL = 'localhost:3000';
 const String FORIEGN_URL = 'imyong-api.horoli.kr';
 
