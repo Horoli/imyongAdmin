@@ -21,7 +21,7 @@ class ServiceLogin {
     http
         .post(query, headers: createHeaders(), body: encodeData)
         .then((response) {
-      if (response.isNull) {
+      if (response == null) {
         return completer.complete(RestfulResult(
           statusCode: STATUS.UNKNOWN_CODE,
           message: STATUS.UNKNOWN_MSG,
